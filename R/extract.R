@@ -1,0 +1,443 @@
+#' extract
+#'
+#' Turn an object into a tidy table
+#'
+#' @name extract
+#' @param ... Objekte
+#'
+#' @return data.frame
+#' @export
+#'
+tbll_extract <- function(...) {
+  UseMethod("tbll_extract")
+}
+
+#' @param x Objekt
+#' @rdname extract
+#' @export
+#'
+tbll_extract.default <- function(x, ...) {
+  cat("\n Keine Methode feur",
+      class(x)[1],
+      "ist in tbll_extract() implementiert\n")
+  prepare_output(fix_format(broom::tidy(x)))
+
+}
+
+#' @param x Objekt
+#' @rdname extract
+#' @export
+#'
+tbll_extract.anova <- function(x, include.eta = TRUE, ...) {
+  rslt <- x
+  rslt[-ncol(rslt)] <-
+    stp25stat2:::render_f(rslt[-ncol(rslt)], digits = 2)
+  rslt[[ncol(rslt)]] <-
+    stp25stat2:::rndr_P(rslt[[ncol(rslt)]], FALSE)#
+  names(rslt)[ncol(rslt)] <- "P Value"
+
+  if (include.eta & names(x)[1] == "Sum Sq") {
+    eta_sqr <- render_f(extract_effsize(x), digits = 2)
+    if (row.names(x)[1] == "(Intercept)")
+      eta_sqr <-
+        rbind(data.frame(eta.sq = NA, eta.sq.part = NA), eta_sqr)
+    rslt <- cbind(rslt[-ncol(rslt)],
+                  eta_sqr,
+                  rslt[ncol(rslt)])
+  }
+
+  prepare_output(stp25tools::fix_to_df(rslt, include.colnames = TRUE),
+                 caption =   attr(rslt, "heading")[1])
+}
+
+#' @param x Objekt
+#' @rdname extract
+#' @export
+#'
+tbll_extract.data.frame <- function(x, ...) {
+  prepare_output(stp25tools::fix_to_df(x, include.colnames = TRUE),
+                 caption =  "")
+}
+
+
+#' @rdname extract
+#' @export
+tbll_extract.lm <- function(...) {
+  Tbll_reg_long(...)
+}
+
+#' @rdname extract
+#' @export
+tbll_extract.aov <- function(...) {
+  prepare_output(extract_param_aov(..., fix_format=TRUE),
+                 caption="Analysis of Variance"
+  )
+}
+
+
+
+#' @rdname extract
+#' @export
+tbll_extract.TukeyHSD <- function(x, digits = 2, ...) {
+  rslt <- broom::tidy(x)
+  rslt <- transform(
+    rslt,
+    estimate    = render_f(estimate, digits = digits),
+    conf.low    = render_f(conf.low, digits = digits),
+    conf.high   = render_f(conf.high, digits = digits),
+    null.value  = render_f(null.value, digits = 0),
+    adj.p.value = rndr_P(adj.p.value,
+                                      include.symbol = FALSE)
+  )
+  prepare_output(rslt,
+                 caption = "Tukey Honest Significant Differences")
+}
+
+
+#' @rdname extract
+#' @export
+tbll_extract.aovlist <- function(x, ...) {
+  if (!is.null(attr(x, "weights")))
+    Stop("Note: Das habe ich noch nicht implementiert\n")
+  nx <- names(x)
+  nx <- nx[-1]
+  nx <- nx[-length(nx)]
+  lx <- length(nx)
+  rslt <-  extract_param_aov(x, ..., fix_format=TRUE)
+  lr <- nrow(rslt)
+  rslt[lr, 1] <- paste(rslt[lr, 1], "(Within)")
+  rslt[1:lx, 1] <- paste("Residuals", nx)
+
+
+  prepare_output(rslt[c((lx + 1):lr, 1:lx),],
+                 caption = "Analysis of Variance (multiple error strata)")
+}
+
+#' @rdname extract
+#' @param include.se,include.df in extract.step
+#' @export
+#'
+#' @examples
+#'
+#' summary(lm1 <- lm(Fertility ~ ., data = swiss))
+#' slm1 <- stats::step(lm1)
+#' tbll_extract(slm1)
+#' # require(lmerTest)
+#'  #m <- lmerTest::lmer(
+#'  # Informed.liking ~ Product * Information * Gender +
+#' #  (1 | Consumer) + (1 | Product:Consumer),
+#' #  data = ham
+#' # )
+#' # elimination of non-significant effects
+#' # s <- lmerTest::step(m)
+#'
+#' # tbll_extract(s)
+#'
+tbll_extract.step <- function(x,
+                              include.se = FALSE,
+                              include.df = FALSE,
+                              ...) {
+  caption <- "Choose a model by AIC"
+
+  res <- NULL
+  if (any(names(x) %in% "lsmeans.table")) {
+    res <- x$diffs.lsmeans.table
+
+    if (nrow(res) == 0)
+      return("Finde keine Loesung step!")
+    res <- cbind(Source = rownames(res), res)
+
+    names(res)[8] <- "p.value"
+    names(res)[3] <- "SE"
+    names(res)[6:7] <- c("lwr",   "upr")
+    res <- res[c(1, 2, 3, 6, 7, 4, 5, 8)]
+    if (!include.se)
+      res <- res[,-which(names(res) == "SE")]
+    if (!include.df)
+      res <- res[,-which(names(res) == "DF")]
+    res <-   prepare_output(fix_format(res),
+                            caption = caption)
+
+  }
+  else{
+    warnings("Nicht getestete Methode")
+    res <- broom::tidy(x)
+    res <-   prepare_output(fix_format(res),
+                            caption = caption)
+  }
+
+  res
+}
+
+
+
+
+#' @rdname extract
+#' @export
+tbll_extract.table<- function(...) {Tbll_xtabs(...)}
+
+#' @rdname extract
+#' @export
+#' @examples
+#'
+#' a <- letters[1:3]
+#' tbll_extract(summary(table(a, sample(a))))
+#'
+tbll_extract.summary.table <- function(x,
+                                       ...) {
+  prepare_output( data.frame(
+    Chisq = render_f(x$statistic, 2),
+    df =    render_f(x$parameter,0),
+    p =     rndr_P(x$p.value, FALSE)
+  ),
+  caption = "Test for independence of all factors (Pearson)")
+}
+
+
+
+#' @rdname extract
+#' @export
+tbll_extract.table<- function(...) Tbll_xtabs(...)
+
+
+#' @rdname extract
+#' @export
+tbll_extract.htest <- function(x,
+                               ...) {
+  # t.test
+  if (any(names(x) == "statistic")) {
+    if (names(x$statistic) == "t")
+      rslt <- prepare_output(
+        fix_data_frame_2(
+          Source = x$data.name,
+          T = x$statistic,
+          df = x$parameter,
+          p.value = x$p.value
+        ),
+        caption = x$method
+      )
+    else
+      rslt <- prepare_output(
+        fix_data_frame_2(
+          Source = x$data.name,
+          W = x$statistic,
+          p.value = x$p.value
+        ),
+        caption = x$method
+      )
+  }
+  else if( x$method == "Fisher's Exact Test for Count Data"){
+
+    rslt <- prepare_output(
+      data.frame(
+        Source = as.character(x$data.name),
+        OR  = render_f(x$estimate),
+     CI  = rndr_CI(as.vector(x$conf.int)),
+        p   = rndr_P(x$p.value),
+        stringsAsFactors = FALSE
+      ), caption = x$method)
+
+  }
+  else{
+    rslt <- x$method
+  }
+
+  rslt
+}
+
+
+
+#' @rdname extract
+#' @export
+#'
+#' @examples
+#'
+#' attach(airquality)
+#' Month <- factor(Month, labels = month.abb[5:9])
+#'
+#' ## These give warnings because of ties :
+#' tbll_extract(pairwise.wilcox.test(Ozone, Month))
+#'
+tbll_extract.pairwise.htest <-  function(x,
+                                         ...) {
+  #pairwise.t.test
+  #?pairwise.wilcox.test
+  prepare_output(
+    data.frame(
+      Source = row.names(x$p.value),
+      render_f(
+        as.data.frame(x$p.value)
+        ,digits = 3 , lead.zero = FALSE
+      )
+    ),
+    caption = paste(x$data.name, x$method )
+  )
+}
+
+
+
+
+#' @rdname extract
+#' @export
+#'
+tbll_extract.likert <- function(...) Tbll_likert.likert(...)
+
+
+
+#' @rdname extract
+#' @export
+#'
+tbll_extract.matchit <- function (x,
+                                  ...) {
+  note <-
+    paste0("method = ", x[["info"]]$method, ", ratio = ", x[["info"]]$ratio)
+  prepare_output(
+    stp25tools::fix_to_df(x$nn[c(2, 4, 5, 6),]),
+    caption = "matchit",
+    note = note
+  )
+}
+
+#' @rdname extract
+#' @param digits in extract.matchit
+#' @export
+#'
+tbll_extract.summary.matchit <- function (x,
+                                          digits = 3,
+                                          ...)  {
+  prepare_output(stp25tools::fix_to_df(round(x$sum.matched[, c(3, 4)], digits)),
+                 caption = "Summary of balance for matched data",
+                 note = "")
+
+}
+
+
+
+#' @rdname extract
+#' @export
+#'
+tbll_extract.principal <- function (x,
+                                    ...) {
+  Tbll_pca(x, ...)
+}
+
+#' @rdname extract
+#' @export
+#'
+#' @examples
+#' require(vcd)
+#' data("Arthritis")
+#' tab <- xtabs(~Improved + Treatment, data = Arthritis)
+#' tbll_extract(assocstats(tab))
+#'
+tbll_extract.assocstats <- function(x,
+                                    ...) {
+  if (length(x) == 2) {
+    x2 <- cor2 <- NULL
+    for (i in names(x)) {
+      if (is.null(x2)) {
+        x2 = extract_assocstats_chisq(x[[i]])
+        cor2 = extract_assocstats_corr(x[[i]])
+        names(cor2)[-1] <-  i
+        names(x2)[-1] <- paste0(i, "_", names(x2)[-1])
+      } else{
+        x22 = extract_assocstats_chisq(x[[i]])
+        cor22 = extract_assocstats_corr(x[[i]])
+        names(cor22)[-1] <-  i
+        names(x22)[-1] <- paste0(i, "_", names(x22)[-1])
+        x2 <- dplyr::bind_cols(x2, x22[-1])
+        cor2 <- dplyr::bind_cols(cor2, cor22[-1])
+      }
+    }
+    list(x2 = x2, cor = cor2)
+  }
+  else{
+    list(x2 = extract_assocstats_chisq(x),
+         cor = extract_assocstats_corr(x))
+  }
+}
+
+extract_assocstats_corr <- function(x,
+                                    ...) {
+  prepare_output(data.frame(
+    Test = c("Phi-Coefficient",
+             "Contingency Coefficient",
+             "Cramer's V"),
+    r = render_f(
+      c(x$phi,
+        x$contingency,
+        x$cramer),
+      3
+    )),
+    caption = "Measures of Association Correlation Test")
+
+}
+
+extract_assocstats_chisq   <- function(x,
+                                       ...) {
+  prepare_output(data.frame(
+    Test = rownames(x$chisq_tests),
+    Chisq  =   render_f(x$chisq_tests[[1]],2),
+    df =   render_f(x$chisq_tests[[2]],0),
+    p.value =   rndr_P(x$chisq_tests[[3]],FALSE)
+  )
+  ,
+  caption = "Pearson chi-Squared")
+}
+
+#' @rdname extract
+#' @export
+#'
+tbll_extract.list <- function(x,
+                              ...) {
+  if (inherits(x[[1]], "assocstats")) {
+    tbll_extract.assocstats(x)
+  }
+  else{
+    cat("\n Keine Methode fuer list()  vorhanden.\n\n")
+    sapply(x, class)
+  }
+}
+
+#' @rdname extract
+#' @param include.ll.ratio,include.pearson in extract.loglm
+#' @export
+#' @examples
+#'
+#' require(MASS)
+#' minn38a <- xtabs(f ~ ., minn38)
+#' fm <- loglm(~ 1 + 2 + 3 + 4, minn38a)  # numerals as names.
+#' #deviance(fm)
+#' #fm
+#' tbll_extract(fm)
+#'
+tbll_extract.loglm <-  function( x,
+                                 include.ll.ratio = TRUE,
+                                 include.pearson = TRUE,
+                                 ...) {
+  ts.array <-
+    rbind(c(x$lrt, x$df,
+            if (x$df > 0L) 1 - pchisq(x$lrt, x$df)
+            else 1),
+          c(x$pearson, x$df,
+            if (x$df > 0L) 1 - pchisq(x$pearson, x$df)
+            else 1))
+
+  rslt <-  data.frame(
+    Test = c("Likelihood Ratio", "Pearson"),
+    Chisq  = render_f(ts.array[, 1], 2),
+    df = render_f(ts.array[, 2], 0),
+    p.value = rndr_P(ts.array[, 3], FALSE)
+  )
+
+  if (include.ll.ratio &
+      include.pearson)
+    prepare_output(rslt, caption = "Log-Linear Model")
+  else if (include.ll.ratio)
+    prepare_output(rslt[1,], caption = "Log-Linear Model")
+  else
+    prepare_output(rslt[2,], caption = "Log-Linear Model")
+
+}
+
+
