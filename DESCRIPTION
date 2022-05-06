@@ -1,0 +1,34 @@
+Package: stp25stat2
+Type: Package
+Title: Functions for statistical computations
+Version: 0.1.2
+Author: person("Wolfgang", "Peter", email = "w.peter@statistik-peter.at",  role = c("aut", "cre"))
+Maintainer: Wolfgang Peter <w.peter@statistik-peter.at>
+Description: Collection of convenient functions for common statistical computations. 
+License:  GPL-3 
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+Date: 2021-12-07
+Imports:
+  stp25tools,
+  stp25settings
+Suggests: 
+ stats, psych, stp25output,
+ knitr, rmarkdown, testthat,
+ purrr, tibble, plyr, lazyeval, tidyr, dplyr,
+ stringr,
+ magrittr,
+ broom, broom.mixed,
+ lmtest, lme4, lmerTest,nlme,
+ pscl, MASS, cowplot,
+ emmeans, effects,
+ survival, pROC,epiR, vcd,
+ Hmisc, DescTools, units,
+ MuMIn,
+ car, caret, coin,
+ insight,
+ rockchalk,
+ performance
+VignetteBuilder: knitr  
+Language: de_DE
