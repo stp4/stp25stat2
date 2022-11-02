@@ -1,15 +1,15 @@
 Package: stp25stat2
 Type: Package
 Title: Functions for statistical computations
-Version: 0.1.2
+Version: 0.1.4
 Author: person("Wolfgang", "Peter", email = "w.peter@statistik-peter.at",  role = c("aut", "cre"))
 Maintainer: Wolfgang Peter <w.peter@statistik-peter.at>
 Description: Collection of convenient functions for common statistical computations. 
-License:  GPL-3 
+License: GPL-3 
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
-Date: 2021-12-07
+RoxygenNote: 7.2.1
+Date: 2022-10-25
 Imports:
   stp25tools,
   stp25settings

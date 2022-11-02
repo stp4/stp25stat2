@@ -261,7 +261,8 @@ spearmanTest2 <- function(x, data) {
 WilkoxTest2 <- function(x, data) {
   suppressWarnings(res <-
                      stats::wilcox.test(x, data,
-                                        alternative =  "two.sided"))
+                                        alternative =  "two.sided",
+                                        exact=FALSE))
 
   res <- rndr_U(res$statistic, res$p.value)
   names(res) <- "Wilcoxon-Test"
@@ -312,11 +313,14 @@ TTest2 <- function(x, data) {
 
 chisqTest2 <- function(x, data) {
   # print(stats::xtabs(x, data, drop.unused.levels = TRUE))
-  res <-
-    suppressWarnings(stats::chisq.test(stats::xtabs(x, data, drop.unused.levels = TRUE),
-                                       correct = FALSE))
+
+  M <- stats::xtabs(x, data, drop.unused.levels = TRUE)
+   # if( length(M)==4 & sum(M == 0 ) == 2) return("n.a.")
+
+  res <- suppressWarnings(stats::chisq.test(M, correct = FALSE))
+
   if (!grepl("Pearson", res$method))
-    return("Error wrong formula!")
+    return("n.a.")
   res <-
     rndr_X(res$statistic, res$parameter, NULL, res$p.value)
   names(res) <- "Pearson Chi-squared"

@@ -134,6 +134,7 @@ render_f.default <- function(x,
                              drop0leading = FALSE,
                              na.strings = "NA",
                              na.symbol = "",
+                             decimal.mark = getOption("OutDec"),
                              ...) {
   x <- as.character(x)
   if (!is.null(na.strings))
@@ -333,36 +334,13 @@ rndr_Stars <- function (x,
 
 
 
-# mean --------------------------------------------------------------------
-
-#' render_mean
-#' Formatiere von Zahlen nach dem APA-Style ( American Psychological Association )
-#'
-#' @name render_mean
-#' @examples
-#'
-#' rndr_median(rnorm(5), rnorm(5), 2)
-#' rndr_median_quant(quantile(rnorm(10)), 2)
-#
-#' p<- c(.1259, .01, .001, .0001)
-#' rndr_P(p)
-#'
-#'
-#'
-#' rndr_percent(c(.2568, 99, 0.02568), c(4, 569, 25), digits = 1)
-#' rndr_percent(2.3, 5, digits = 1)
-#' rndr_percent(2.3, 5, digits = 1, style = 2)
-#' rndr_percent(2.3, 5, digits = 1, style = 3)
-#' rndr_percent(2.3, 5, digits = 1, style = 4)
-#'
-NULL
 
 
 
 
 
 
-
+# percent --------------------------------------------------------------------
 
 #' @rdname render_f
 #' @examples
@@ -386,7 +364,15 @@ rndr_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
                          symbol.na = "n.a.",
                          style = get_opt("prozent", "style"),
                          null_percent_sign = get_opt("prozent", "null_percent_sign"),
-                         small_values = x < 1 / (10 ^ digits)) {
+                         small_values = x < 1 / (10 ^ digits)
+                        ) {
+
+  res <- NULL
+  n_total <-  sum(n, na.rm = TRUE)
+  # cat("\nrndr_percent\n")
+  #  print(x)
+  #   print(n)
+  # print(n_total)
   n <-  render_f(
     n,
     digits = 0,
@@ -401,7 +387,7 @@ rndr_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
     format = "f",
     na.strings = NULL
   )
-  res <- NULL
+
 
 
   paste_prc <- function() {
@@ -414,11 +400,11 @@ rndr_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
       else  if (style == 2)
         res <- paste0(n, " (", prc, symbol.trailing, ")")
       else if (style == 3)
-        res <- paste0(prc, symbol.trailing)
+        res <- paste0(prc,  symbol.trailing)
       else if (style == 4)
         res <- n
       else
-        res <- paste0(n, prc, symbol.trailing)
+        res <- paste0(n, "/", n_total)
     }
     else{
       res <- paste0(prc, symbol.trailing)
@@ -437,7 +423,7 @@ rndr_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
   if (is.vector(x)) {
     res <- paste_prc()
   }
-  else if (is.matrix(x) & !is.table(x) &  !inherits(x, "ftable"))  {
+  else if (is.matrix(x) & !is.table(x) & !inherits(x, "ftable"))  {
     res <-   matrix(
       paste_prc(),
       ncol = ncol(x),
@@ -542,186 +528,43 @@ fix_tbl_to_df <- function(res,
   res
 }
 
-# fix_tbl_to_df <- function(res, x) {
-#
-#
-#   if (inherits(x, "ftable"))
-#   {
-#     if (length(attr(x, "row.vars")) == 1) {
-#       nms <- names(attr(x, "row.vars"))
-#       dms <- list(attr(x, "row.vars")[[1]],
-#                   paste(names(attr(x, "col.vars")),
-#                         attr(x, "col.vars")[[1]], sep = "_"))
-#     }
-#     else{
-#       nms <- paste(names(attr(x, "row.vars")), collapse = "_")
-#       dms <- list(paste(rep(
-#         attr(x, "row.vars")[[1]], each = length(attr(x, "row.vars")[[2]])
-#       ),
-#       attr(x, "row.vars")[[2]], sep = "/")
-#       ,
-#       paste(names(attr(x, "col.vars")),
-#             attr(x, "col.vars")[[1]], sep = "_"))
-#     }
-#   }
-#   else
-#   {
-#     nms <- names(dimnames(x))[1]
-#     dms <-  list(dimnames(x)[[1]] ,
-#                  paste(names(dimnames(x))[2],
-#                        dimnames(x)[[2]], sep = "_"))
-#   }
-#
-#   res <-
-#     matrix(
-#       res,
-#       nrow = dim(x)[1],
-#       ncol = dim(x)[2],
-#       byrow = FALSE,
-#       dimnames = dms
-#     )
-#
-#
-#   res <- as.data.frame(res)
-#   res <- cbind(Source = row.names(res),  res)
-#
-#
-#   names(res)[1] <- nms[1]
-#   res
-# }
 
 
-# rndr_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
-#                          n = NULL,
-#                          digits = get_opt("prozent", "digits") ,
-#                          symbol.trailing = get_opt("prozent", "percentage_str"),
-#                          symbol.na = "n.a.",
-#                          style = get_opt("prozent", "style"),
-#                          null_percent_sign = get_opt("prozent", "null_percent_sign"),
-#                          small_values = x < 1 / (10 ^ digits)) {
-#   n <-
-#     render_f(n, digits = 0,
-#     drop0leading  = FALSE,
-#     format = "f",
-#     na.strings = NULL
-#   )
-#   res <- NULL
-#
-#
-#
-#   paste_prc <- function() {
-#     if (any(small_values))
-#       prc[which(small_values)] <- paste0("<", 1 / (10 ^ digits))
-#
-#     if (!is.null(n)) {
-#       if (style == 1)
-#         res <-  paste0(prc, symbol.trailing, " (", n, ")")
-#       else  if (style == 2)
-#         res <- paste0(n, " (", prc, symbol.trailing, ")")
-#       else if (style == 3)
-#         res <- paste0(prc, symbol.trailing)
-#       else if (style == 4)
-#         res <- n
-#       else
-#         res <- paste0(n, prc, symbol.trailing)
-#     }
-#     else{
-#       res <- paste0(prc, symbol.trailing)
-#     }
-#
-#     if (!is.null(null_percent_sign)) {
-#       res[which(x == 0)] <- null_percent_sign
-#     }
-#
-#     if (any(is.na(x)))
-#       res[which(is.na(x))]  <-   symbol.na
-#
-#     res
-#   }
-#
-#   if (is.vector(x)) {
-#     prc <-
-#       render_f(x, digits = digits,
-#                drop0leading  = FALSE, format = "f", na.strings = NULL)
-#     res <- paste_prc()
-#   }
-#   else if (is.matrix(x) & !is.table(x) & !inherits(x, "ftable"))  {
-#     prc <-
-#       render_f(x, digits = digits,
-#                drop0leading  = FALSE, format = "f", na.strings = NULL)
-#     res <-   matrix(
-#       paste_prc(),
-#       ncol = ncol(x),
-#       nrow = nrow(x),
-#       dimnames = dimnames(x)
-#     )
-#   }
-#   else if (is.data.frame(x)) {
-#     prc <-
-#       render_f(x, digits = digits,
-#                drop0leading  = FALSE, format = "f", na.strings = NULL)
-#     n <- as.matrix(n)
-#     prc <- as.matrix(prc)
-#     res <-   matrix(
-#       paste_prc(),
-#       ncol = ncol(x),
-#       nrow = nrow(x),
-#       dimnames = dimnames(as.matrix(x))
-#     )
-#   } else{
-#     prc <- render_f(
-#       as.vector(x),
-#       digits = digits,
-#       drop0leading  = FALSE,
-#       format = "f",
-#       na.strings = NULL
-#     )
-#     if (length(dim(x)) == 2) {
-#       res <- fix_tbl_to_df(paste_prc(), x)
-#     }
-#     else{
-#       res <- matrix(paste_prc(),
-#                     dimnames = dimnames(as.matrix(x)))
-#     }
-#   }
-#   res
-# }
 
-#
-# fix_tbl_to_df <- function(res, x) {
-#   if (inherits(x, "ftable"))
-#   {
-#     if (length(attr(x, "row.vars")) == 1) {
-#       nms <- names(attr(x, "row.vars"))
-#       dms <- list(attr(x, "row.vars")[[1]],
-#                   paste(names(attr(x, "col.vars")),
-#                         attr(x, "col.vars")[[1]], sep = "_"))
-#     }
-#     else{
-#       nms <- paste(names(attr(x, "row.vars")), collapse = "_")
-#       dms <- list(paste(rep(
-#         attr(x, "row.vars")[[1]], each = length(attr(x, "row.vars")[[2]])
-#       ),
-#       attr(x, "row.vars")[[2]], sep = "/")
-#       ,
-#       paste(names(attr(x, "col.vars")),
-#             attr(x, "col.vars")[[1]], sep = "_"))
-#     }
-#   }
-#   else
-#   {
-#     nms <- names(dimnames(x))[1]
-#     dms <-  list(dimnames(x)[[1]] ,
-#                  paste(names(dimnames(x))[2],
-#                        dimnames(x)[[2]], sep = "_"))
-#   }
-# }
 
-rndr_median <- function(m,
+
+
+# mean --------------------------------------------------------------------
+
+#' render_mean
+#' Formatiere von Zahlen nach dem APA-Style ( American Psychological Association )
+#'
+#' @name render_mean
+#' @examples
+#'
+#' rndr_median(rnorm(5), rnorm(5), 2)
+#' rndr_median_quant(quantile(rnorm(10)), 2)
+#
+#' p<- c(.1259, .01, .001, .0001)
+#' rndr_P(p)
+#'
+#'
+#'
+#' rndr_percent(c(.2568, 99, 0.02568), c(4, 569, 25), digits = 1)
+#' rndr_percent(2.3, 5, digits = 1)
+#' rndr_percent(2.3, 5, digits = 1, style = 2)
+#' rndr_percent(2.3, 5, digits = 1, style = 3)
+#' rndr_percent(2.3, 5, digits = 1, style = 4)
+#'
+NULL
+
+rndr_median_iqr <- function(m,
                         iqr,
-                        digits = get_opt("mittelwert", "digits"),
-                        sep =   get_opt("sep_element"),
+                        digits = get_opt("median", "digits"),
+                        sep =    get_opt("median", "seperator"),
+                        style =  get_opt("median", "style"),
                         ...) {
+
   paste0(render_f(m, digits, ...),
          " (IQR ",
          render_f(iqr, digits, ...),
@@ -731,7 +574,9 @@ rndr_median <- function(m,
 
 
 rndr_median_quant <- function(x,
-                              digits = get_opt("mittelwert", "digits"),
+                              digits = get_opt("median", "digits"),
+                              sep =    get_opt("median", "seperator"),
+                              style =  get_opt("median", "style"),
                               ...) {
   paste0(
     render_f(x[3], digits, ...),
@@ -744,18 +589,18 @@ rndr_median_quant <- function(x,
 }
 
 
-rndr_median_range <- function (m,
+rndr_median_iqr_range <- function (m,
                                iqr,
                                mn,
                                mx,
-                               digits = get_opt("mittelwert", "digits"),
-                               line_break = get_opt("mittelwert", "seperator"),
+                               digits = get_opt("median", "digits"),
+                               sep = get_opt("median", "seperator"),
                                ...) {
   paste0(
     render_f(m, digits, ...),
     " (IQR ",
     render_f(iqr, digits, ...),
-    line_break,
+    sep,
     "range ",
     render_f(mn, digits, ...),
     " to ",
@@ -765,13 +610,42 @@ rndr_median_range <- function (m,
 
 }
 
+rndr_median_range <-
+function(x,
+         digits = get_opt("median", "digits"),
+         sep =    get_opt("median", "seperator"),
+         style =  get_opt("median", "style"),
+         ...) {
+  paste0(
+    render_f(x[3], digits, ...),
+    " (",
+    render_f(x[1], digits, ...),
+    sep,
+    render_f(x[5], digits, ...),
+    ")"
+  )
+}
+
+
+
 
 
 rndr_mean <- function(m,
                       s,
-                      digits = get_opt("mittelwert" , "digits"),
+                      digits = get_opt("mean", "digits"),
+                      style = get_opt("mean", "style"),
                       ...) {
-  paste0(render_f(m, digits, ...), " (", render_f(s, digits, ...), ")")
+
+  # if (is.null(style))
+  #   style <- get_opt("mittelwert", "mean.style")
+
+  if(style == 1 )
+  paste0(render_f(m, digits, ...),
+         " (", render_f(s, digits, ...), ")")
+  else
+    paste0(render_f(m, digits, ...),
+           get_opt("mean", "plusmin_str"),
+           render_f(s, digits, ...))
 
 }
 
@@ -779,9 +653,13 @@ rndr_mean_range <- function(m,
                             s,
                             mn,
                             mx,
-                            digits = get_opt("mittelwert", "digits"),
-                            line_break = get_opt("mittelwert", "seperator"),
+                            digits = get_opt("mean", "digits"),
+                            line_break = get_opt("mean", "seperator"),
+                            style = get_opt("mean", "style"),
                             ...) {
+# noch nicht implementiert
+#  if (is.null(style)) style <- get_opt("mittelwert", "mean.style")
+
   paste0(
     render_f(m, digits, ...),
     " (SD ",
@@ -943,159 +821,259 @@ rndr_Effect_Size <- function(x,
 
 # Tests -------------------------------------------------------------------
 
+
 rndr_Test_Statistic <-
   function (x,
-            digits = get_opt("Fstat", "digits" )[1],
+            digits = get_opt("Fstat", "digits") ,
             drop0leading = !get_opt("Fstat", "lead.zero"),
-            ...){
+            ...) {
     render_f(x,
-            digits = digits,
-            drop0leading  = drop0leading,
-            ...)
+             digits = digits,
+             drop0leading  = drop0leading,
+             ...)
   }
 
 rndr_df <- function(df1, df2 = NULL) {
-  sub<- sub_tiefgestellt()
+  sub <- sub_tiefgestellt()
   if (is.null(df2))
-    paste0(sub[1],"(", render_f(df1, 0), ")", sub[2])
+    paste0(sub[1], "(", render_f(df1, 0), ")", sub[2])
   else
-    paste0(sub[1],"(", render_f(df1, 0), ", ", render_f(df2, 0), ")", sub[2])
+    paste0(sub[1], "(", render_f(df1, 0), ", ", render_f(df2, 0), ")", sub[2])
 }
 
 
-
-rndr_F <- function(F_val, df1, df2, p = NULL,sep = get_opt("sep_element")) {
-  F_val <-
-    paste0("F", rndr_df(df1, df2), "=", rndr_Test_Statistic(F_val))
-  if (is.null(p))
-    F_val
-  else
-    paste0(F_val, sep, rndr_P(p))
-}
-
-
-
-rndr_T <- function(F_val, df1, p = NULL, sep = get_opt("sep_element")) {
-  F_val <- paste0("T", rndr_df(df1), "=", rndr_Test_Statistic(F_val))
-  if (is.null(p))
-    F_val
-  else
-    paste0(F_val, sep, rndr_P(p))
-}
-
-
-
-rndr_H <- function(F_val, df1, p = NULL, sep = get_opt("sep_element")) {
-  F_val <- paste0("H", rndr_df(df1), "=", rndr_Test_Statistic(F_val))
-  if (is.null(p))
-    F_val
-  else
-    paste0(F_val, sep, rndr_P(p))
-}
-
-
-
-rndr_BP <- function(F_val, df1, p = NULL, sep = get_opt("sep_element")) {
-  F_val <- paste0("BP", rndr_df(df1), "=", rndr_Test_Statistic(F_val))
-  if (is.null(p))
-    F_val
-  else
-    paste0(F_val, sep, rndr_P(p))
-}
-
-
-
-rndr_DW <- function(F_val, df1, p = NULL, sep = get_opt("sep_element")) {
-  F_val <- paste0("DW",
-                  "=", rndr_Test_Statistic(F_val))
-  if (is.null(p))
-    F_val
-  else
-    paste0(F_val, sep, rndr_P(p))
-}
-
-
-
-rndr_W <- function(F_val, p = NULL, sep = get_opt("sep_element")) {
-  F_val <- paste0("W=", rndr_Test_Statistic(F_val))
-  if (is.null(p))
-    F_val
-  else
-    paste0(F_val, sep, rndr_P(p))
-}
-
-
-
-rndr_U <- function(F_val, p = NULL, sep = get_opt("sep_element")) {
-  F_val <- paste0("U=", rndr_Test_Statistic(F_val))
-  if (is.null(p))
-    F_val
-  else
-    paste0(F_val, sep, rndr_P(p))
-}
-
-
-
-rndr_shapiro <- function(F_val, p = NULL, sep = get_opt("sep_element")) {
-  F_val <- paste0("W=", rndr_Test_Statistic(F_val))
-  if (is.null(p))
-    F_val
-  else
-    paste0(F_val, sep, rndr_P(p))
-}
-
-
-
-rndr_lm <- function(F_val, df1, df2, p, r2, ar2, sep = get_opt("sep_element")) {
-  paste0(
-    "R2=",
-    rndr_Effect_Size(r2),
-    sep,
-    "ad.R2=",
-    rndr_Effect_Size(ar2),
-    sep,
-    rndr_F(F_val, df1, df2, p)
-  )
-}
-
-
-
-rndr_X <- function(x, df1, df2 = NULL, p = NULL, sep = get_opt("sep_element")) {
-  if (is.null(df2)) {
-    if (!is.null(df1))
-      x <-
-        paste0(symbol_chi2(), rndr_df(df1), "=", rndr_Test_Statistic(x))
-    else
-      x <- paste0(symbol_chi2(), "=", rndr_Test_Statistic(x))
-  } else {
-    x <- paste0(symbol_chi2(), rndr_df(df1), "=", rndr_Test_Statistic(x))
+rndr_F <-
+  function(F_val,
+           df1,
+           df2,
+           p = NULL,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic) {
+      F_val <-
+        paste0("F", rndr_df(df1, df2), "=", rndr_Test_Statistic(F_val))
+      if (is.null(p))
+        F_val
+      else
+        paste0(F_val, sep, rndr_P(p))
+    }
+    else{
+      rndr_P(p, FALSE)
+    }
   }
-  if (!is.null(p))
-    paste0(x, sep, rndr_P(p))
-  else
-    x
-}
 
+
+rndr_T <-
+  function(F_val,
+           df1,
+           p = NULL,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic) {
+      F_val <- paste0("T", rndr_df(df1), "=", rndr_Test_Statistic(F_val))
+      if (is.null(p))
+        F_val
+      else
+        paste0(F_val, sep, rndr_P(p))
+    }
+    else{
+      rndr_P(p, FALSE)
+    }
+  }
+
+
+rndr_H <-
+  function(F_val,
+           df1,
+           p = NULL,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic) {
+      F_val <- paste0("H", rndr_df(df1), "=", rndr_Test_Statistic(F_val))
+      if (is.null(p))
+        F_val
+      else
+        paste0(F_val, sep, rndr_P(p))
+    }
+    else{
+      rndr_P(p, FALSE)
+    }
+  }
+
+
+rndr_BP <-
+  function(F_val,
+           df1,
+           p = NULL,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic) {
+      F_val <- paste0("BP", rndr_df(df1), "=", rndr_Test_Statistic(F_val))
+      if (is.null(p))
+        F_val
+      else
+        paste0(F_val, sep, rndr_P(p))
+    }
+    else{
+      rndr_P(p, FALSE)
+    }
+  }
+
+
+rndr_DW <-
+  function(F_val,
+           df1,
+           p = NULL,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic) {
+      F_val <- paste0("DW",
+                      "=", rndr_Test_Statistic(F_val))
+      if (is.null(p))
+        F_val
+      else
+        paste0(F_val, sep, rndr_P(p))
+    }
+    else{
+      rndr_P(p, FALSE)
+    }
+  }
+
+
+rndr_W <-
+  function(F_val,
+           p = NULL,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic) {
+      F_val <- paste0("W=", rndr_Test_Statistic(F_val))
+      if (is.null(p))
+        F_val
+      else
+        paste0(F_val, sep, rndr_P(p))
+    }
+    else{
+      rndr_P(p, FALSE)
+    }
+  }
+
+
+rndr_U <-
+  function(F_val,
+           p = NULL,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic) {
+      F_val <- paste0("U=", rndr_Test_Statistic(F_val))
+      if (is.null(p))
+        F_val
+      else
+        paste0(F_val, sep, rndr_P(p))
+    }
+    else{
+      rndr_P(p, FALSE)
+    }
+  }
+
+
+rndr_shapiro <-
+  function(F_val,
+           p = NULL,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic) {
+      F_val <- paste0("W=", rndr_Test_Statistic(F_val))
+      if (is.null(p))
+        F_val
+      else
+        paste0(F_val, sep, rndr_P(p))
+    }
+    else{
+      rndr_P(p, FALSE)
+    }
+  }
+
+
+rndr_lm <-
+  function(F_val,
+           df1,
+           df2,
+           p,
+           r2,
+           ar2,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic)
+      paste0(
+        "R2=",
+        rndr_Effect_Size(r2),
+        sep,
+        "ad.R2=",
+        rndr_Effect_Size(ar2),
+        sep,
+        rndr_F(F_val, df1, df2, p)
+      )
+    else
+      rndr_P(p, FALSE)
+
+  }
+
+
+rndr_X <-
+  function(x,
+           df1,
+           df2 = NULL,
+           p = NULL,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic) {
+      if (is.null(df2)) {
+        if (!is.null(df1))
+          x <-
+            paste0(symbol_chi2(),
+                   rndr_df(df1),
+                   "=",
+                   rndr_Test_Statistic(x))
+        else
+          x <- paste0(symbol_chi2(), "=", rndr_Test_Statistic(x))
+      } else {
+        x <-
+          paste0(symbol_chi2(),
+                 rndr_df(df1),
+                 "=",
+                 rndr_Test_Statistic(x))
+      }
+      if (!is.null(p))
+        paste0(x, sep, rndr_P(p))
+      else
+        x
+    }
+    else{
+      rndr_P(p, FALSE)
+    }
+  }
 
 
 rndr_Chisq <- function(x, df, p)
   rndr_X(x, df, NULL, p)
 
 
-
-rndr_Chisq_stars <- function(x, p) {
-  paste0(rndr_Test_Statistic(x) , rndr_Stars(p))
-}
-
-
-rndr_fischer <- function(x, p, sep = get_opt("sep_element")) {
-  paste0("OR=", rndr_Test_Statistic(x), sep, rndr_P(p))
-
-}
+rndr_Chisq_stars <-
+  function(x, p) {
+    paste0(rndr_Test_Statistic(x) , rndr_Stars(p))
+  }
 
 
-
-
+rndr_fischer <-
+  function(x,
+           p,
+           sep = get_opt("sep_element"),
+           include.test.statistic = get_opt("Fstat", "include.statistic")) {
+    if (include.test.statistic)
+      paste0("OR=", rndr_Test_Statistic(x), sep, rndr_P(p))
+    else
+      rndr_P(p, FALSE)
+  }
 
 
 

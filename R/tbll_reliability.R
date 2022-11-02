@@ -27,7 +27,7 @@
 #' @param include.label Labels
 #' @param include.item_statistic Item Statistic
 #' @param include.scale_statistic  Scale Statistic
-#' @param revcoded numeric oder logikal TRUE entspricht check.keys = TRUE,
+#' @param revcoded,check.keys,keys numeric oder logikal TRUE entspricht check.keys = TRUE
 #' @param digits Digits
 #'
 #' @return list ore data.frame
@@ -61,16 +61,28 @@
 #' m2 <-  Tbll_reliability(dat, x, y, z, w)
 #'
 #' Tbll_Alpha(m1, m2)
-#'
-Tbll_reliability <-
+
+
+Tbll_reliability <- function(...) {
+  UseMethod("Tbll_reliability")
+}
+
+#' @rdname Tbll_reliability
+#' @export
+Tbll_reliability.default <-
   function(...,
            include.label = TRUE,
            include.item_statistics = TRUE,
            include.scale_statistics = TRUE,
+          # include.scale.value = include.scale_statistics,
            include.cronbachs.alpha = TRUE,
+
            include.inter.item.correlation = FALSE,
            revcoded = FALSE,
+           check.keys = NULL,
+           keys = NULL,
            digits = 2) {
+
     X <- stp25tools::prepare_data2(...)
     n <- length(X$measure.vars)
     if (!include.label)
@@ -80,7 +92,11 @@ Tbll_reliability <-
       X$data[X$measure.vars] <- stp25tools:::dapply1(X$data[X$measure.vars])
 
 
-      rslt <- item_statistik(X$data[X$measure.vars] , revcoded = revcoded)
+      rslt <- item_statistik(X$data[X$measure.vars],
+                             revcoded = revcoded,
+                             check.keys = check.keys,
+                             keys = keys
+                             )
       rslt <- skala_statistik(rslt)
       rslt$labels <-  X$row_name
 
@@ -110,6 +126,7 @@ Tbll_reliability <-
 
       if (include.cronbachs.alpha)
         aplha_statistik$Alpha <- render_f(rslt$Alpha, 2)
+
       if (include.inter.item.correlation)
         aplha_statistik$inter.item.correlation <-
         render_f(performance::item_intercor(rslt$data), 2)
@@ -121,7 +138,13 @@ Tbll_reliability <-
         prepare_output(aplha_statistik, caption = "Item-Mittelwerte", N = n)
 
       if (include.item_statistics & include.scale_statistics)
-        return(list(item_statistics = item_statistics, scale_statistics = scale_statistics))
+        return(list(
+          item_statistics = item_statistics,
+          scale_statistics = scale_statistics,
+          index= rslt$index,
+          keys = rslt$keys
+
+          ))
       else if (include.item_statistics)
         return(item_statistics)
       else
@@ -148,7 +171,58 @@ Tbll_reliability <-
     }
   }
 
+#' @rdname Tbll_reliability
+#' @export
+Tbll_reliability.psych <-
+  function(x,
+           # include.label = TRUE,
+           # include.item_statistics = TRUE,
+           # include.scale_statistics = TRUE,
+           # include.scale.value = include.scale_statistics,
+           # include.cronbachs.alpha = TRUE,
+           # include.inter.item.correlation = FALSE,
+           #revcoded = FALSE,
+           digits = 2) {
+    if (!inherits(x, "alpha"))
+      return(str(x))
 
+
+    n = max(x$item.stats$n)
+
+    item_statistics <-
+      data.frame(
+        Items = row.names(x$item.stats),
+        n = x$item.stats$n,
+        M = render_f(x$item.stats$mean, 2),
+        SD = render_f(x$item.stats$sd, 2),
+        Alpha.if.Item.Deleted = render_f(x$item.stats$r.drop, 2)
+      )
+
+
+    scale_statistics <-
+      data.frame(
+        Items = length(x$keys),
+        n = n,
+        M = render_f(x$total$mean, 2),
+        SD = render_f(x$total$sd, 2),
+        Alpha = render_f(x$total$raw_alpha, 2)
+      )
+
+    scale_statistics  <-
+      prepare_output(scale_statistics, caption = "Item-Mittelwerte", N = n)
+
+    item_statistics <-
+      prepare_output(item_statistics, caption = "Itemstatistiken", N = n)
+
+    return(
+      list(
+        item_statistics = item_statistics,
+        scale_statistics = scale_statistics,
+        index =  x$scores,
+        keys = x$keys
+      )
+    )
+  }
 
 #' @rdname Tbll_reliability
 #' @export
@@ -172,36 +246,63 @@ Tbll_Alpha <- function(...,
 }
 
 
+
+
+#'  es werden immer die Werte mit  check.keys = FALSE berechnet
+#'  die Umcodierung wird dabei mit dappl1 erstellt.
+#'
 #' @noRd
 item_statistik <- function(data,
-                           revcoded = FALSE) {
+                           revcoded = FALSE,
+                           check.keys = NULL,
+                           keys = NULL) {
 
+
+  if (all(abs(revcoded) == 1)) {
+    keys <-  revcoded
+    revcoded <- NULL
+  }
 
   if (is.numeric(revcoded)) {
     min.level <- min(data, na.rm = TRUE)
     max.level <- max(data, na.rm = TRUE)
 
     data[revcoded] <-
-      stp25tools:::dapply1(data[revcoded], function(x)
-        max.level + min.level - x)
-    keys <-  ifelse(1:ncol(data) %in% revcoded,-1, 1)
+      stp25tools:::dapply1(data[revcoded],
+                           function(x) max.level + min.level - x)
+
+    keys <-  ifelse(1:ncol(data) %in% revcoded, -1, 1)
     psych <- psych::alpha(data, check.keys = FALSE)
   }
-  else if (isTRUE(revcoded)) {
+  else if (isTRUE(revcoded) | isTRUE(check.keys)) {
     alp_check <- psych::alpha(data, check.keys = TRUE)
     keys <- alp_check$keys
+
     if (any(alp_check$keys == -1)) {
       min.level <- min(data, na.rm = TRUE)
       max.level <- max(data, na.rm = TRUE)
 
       revcoded <-  which(keys == -1)
+
       data[revcoded] <-
         stp25tools:::dapply1(data[revcoded], function(x)
           max.level + min.level - x)
       psych <- psych::alpha(data, check.keys = FALSE)
+
     } else{
       psych <- alp_check
     }
+  }
+  if (is.numeric(keys)) {
+    min.level <- min(data, na.rm = TRUE)
+    max.level <- max(data, na.rm = TRUE)
+    revcoded <- which(keys == -1)
+    data[revcoded] <-
+      stp25tools:::dapply1(data[revcoded],
+                           function(x) max.level + min.level - x)
+
+  #  keys <-  ifelse(1:ncol(data) %in% revcoded, -1, 1)
+    psych <- psych::alpha(data, check.keys = FALSE)
   }
   else{
     keys <- rep(1, ncol(data))
@@ -232,7 +333,7 @@ item_statistik <- function(data,
 }
 
 
-# Die Funktion Tbll_desc_item() berechnet das gleiche nur mit der Summary() Funktion
+#' Die Funktion Tbll_desc_item() berechnet das gleiche nur mit der Summary() Funktion
 #' @noRd
 skala_statistik <- function(data) {
   data$index <- apply(data$data,  1,

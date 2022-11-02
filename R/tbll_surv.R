@@ -507,7 +507,9 @@ extract_summary_survfit <- function(x,
 
   colnames(rslt) <- vars_names
   rslt <-
-    fix_format(rslt, exclude = 1:3, digits = digits)
+    fix_format(rslt,
+              # exclude = 1:3,
+               digits = digits)
   if ("strata" %in% names(x))
     rslt <- cbind(Source = x$strata, rslt)
 

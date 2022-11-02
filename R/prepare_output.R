@@ -48,10 +48,10 @@ prepare_output <- function(x,
   attr(x, "n.rgroup") <- n.rgroup
  # attr(x, "col_header") <- NULL
 
-  x <-  tibble::as_tibble(x, .name_repair = "unique")
+  x <-  tibble::as_tibble(x, .name_repair = "unique", rownames=NA)
 
-  if(!is.null(get_lang()))
-    names(x) <- get_lang(names(x))
+#  if(!is.null(get_lang()))
+#    names(x) <- get_lang(names(x))
 
   x
 }

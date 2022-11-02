@@ -84,6 +84,107 @@ mtcars %>% Tbll_desc_long(
   include.range = TRUE,  include.n = TRUE
 ) %>% kable(caption ="summary statistics" )
 ```
+ 
+ 
+```{r, include=FALSE}
+require(stp25stat2)
+require(stp25tools)
+n<- 100
+set.seed(1)
+DF <- data.frame(
+  sex= gl(2, n/3, labels = c("male", "female"))[sample.int(n)],
+  group = gl(2, n/3, labels = c("Control", "Treat"))[sample.int(n)],
+  age= runif(n, min = 18, max = 73),
+  smoker =  rbinom(n, size=1, prob=.25)==1,
+  alc = gl(3, n/3, labels = c("non", "Occasionally", "Abuse"))[sample.int(n)],
+  diabet=  rbinom(n, size=1, prob=.5)==1,
+  metabolic = rbinom(n, size=1, prob=.3)==1,
+  cardo=  rbinom(n, size=1, prob=.1)==1,
+  infect= factor( rbinom(n, size=1, prob=.77), 0:1, c("yes", "no")),
+  bili=  rnorm(n, 0.83, 0.40)
+) %>% 
+  na.omit %>% 
+  Label(
+  smoker = "Tobacco Smoker",
+  group = "Group",
+  sex = "Sex",
+  alc = "Alcohol Consumption",
+  age="Age",
+  
+ diabet= "Diabetes" ,
+ cardo = "Cardiovascular Disease" ,
+ metabolic =  "Chronic Metabolic Disease ",
+ infect = "Chronic Infections" ,
+  bili = "Serum Bilirubin (mg/dl)"
+    
+)
+
+      
+```
+
+
+```{r}
+set_opt(
+  caption=TRUE,
+  median = list(digits = 0, style=1),
+  prozent = list(style=2, 
+                 digits=1,
+                 percentage_str="%",
+                 
+                 null_percent_sign =  ' . ',
+                 
+                 include_level_multi = TRUE)
+) 
+```
+
+
+
+ 
+```{r, results='asis'}
+DF %>%
+  Tbll_desc(
+    sex[ratio],
+    group[freq],
+    age[median],
+    alc, smoker,
+    "Clinical/Pretreatment",
+    diabet,
+    cardo,
+    metabolic,
+    infect[multi],
+    bili[median,3],
+    
+    by = ~ group,
+    include.total = TRUE,
+    
+    include.custom = stp25stat2:::effect_size
+    # include.custom =  function(x ,
+    #                            by, ...) {
+    #   x <- scale(as.numeric(x))
+    #   round(diff(sapply(split(x, by), mean, na.rm = TRUE)), 2)
+    # },
+    # 
+    # include.value = c(group = "OR = .0256", sex = "swx = 26")
+  ) %>% stp25output2::Output()
+```
+ 
+ 
+```{r}
+Info <- data.frame( var_name=c("age", "sex"), y=1:2)
+rownames(Info) <- c("age", "sex" )
+DF %>%
+  Tbll_desc(
+    sex[ratio],
+    group[freq],
+    "Zwichen Ueberschrift",
+    age[median],
+    by = ~ group,
+    include.total = TRUE,
+    include.value = Info,
+    include.nr = TRUE
+  ) %>% kable()
+```
+ 
      
      
 ### Correlation analysis

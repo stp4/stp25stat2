@@ -15,7 +15,7 @@ fix_and_format<- function(x, caption, digits=2, ...) {
 #' @param digits nur fuer die means
 #' @param ... nicht benztzt
 #'
-#' @return
+#' @return data.frame
 #' @export
 #'
 #' @examples

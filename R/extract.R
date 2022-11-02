@@ -17,12 +17,23 @@ tbll_extract <- function(...) {
 #' @export
 #'
 tbll_extract.default <- function(x, ...) {
-  cat("\n Keine Methode feur",
+  cat("\n Es ist keine Methode feur die Class",
       class(x)[1],
-      "ist in tbll_extract() implementiert\n")
+      " in tbll_extract() implementiert.\nIch versuche daher mal das mit broom zu extrahieren.\n")
   prepare_output(fix_format(broom::tidy(x)))
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 #' @param x Objekt
 #' @rdname extract
@@ -112,6 +123,27 @@ tbll_extract.aovlist <- function(x, ...) {
   prepare_output(rslt[c((lx + 1):lr, 1:lx),],
                  caption = "Analysis of Variance (multiple error strata)")
 }
+
+
+
+#' @rdname Tbll
+#' @export
+#'
+tbll_extract.summary.aov <- function(x,
+                                     ...) {
+  rslt <- fix_format(broom::tidy(x[[1]]))
+  prepare_output(rslt,
+                 caption = "ANOVA",
+                 note = paste("contrasts: ",
+                              paste(options()$contrasts,
+                                    collapse = ", ")))
+}
+
+
+
+
+
+
 
 #' @rdname extract
 #' @param include.se,include.df in extract.step
@@ -321,6 +353,156 @@ tbll_extract.principal <- function (x,
   Tbll_pca(x, ...)
 }
 
+
+
+#' @param x Objekt
+#' @rdname extract
+#' @export
+tbll_extract.confusionMatrix <-
+  function(x,
+           digits = 2,
+           Positive_Class= x$positiv,
+           ...) {
+
+      prepare_output(
+        data.frame(
+          Statistic =
+            c(
+              "Accuracy",
+              "95% CI",
+              "No Information Rate",
+              "P-Value [Acc > NIR]",
+              "Kappa",
+              "Mcnemar's Test P-Value",
+              "Sensitivity",
+              "Specificity",
+              "Pos Pred Value" ,
+              "Neg Pred Value",
+              "Precision",
+              "Recall",
+              "F1",
+              "Prevalence",
+              "Detection Rate",
+              "Detection Prevalence" ,
+              "Balanced Accuracy",
+              "Positive Class"
+            ),
+          estimate =
+            c(
+              render_f(x$overall["Accuracy"], digits),
+              rndr_CI(x$overall[c("AccuracyLower", "AccuracyUpper")]),
+              render_f(x$overall["AccuracyNull"], digits),
+              rndr_P(x$overall["AccuracyPValue"]),
+              render_f(x$overall["Kappa"], digits),
+              rndr_P(x$overall["McnemarPValue"]),
+              render_f(x$byClass, digits),
+              Positive_Class
+          ),
+          stringsAsFactors = FALSE
+        ),
+        caption="Associated Statistics"
+      )
+
+
+  }
+
+
+#' @param x Objekt
+#' @rdname extract
+#' @export
+#'
+#' @examples
+#'
+#' # Sensitivität: richtig positive Rate eines Tests
+#' #Spezifität: richtig-negative Rate eines Tests
+#'
+#'   tab<-matrix(c(94,40,39,40), ncol=2, byrow = TRUE)
+#'     tbll_extract( epiR::epi.tests(tab) )
+#'
+tbll_extract.epi.tests <-
+  function (x,
+            type =
+              c(
+              #  ap = "Apparent prevalence",
+              #  tp = "True prevalence",
+                se = "Sensitivity",
+                sp = "Specificity",
+                pv.pos = "Positive predictive value",
+                pv.neg = "Negative predictive value",
+             #   lr.pos = "Positive likelihood ratio",
+             #   lr.neg = "Negative likelihood ratio",
+                p.tpdn = "False T+ proportion for true D-",
+                p.tndp = "False T- proportion for true D+",
+                p.dntp = "False T+ proportion for T+",
+                p.dptn = "False T- proportion for T-",
+                diag.ac = "Correctly classified proportion"
+
+              #  p.rout ="proportion of subjects with the outcome ruled out",
+              #  p.rin ="proportion of subjects with the outcome ruled in",
+             #   youden = "Youden's index",
+             #   nndx ="number needed to diagnose",
+             #   diag.or="Diagnostic odds ratio"
+             ),
+            digits=2){
+    # print(x$tab, ...)
+    x$detail$statistic <-
+      factor(x$detail$statistic, names(type), type)
+    x$detail$est <-
+      render_f(x$detail$est, digits=digits)
+    x$detail$CI <-
+      rndr_CI(cbind(x$detail$lower, x$detail$upper), digits = digits)
+
+
+    prepare_output(
+      na.omit(x$detail[c(1, 2, 5)]),
+      caption =  paste0("Point estimates and ",
+                        x$conf.level * 100, "%"
+                        , " CIs:"),
+      note = x$method)
+  }
+
+
+#' @rdname extract
+#' @export
+tbll_extract.roc <- function(x,
+                             digits = 2,
+                             type = c(
+                               threshold = "Threshold value",
+                               # tn = "True negative count",
+                               #  tp = "True positive count",
+                               #  fn = "False negative count",
+                               #  fp = "False positive count",
+                               specificity = "Specificity",
+                               sensitivity = "Sensitivity",
+                               accuracy = "Accuracy",
+                               #    npv = "Negative Predictive Value",
+                               #    ppv = "Positive Predictive Value",
+                               #    precision = "Precision",
+                               #   recall = "Recall",
+                               tpr = "True Positive Rate",
+                               fpr = "False Positive Rate",
+                               tnr = "True Negative Rate",
+                               fnr = "False Negative Rate",
+                               fdr = "False Discovery Rate"#,
+                               #  youden = "Youden Index"#,
+                               #  closest.topleft = "Distance to the top left corner of the ROC space"
+                             )) {
+  c_crd <-  coords(roc.fit, "best", ret = names(type))
+  auc <- data.frame(Source  = "AUC",  Estimate = x$auc[1])
+
+  rslt <- t(c_crd)
+  rslt <- stp25tools::fix_to_df(rslt)
+  rslt[[1]] <- factor(rslt[[1]] , names(type), type)
+
+
+  names(rslt) <-  names(auc)
+  rslt <-    rbind(auc, rslt)
+  rslt[[2]] <- render_f(rslt[[2]] , digits)
+
+  prepare_output(rslt,
+                 caption =  "ROC curve")
+}
+
 #' @rdname extract
 #' @export
 #'
@@ -332,7 +514,10 @@ tbll_extract.principal <- function (x,
 #'
 tbll_extract.assocstats <- function(x,
                                     ...) {
+
+ # cat("\n in tbll_extract.assocstats\n")
   if (length(x) == 2) {
+   # cat("\n length = 2 \n")
     x2 <- cor2 <- NULL
     for (i in names(x)) {
       if (is.null(x2)) {
@@ -375,14 +560,17 @@ extract_assocstats_corr <- function(x,
 
 extract_assocstats_chisq   <- function(x,
                                        ...) {
-  prepare_output(data.frame(
-    Test = rownames(x$chisq_tests),
-    Chisq  =   render_f(x$chisq_tests[[1]],2),
-    df =   render_f(x$chisq_tests[[2]],0),
-    p.value =   rndr_P(x$chisq_tests[[3]],FALSE)
+
+ # print(x$chisq_tests)
+  prepare_output(
+    data.frame(
+      Test = rownames(x$chisq_tests),
+      Chisq = render_f(as.vector(x$chisq_tests[, 1]), 2),
+      df = render_f(as.vector(x$chisq_tests[, 2]), 0),
+      p.value = rndr_P(as.vector(x$chisq_tests[, 3]), FALSE)
+    ),
+    caption = "Pearson Chi-Squared"
   )
-  ,
-  caption = "Pearson chi-Squared")
 }
 
 #' @rdname extract
@@ -430,8 +618,7 @@ tbll_extract.loglm <-  function( x,
     p.value = rndr_P(ts.array[, 3], FALSE)
   )
 
-  if (include.ll.ratio &
-      include.pearson)
+  if (include.ll.ratio & include.pearson)
     prepare_output(rslt, caption = "Log-Linear Model")
   else if (include.ll.ratio)
     prepare_output(rslt[1,], caption = "Log-Linear Model")

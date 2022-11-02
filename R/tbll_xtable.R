@@ -41,6 +41,14 @@ Tbll_xtabs <-   function(x, ...) {
 #' @rdname Tbll_xtabs
 #'
 #' @export
+#'
+Tbll_xtabs.default <- function(x, ...) {
+  cat("Keine Methode fuer ", class(x), " vorhanden.")
+}
+
+#' @rdname Tbll_xtabs
+#'
+#' @export
 Tbll_xtabs.NULL <- function() {
   Info_Statistic(
     c(
@@ -74,10 +82,10 @@ Tbll_xtabs.glm <- function(x,
 #' @rdname Tbll_xtabs
 #'
 #' @export
-#' @param data = data.frame
-#' @param labels Beschriftung mit labels
-#' @param addNA,exclude,drop.unused.levels An xtabs() default = FALSE
-#'
+#' @param x,data formula und data.frame geht an xtabs
+#' @param addNA,exclude,drop.unused.levels an xtabs()
+#' @param margin,add.margins Prozent und total
+#' @param ... include.test usw
 #' @examples
 #'
 #' df<- data.frame(A = c(1,0,0,1,0,1,0,1,1,0,0,0,0,1,1),
@@ -93,49 +101,105 @@ Tbll_xtabs.glm <- function(x,
 #'   include.diagnostic = TRUE
 #' )
 #'
-Tbll_xtabs.formula <- function(x,
-                              data = NULL,
+Tbll_xtabs.formula <-
+  function(x,
+           data = NULL,
+           addNA = FALSE,
+           exclude = if (!addNA) c(NA, NaN),
+           drop.unused.levels = FALSE,
+           margin = NULL,
+           add.margins = NULL,
+           ...) {
+    x_tab <- stats::xtabs(
+      x, data,
+      addNA = addNA,
+      exclude = exclude,
+      drop.unused.levels = drop.unused.levels
+    )
 
-                              labels = TRUE,
-                              addNA = FALSE,
-                              exclude = if (!addNA)  c(NA, NaN) ,
-                              drop.unused.levels = FALSE,
-                              ...) {
-
-  x_tab <- stats::xtabs(
-    x,
-    data,
-    addNA = addNA,
-    exclude = exclude,
-    drop.unused.levels = drop.unused.levels
-  )
-
-  if (is.logical(labels)) {
-    if (labels) {
-      dnn <- dimnames(x_tab)
-      names(dnn) <-
-        stp25tools::get_label( data[all.vars(x)], include.units=FALSE )
-      dimnames(x_tab) <- dnn
-    }
-  } else if (is.character(labels)) {
     dnn <- dimnames(x_tab)
-    names(dnn)[1:length(labels)] <- labels
+    names(dnn) <- stp25tools:::get_label2(data[all.vars(x)] )
     dimnames(x_tab) <- dnn
-  } else if (is.list(labels)) {
-    dimnames(x_tab) <- labels
+
+    if (is.character(margin))
+      margin <- which(all.vars(x) == margin)
+    if (is.character(add.margins))
+      add.margins <- which(all.vars(x) == add.margins)
+
+    #  if (is.logical(labels)) {
+    #    if (labels) {
+    # dnn <- dimnames(x_tab)
+    # names(dnn) <-
+    #   stp25tools::get_label(data[all.vars(x)], include.units = FALSE)
+    # dimnames(x_tab) <- dnn
+    #  }
+    #  } else if (is.character(labels)) {
+    #   dnn <- dimnames(x_tab)
+    #   names(dnn)[1:length(labels)] <- labels
+    #   dimnames(x_tab) <- dnn
+    # } else if (is.list(labels)) {
+    #   dimnames(x_tab) <- labels
+    # }
+
+    Tbll_xtabs.xtabs(x_tab,
+                     margin = margin,
+                     add.margins = add.margins,
+                     ...)
   }
 
-  Tbll_xtabs.xtabs(x_tab, ...)
-}
+
+
+
 
 
 #' @rdname Tbll_xtabs
 #'
 #' @export
 #'
-Tbll_xtabs.default <- function(x, ...) {
-  cat("Keine Methode fuer ", class(x), " vorhanden.")
-}
+Tbll_xtabs.data.frame <-
+  function(data ,
+           ...,
+           include.count = TRUE,
+           include.percent = TRUE,
+           include.prop.chisq = FALSE,
+           include.chisq = FALSE,
+           include.fisher = FALSE,
+           include.test = any(c(include.fisher, include.chisq, include.prop.chisq)),
+           include.correlation = FALSE,
+           include.diagnostic = FALSE,
+           margin = NULL,
+           add.margins = NA,
+           digits = get_opt("prozent", "digits"),
+           prevalence = NULL,
+           addNA = FALSE,
+           exclude = if (!addNA) c(NA, NaN),
+           drop.unused.levels = FALSE) {
+
+    X <- stp25tools::prepare_data2(data, ...)
+if(!is.null( X$group.vars ))
+  stop("group.vars sind fuer xtabs nicht definert!")
+
+    Tbll_xtabs.formula(
+      as.formula(paste(
+        "~", paste(X$measure.vars, collapse = "+"))),
+      X$data,
+      include.count = include.count,
+      include.percent = include.percent,
+      include.prop.chisq = include.prop.chisq,
+      include.chisq = include.chisq,
+      include.fisher = include.fisher,
+      include.test = include.test,
+      include.correlation = include.correlation,
+      include.diagnostic = include.diagnostic,
+      prevalence = prevalence,
+      margin = margin,
+      add.margins = add.margins,
+      digits = digits,
+      addNA = addNA,
+      exclude = exclude,
+      drop.unused.levels = drop.unused.levels
+    )
+  }
 
 #' @rdname Tbll_xtabs
 #'
@@ -149,12 +213,7 @@ Tbll_xtabs.table <- function(...) Tbll_xtabs.xtabs(...)
 #' @export
 #'
 #' @param digits Nachkommastellen
-#' @param x xtabs-Objekt oder Formel
-#' @param caption,note,output  an Output
-#' @param include.total,include.total.columns,include.total.sub,include.total.rows Zeilen Prozenz usw
-#' aber wie mit den Margins gerechnet
 #' @param include.percent,include.count ausgabe
-#' @param margin,add.margins flexible einstellung der Prozent
 #' @param include.test,test,include.prop.chisq,include.chisq,include.fisher die Tests
 #' @param include.correlation Korrelation
 #' @param include.diagnostic,include.sensitivity,prevalence ascostat
@@ -187,11 +246,8 @@ Tbll_xtabs.table <- function(...) Tbll_xtabs.xtabs(...)
 #' (Tbll_xtabs(tab_3x3x2, include.test=TRUE))
 #'
 Tbll_xtabs.xtabs  <- function(x,
-
-                              include.label = TRUE,
                               include.count = TRUE,
                               include.percent = TRUE,
-                              include.total = FALSE,
                               include.prop.chisq = FALSE,
                               include.chisq = FALSE,
                               include.fisher = FALSE,
@@ -199,43 +255,34 @@ Tbll_xtabs.xtabs  <- function(x,
                               include.correlation = FALSE,
                               include.diagnostic = FALSE,
                               margin = NULL,
-                              add.margins = NA,
-                              digits = get_opt("prozent","digits"),
-
-                              include.total.columns = FALSE,
-                              include.total.sub = FALSE,
-                              include.total.rows = FALSE,
-                              prevalence=NULL,
-                              # include.mcnemar = FALSE, include.resid = FALSE,
-                              # include.sresid = FALSE,include.asresid = FALSE,
+                              add.margins = NULL,
+                              digits = get_opt("prozent", "digits"),
+                              prevalence = NULL,
                               ...) {
+  # cat( "\n in Tbll_xtabs.xtabs\n" )
   res <- list()
   dim_x <- dimension(x)
-  mrgn <-
-    get_margins(
-      x,
-      margin,
-      add.margins,
-      include.total,
-      include.total.columns,
-      include.total.sub,
-      include.total.rows
-    )
+  # get position of margin
+  var_nms <- names(dimnames(x))
+  if (is.character(margin))
+    margin <- which(var_nms == margin)
+  if (is.character(add.margins))
+    add.margins <- which(var_nms == add.margins)
 
   res$xtab <- prepare_output(
     format_xtab(
       x,
-      margin = mrgn$prop,
-      add.margins = mrgn$add,
+      margin = margin,
+      # mrgn$prop,
+      add.margins =  add.margins,
+      #mrgn$add,
       include.count,
       include.percent,
       digits = digits,
       dim_x = dim_x
     ),
-    caption = ""
+    caption = "Haeufigkeitstabellen"
   )
-
-
 
   if (include.test) {
     include.chisq.sumary <- FALSE
@@ -292,7 +339,6 @@ Tbll_xtabs.xtabs  <- function(x,
     }
   }
 
-
   if (include.correlation) {
     corr_test <-  vcd::assocstats(x)
     res$corr_test <- prepare_output(data.frame(
@@ -310,13 +356,18 @@ Tbll_xtabs.xtabs  <- function(x,
     caption = "Correlation Test")
   }
 
-  if (include.diagnostic & dim_x == 1) {
+  if (include.diagnostic) {
+    if(dim_x == 1)
     res$diagnostic.test <-
-      prepare_output(Klassifikation(x, prevalence = prevalence)$statistic,
-                     caption = "diagnostic")
-
-
+      prepare_output(
+        Klassifikation(x,
+                       prevalence = prevalence)$statistic,
+                     caption = "Diagnostic")
+    else {
+      warning("\nDie Diagnostic gibt es nur bei 2x2-Tabellen (wir haben hier die Dimensions von ", dim_x, ").\n")
+      }
   }
+
   res
 }
 
@@ -456,7 +507,8 @@ Tbll.summary.table <- function(x, ...) {
     Chisq =    render_f(x$statistic, 2),
     df = x$parameter,
     p =  rndr_P(x$p.value, FALSE)
-  ))
+  ),
+  caption = "Pearson's Chi-squared Test for Count Data")
 }
 
 #' main function for xtabs
@@ -472,216 +524,52 @@ format_xtab <- function(x,
                         add.margins = NULL,
                         include.count = TRUE,
                         include.percent = TRUE,
-                        digits = 0,
+                        digits =  get_opt("prozent", "digits"),
                         dim_x = dimension(x),
                         style = get_opt("prozent", "style"))  {
   style <-
-    if (include.count & include.percent)  style
-    else if (include.count &  !include.percent)  4
-    else if (!include.count &  include.percent)  3
-    else return(NULL)
+    if (include.count & include.percent) style
+    else if (include.count &  !include.percent) 4
+    else if (!include.count &  include.percent) 3
+    else 1
+
 
   if (dim_x > 0) {
     if (!is.null(add.margins)) {
+    #   cat("\n format_xtab \n")
+    #   cat("  add.margins:  ")
+    #   print(add.margins)
+    # #  print(addmargins(x, add.margins))
+    #   cat("\n-----------------\n")
       cnt <- ftable(addmargins(x, add.margins))
+
+      prop_table <- prop.table(x, margin)
+      prop_table[which(is.na(prop_table))] <- 0
       prc <-
-        ftable(addmargins(prop.table(x, margin) * 100,
+        ftable(addmargins(prop_table * 100,
                           add.margins))
     } else{
       cnt <- ftable(x)
-      prc <-  ftable(prop.table(x, margin) * 100)
+      prop_table <- prop.table(x, margin)
+      prop_table[which(is.na(prop_table))] <- 0
+      prc <-  ftable(prop_table * 100)
     }
+
+    return(rndr_percent(prc, cnt, digits = digits, style = style))
+
   }
   else{
-    cnt <- x
+    # 1 x Tabelle
     prc <- prop.table(x) * 100
-  }
+    rslt <-
+      stp25tools::fix_to_df(rndr_percent(prc, x, digits = digits, style = style))
+    names(rslt)[1:2] <- c(names(dimnames(x)), "m")
 
-  rndr_percent(prc, cnt, digits = digits, style = style)
-}
-# format_xtab <- function(x,
-#                         margin = NULL,
-#                         add.margins = NA,
-#                         include.count = TRUE,
-#                         include.percent = TRUE,
-#                         digits = 0,
-#                         dim_x = dimension(x))  {
-#   if (dim_x > 0) {
-#     if (!is.null(add.margins)) {
-#       f_count <- ftable(addmargins(x, add.margins))
-#       f_percent <-
-#         ftable(addmargins(prop.table(x, margin) * 100,
-#                           add.margins))
-#     } else{
-#       f_count <- ftable(x)
-#       f_percent <-
-#         ftable(prop.table(x, margin) * 100)
-#     }
-#
-#
-#     if (include.count & include.percent) {
-#       #cat(" rndr_percent  \n")
-#       rndr_percent(f_percent, f_count, digits = digits)
-#     }
-#     else if (!include.percent)  {
-#      stp25tools::fix_to_df(f_count)
-#     }
-#     else{
-#       rndr_percent(f_percent, digits = digits)
-#     }
-#   }
-#   else{
-#
-#     f_count <- x
-#     f_percent <-
-#       (prop.table(x) * 100)
-#     r <-  stp25tools::fix_to_df(f_count)
-#     if (include.count & include.percent) {
-#     #  cat("\n format_xtab\n class=", class(f_percent), "\n")
-#
-#     #  print(list(f_percent, f_count, digits = digits))
-#
-#       r[1,] <- rndr_percent(f_percent, f_count, digits = digits)
-#     }
-#     else if (include.percent)  {
-#       r[1,] <- rndr_percent(f_percent, digits = digits)
-#     }
-#     r
-#   }
-# }
-
-
-
-
-#' @noRd
-# stp25stat2:::get_margins(x,
-#             margin = c("education"),
-#             add.margins = NULL )
-get_margins <- function(x,
-                        margin = NULL,
-                        add.margins = NA,
-                        include.total = FALSE,
-                        include.total.columns = FALSE,
-                        include.total.sub = FALSE,
-                        include.total.rows = FALSE,
-                        use_margin = !any(c(
-                          include.total,
-                          include.total.columns,
-                          include.total.sub,
-                          include.total.rows
-                        ))) {
-  if (use_margin) {
-    margin <- position_margin(x, margin)
-
-    if (!is.null(add.margins)) {
-      if (is.na(add.margins[1])) {
-        if (is.null(margin)) {
-          add.margins <- NULL
-        }
-        else {
-          add.margins <- setdiff(seq_along(dim(x)), margin)
-          if (length(add.margins) == 0)
-            add.margins <- NULL
-        }
-      }
-      else {
-        add.margins <- position_margin(x, add.margins)
-      }
-    }
-    list( add = add.margins, prop = margin)
-  }
-  else {
-    which_margin(
-      dim(x),
-      include.total,
-      include.total.columns,
-      include.total.sub,
-      include.total.rows)
+    return (rslt)
   }
 }
 
 
-
-#' @noRd
-#'
-which_margin <- function(mydim,
-                         include.total = FALSE,
-                         include.total.columns = include.total,
-                         include.total.sub = include.total,
-                         include.total.rows = include.total) {
-  mylength <- length(mydim)
-  margin <-
-    if (mylength == 2) {
-      if (include.total)
-        list(add = seq_along(mydim), prop = NULL)
-      else if (include.total.columns &
-               !include.total.rows)
-        list(add = mylength, prop = 1)
-      else if (include.total.rows &
-               !include.total.columns)
-        list(add = 1, prop = 2)
-      else
-        list(add = NULL, prop = NULL)
-    }
-  else{
-    if (include.total)
-      list(add = seq_along(mydim), prop = NULL)
-    else if (include.total.columns &
-             !include.total.rows &
-             !include.total.sub)
-      list(add = mylength, prop = 1:2)
-    else if (include.total.rows  &
-             !include.total.columns  &
-             !include.total.sub)
-      list(add = 1, prop = 2:3)
-    else if (include.total.sub &
-             !include.total.rows  &
-             !include.total.columns)
-      list(add = 2, prop = c(1, 3))
-    else if (include.total.rows  &
-             include.total.sub &
-             !include.total.columns)
-      list(add = 1:2, prop = 3)
-    else if (include.total.rows  &
-             include.total.columns  &
-             !include.total.sub)
-      list(add = c(1, 3), prop = c(2))
-    else
-      list(add = NULL, prop = NULL)
-  }
-  margin
-}
-
-
-
-# copy from base::sweep
-#' @noRd
-position_margin <- function(x, margin) {
-  if (is.character(margin)) {
-    dn <- dimnames(x)
-    if (is.null(dnn <- names(dn)))
-      stop("'x' must have named dimnames")
-    margin <- match(margin, dnn)
-    if (anyNA(margin))
-      stop("not all elements of 'margin' are names of dimensions")
-  }
-  margin
-}
-
-
-#' @noRd
-#'
-# tab_1<- xtabs(~  case, infert)
-# tab_2x2<- xtabs(~ induced2 + case, infert)
-# tab_3x2<- xtabs(~ induced + case, infert)
-# tab_3x3<- xtabs(~ induced + education, infert)
-# tab_3x3x2<- xtabs(~ induced + education+case, infert)
-#
-# stp25stat2:::dimension(tab_1)
-# stp25stat2:::dimension(tab_2x2)
-# stp25stat2:::dimension(tab_3x2)
-# stp25stat2:::dimension(tab_3x3)
-# stp25stat2:::dimension(tab_3x3x2)
 dimension <- function(x) {
   dm <- dim(x)
   ldm <-  length(dm)
@@ -759,43 +647,47 @@ Klassifikation <- function(x, ...) {
 #' # thkarz <- as.data.frame(xtabs(~gruppe+lai, hkarz))
 #' # fit2<- glm(Freq ~ gruppe*lai, thkarz, family = poisson())
 #'
-Klassifikation.glm <- function(x,
-                               thresh = 0.5,
-                               ...) {
-  response <- all.vars(formula(formula(x)))[1]
-  data <- x$model
-  predictor <- fitted(x) # vorhergesagte Wahrscheinlichkeit
-  data$Response <- data[, response]
+Klassifikation.glm <-
+  function(x,
+           thresh = 0.5,
+           ...) {
+    response <- all.vars(formula(formula(x)))[1]
+    data <- x$model
+    predictor <- fitted(x) # vorhergesagte Wahrscheinlichkeit
+    data$Response <- data[, response]
 
 
-  mylevels <- if (is.factor(data$Response)) levels(data$Response) else  0:1
-  data$Predictor <- cut(predictor,
-                        breaks = c(-Inf, thresh, Inf),
-                        labels = mylevels)
-  # Kontingenztafel: tatsaechliche vs. vorhergesagte Kategorie
-  cTab <- stats::xtabs(~ Response + Predictor, data = data)
+    mylevels <-
+      if (is.factor(data$Response)) levels(data$Response)
+      else 0:1
 
-  if (length(cTab) == 4) {
-    res <- Klassifikation.xtabs(cTab)
-    res$response = data$Response
-    res$predictor = predictor
+    data$Predictor <- cut(predictor,
+                          breaks = c(-Inf, thresh, Inf),
+                          labels = mylevels)
+#print(car::some(data))
 
+    # Kontingenztafel: tatsaechliche vs. vorhergesagte Kategorie
+    cTab <- stats::xtabs( ~ Response + Predictor, data = data)
+
+    if (length(cTab) == 4) {
+      res <- Klassifikation.xtabs(cTab)
+
+      res$response = data$Response
+      res$predictor = predictor
+    }
+    else
+      res <- list(
+        xtab = cTab,
+        statistic = NULL,
+        response = response,
+        predictor = predictor
+      )
+    res
   }
-  else
-    res <- list(
-      xtab = cTab,
-      statistic = NULL,
-      response = response,
-      predictor = predictor
-    )
-  res
-}
 
 #' @rdname Tbll_xtabs
 #' @export
-Klassifikation.table <- function(...) {
-  Klassifikation.xtabs(...)
-}
+Klassifikation.table <- function(...) Klassifikation.xtabs(...)
 
 #' @rdname Tbll_xtabs
 #' @description xtabs-Objekt
@@ -806,130 +698,183 @@ Klassifikation.table <- function(...) {
 #'  # hkarz$LAI<- factor(hkarz$lai, 0:1, c("pos", "neg"))
 #'  # Klassifikation(xtabs(~gruppe+LAI, hkarz), test=TRUE, type="fischer")
 #'
+#'  tab <- matrix(c(94, 40, 39, 40), ncol = 2, byrow = TRUE)
+#'  tbll_extract(caret::confusionMatrix(tab))
+#'  tbll_extract(epiR::epi.tests(tab) )
 #'
-Klassifikation.xtabs<- function(x,
-                                lvs = c("positiv", "negativ"),
-                                digits = 2,
-                                prevalence = NULL,
-                                ...){
-  if(!length(x)==4) return("Nur mit 2x2 Tabellen moeglich!")
+#'  Klassifikation(as.table(tab))
+#'
+#'
+#' # dat <-
+#' #   get_data("
+#' # outcome    A B
+#' # a   94 40
+#' # b   39  40",
+#' #            tabel_expand = TRUE,
+#' #            value = "test")
+#' #
+#' #
+#' # dat$outcome <- ifelse(dat$outcome =="a",1,0)
+#' # dat$test <- ifelse(dat$test =="A",1,0)
+#' # xtabs( ~ outcome + test, dat)
+#' #
+#' # fit<- glm(outcome~ test, dat, family = binomial())
+#' #
+#' #
+#' # summary(fit)
+#' # dat$residuals <- residuals(fit)
+#' # dat$predict <- predict(fit)
+#' #
+#' # (dat)
+#' #
+#' # require(glue)
+#' # require(pROC)
+#' # fit_roc <- pROC::roc( dat$outcome, dat$test )
+#' # Tbll( fit_roc )
+#' # ?coords(fit_roc)
+#' #
+#' #
+#' # roc.liver <- roc( outcome ~ predict, dat)
+#' #
+#' # auc<- roc.liver$auc
+#' # glue( 'Area under the curve: {sprintf("%.3f", auc)} it means there is a {sprintf("%.0f", auc*100)} % chance that the model
+#' #  will be able to distinguish between positive class and negative class.')
+#' #
+#' #
+#' # plot(roc.liver)
+#'
+Klassifikation.xtabs <-
+  function(x,
+           lvs = c("positiv", "negativ"),
+           digits = 2,
+           prevalence = NULL,
+           ...) {
+    if (!length(x) == 4)
+      stop("Klassifikation: nur mit 2x2 Tabellen moeglich!")
 
-  Positive_Class <-
-    paste(attr(x, "dimnames")[[1]][1],
-          attr(x, "dimnames")[[2]][1], sep = "/")
-  attr(x, "dimnames")[[1]] <- lvs
-  attr(x, "dimnames")[[2]] <- lvs
-  xtab <- x
-  x <- caret::confusionMatrix(x, prevalence = prevalence)
-
-  out <- as.character(c(
-
-    render_f(x$overall["Accuracy"], digits),
-    rndr_CI(x$overall[c("AccuracyLower", "AccuracyUpper")]),
-    render_f(x$overall["AccuracyNull"], digits),
-    rndr_P(x$overall["AccuracyPValue"]),
-    render_f(x$overall["Kappa"], digits),
-    rndr_P(x$overall["McnemarPValue"]),
-    render_f(x$byClass, digits),Positive_Class))
-
-
-  list(xtab=xtab,
-       statistic=
-         data.frame(Statistic =
-                      c("Accuracy",
-                        "95% CI",
-                        "No Information Rate",
-                        "P-Value [Acc > NIR]",
-                        "Kappa",
-                        "Mcnemar's Test P-Value",
-                        "Sensitivity",
-                        "Specificity",
-                        "Pos Pred Value" ,
-                        "Neg Pred Value",
-                        "Precision",
-                        "Recall",
-                        "F1",
-                        "Prevalence",
-                        "Detection Rate",
-                        "Detection Prevalence" ,
-                        "Balanced Accuracy",
-                        "Positive Class"
-                      )
-                    , Value = out,
-                    stringsAsFactors = FALSE),
-       stat=x,
-       response=NULL,
-       predictor=NULL
-  )
-}
+    Positive_Class <-
+      paste(attr(x, "dimnames")[[1]][1],
+            attr(x, "dimnames")[[2]][1], sep = "/")
 
 
+    attr(x, "dimnames")[[1]] <- lvs
+    attr(x, "dimnames")[[2]] <- lvs
+
+    x_asco <- caret::confusionMatrix(x, prevalence = prevalence)
 
 
+    list(
+      xtab = x ,
+      statistic = tbll_extract.confusionMatrix(x_asco,
+                                               digits = digits,
+                                               Positive_Class = Positive_Class)
+    )
 
 
+    # out <- as.character(
+    #   c(
+    #     render_f(x$overall["Accuracy"], digits),
+    #     rndr_CI(x$overall[c("AccuracyLower", "AccuracyUpper")]),
+    #     render_f(x$overall["AccuracyNull"], digits),
+    #     rndr_P(x$overall["AccuracyPValue"]),
+    #     render_f(x$overall["Kappa"], digits),
+    #     rndr_P(x$overall["McnemarPValue"]),
+    #     render_f(x$byClass, digits),
+    #     Positive_Class
+    #   )
+    # )
+    #
+    #
+    # list(
+    #   xtab = xtab,
+    #   statistic =
+    #     data.frame(
+    #       Statistic =
+    #         c(
+    #           "Accuracy",
+    #           "95% CI",
+    #           "No Information Rate",
+    #           "P-Value [Acc > NIR]",
+    #           "Kappa",
+    #           "Mcnemar's Test P-Value",
+    #           "Sensitivity",
+    #           "Specificity",
+    #           "Pos Pred Value" ,
+    #           "Neg Pred Value",
+    #           "Precision",
+    #           "Recall",
+    #           "F1",
+    #           "Prevalence",
+    #           "Detection Rate",
+    #           "Detection Prevalence" ,
+    #           "Balanced Accuracy",
+    #           "Positive Class"
+    #         )
+    #       ,
+    #       Value = out,
+    #       stringsAsFactors = FALSE
+    #     ),
+    #   Positive_Class =Positive_Class
+    #   #,
+    # #  stat = x,
+    # #  response = NULL,
+    # #  predictor = NULL
+    # )
+  }
 
 
-
-
-# library(caret)
-# require(epiR)
-# DF<- GetData("
-# GoldStandart RT.qPCR Anzahl
-# positiv positiv 111
-# positiv negativ 12
-# negativ positiv 1
-# negativ negativ 62 ", Tabel_Expand =TRUE, id.vars=1:2)
-# DF$GoldStandart<- factor( DF$GoldStandart, rev(levels( DF$GoldStandart)))
-# DF$RT.qPCR<- factor( DF$RT.qPCR, rev(levels( DF$RT.qPCR)))
+# beispiel ----------------------------------------------------------------
+# require(stp25tools)
+# prepare_output <- stp25stat2::prepare_output
+# rndr_percent <- stp25stat2:::rndr_percent
+# render_f <- stp25stat2:::render_f
+# rndr_P <- stp25stat2:::rndr_P
+# rndr_CI <- stp25stat2:::rndr_CI
+#
+# # #detach("package:stp25stat2", unload = TRUE)
+# #
+# data(infert, package = "datasets")
+#
+# infert2  <- infert
+# infert2$case  <- factor(infert2$case ,1:0, c("case", "control") )
+# infert2<- Label(infert2,
+#                 education = "Education",
+#                 induced = "Number of prior Induced abortions",
+#                 case = "Case Status")
 #
 #
+# x <- xtabs( ~ education + induced + case, infert2)
 #
+# Tbll_xtabs(
+#   x,
+#   margin = "case",
+#   add.margins = c("induced"))
 #
-# dat <- as.table(matrix(c(111, 12, 1, 62), nrow = 2, byrow = TRUE))
-# colnames(dat) <- c("RT.qPCR +", "RT.qPCR -")
-# rownames(dat) <- c("Gold Standart +", "GoldStandart -")
-# rval <- epi.tests(dat, conf.level = 0.95)
-# Tbll(rval)
+# Tbll_xtabs(~ education + induced + case, infert2,
+#            include.test = TRUE,
+#            include.correlation = FALSE,
+#            include.diagnostic = TRUE,
+#
+#   margin = "case",
+#   add.margins = c("induced"))
 
 
-# Tbll.epi.tests <-
-#   function (x,
-#             ...)
-#   {
-#     #    Output(cbind(Test= row.names( x$tab),  x$tab), ...)
-#
-#     stat <-  with(x$rval, {
-#       data.frame(
-#         "Diagnostic Parameters"
-#         = c(
-#           "Apparent prevalence",
-#           "True prevalence",
-#           "Sensitivity",
-#           "Specificity",
-#           "Positive predictive value",
-#           "Negative predictive value",
-#           # "Positive likelihood ratio",
-#           # "Negative likelihood ratio",
-#
-#           "Diagnostic Accuracy"
-#         ) ,
-#         "Point Estimates" = c(
-#           sprintf("%.2f (%.2f, %.2f)", aprev$est, aprev$lower, aprev$upper),
-#           sprintf("%.2f (%.2f, %.2f)", tprev$est, tprev$lower, tprev$upper),
-#           sprintf("%.2f (%.2f, %.2f)", se$est, se$lower, se$upper),
-#           sprintf("%.2f (%.2f, %.2f)", sp$est, sp$lower, sp$upper),
-#           sprintf("%.2f (%.2f, %.2f)",  ppv$est, ppv$lower, ppv$upper),
-#           sprintf("%.2f (%.2f, %.2f)",  npv$est, npv$lower, npv$upper),
-#           # sprintf("%.2f (%.2f, %.2f)",  plr$est, plr$lower, plr$upper),
-#           #  sprintf("%.2f (%.2f, %.2f)",  nlr$est, nlr$lower, nlr$upper),
-#           sprintf("%.2f (%.2f, %.2f)",  diag.acc$est, diag.acc$lower, nlr$upper))
-#
-#       )
-#     })
-#
-#     prepare_output(stat)
-#
-#   }
+
+ # summary(infert2)
+ # levels(infert2$education) <- c("0-11yrs", "0-11yrs", "12+ yrs")
+ # Klassifikation(xtabs(~ case + education, infert2), test=TRUE, type="fischer")
+ #
+ #
+ # xtabs(~ induced + case, infert2)
+ #
+ # contrasts =  c("contr.treatment", "contr.poly")
+ # options(contrasts = contrasts)
+ #  fit1<- glm(case ~  education, infert2, family = binomial)
+ #
+ #  summary(fit1)
+ #
+ #  Klassifikation(fit1)
 
 
+ #' # thkarz <- as.data.frame(xtabs(~gruppe+lai, hkarz))
+ #' # fit2<- glm(Freq ~ gruppe*lai, thkarz, family = poisson())

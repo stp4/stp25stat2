@@ -145,16 +145,16 @@ extract_gof <- function(x,
     res <-
       rbind(res,
             c(Test = "Homogeneity of Variances (Bartlett)",
-              statistic =  APA(bartlett.test(x$model[,1], x$model[,2]))))
+              statistic =  APA(stats::bartlett.test(x$model[,1], x$model[,2]))))
 
   }
 
-  # if (include.normality) {
-  #   res <-
-  #     rbind(res,
-  #           c(Test = "Shapiro-Wilk normality test",
-  #             statistic =  test_normality(x)))
-  # }
+  if (include.normality) {
+    res <-
+      rbind(res,
+            c(Test = "Shapiro-Wilk normality test",
+              statistic =  test_normality(x)))
+  }
 
   if (include.multicollin) {
     res <-
@@ -224,4 +224,24 @@ extract_gof <- function(x,
 
 }
 
+#' @noRd
+test_normality <- function(x) {
+  # bei  sjstats ist im orginal stats::rstandard ich verwende aber resid
+  APA( stats::shapiro.test(stats::resid(x)) )
+}
 
+#' @noRd
+test_multicollin <- function(x) {
+  x <- performance::check_collinearity(x)
+  vifs <- x$VIF
+  ifelse(
+    any(vifs >= 10) ,
+    "VIF>10 high correlation",
+    ifelse(
+      any(vifs >= 5 &
+            vifs < 10),
+      "VIF>5 moderate correlation",
+      "VIF<5 low correlation"
+    )
+  )
+}

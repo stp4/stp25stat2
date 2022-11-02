@@ -50,6 +50,7 @@ Tbll_likert.default <- function(...,
                                 include.order = TRUE,
                                 include.percent = TRUE,
                                 include.count = TRUE,
+                                decreasing = TRUE,
                                 labels = c("low", "neutral", "high"),
                                 reverse.levels = FALSE,
                                 reorder.levels = NA) {
@@ -66,16 +67,24 @@ Tbll_likert.default <- function(...,
       include.order = include.order,
       include.percent = include.percent,
       include.count = include.count,
-      labels = labels
+      labels = labels,
+      decreasing=decreasing
     )
 
-  attr(tbl, "plot") <-list( item = levels(rslt$results$Item),
+
+
+# workaround da
+#  HH::likert die sortierung komisch erstellt
+  attr(tbl, "plot") <- list(
+    item = levels(rslt$results$Item),
     formula =  rslt$formula,
-    results = rslt$results,
+    results =  if(is.null(attr(tbl, "plot")$order)) rslt$results
+                  else rslt$results[attr(tbl, "plot")$order,],
     nlevels = rslt$nlevels,
     ReferenceZero = ReferenceZero
   )
 
+ # print( rslt$results )
 tbl
 }
 
@@ -92,7 +101,8 @@ Tbll_likert.likert <- function(x,
                                #  na.exclude = FALSE,
                                include.percent = TRUE,
                                include.count = TRUE,
-                               labels = c("low", "neutral", "high")) {
+                               labels = c("low", "neutral", "high"),
+                               decreasing=TRUE) {
   note <- NULL
 
   if (!is.null(ReferenceZero)) {
@@ -174,14 +184,21 @@ Tbll_likert.likert <- function(x,
 
   ans <- cbind(x$names, x$freq)
 
+
+  attr(ans, "plot") <- list( order= NULL)
   if (include.order) {
     if (length(all.vars(x$formula)) > 2) {
-      ans <- ans[order(x$m + as.numeric(x$results[[1]]) * 100),]
+      item.order <- order(x$m + as.numeric(x$results[[1]]) * 100, decreasing=decreasing)
+      ans <- ans[item.order,]
+      attr(ans, "plot")<- list( order= item.order)
     }
     else{
-      ans <- ans[order(x$m),]
+      item.order<- order(x$m, decreasing=decreasing)
+      ans <- ans[item.order,]
+      attr(ans, "plot")<- list( order= item.order)
     }
   }
+
 
   prepare_output(ans,
                  caption = "Likert",

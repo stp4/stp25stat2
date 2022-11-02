@@ -5,7 +5,7 @@
 #' @export
 #' @param ... An Long() daten Formeln,Variablen-Namen
 #' @param fun  function(x) length(na.omit(x)) an aggregate
-#' @param key,value  an Long bzw
+#' @param key,value,use.label  an Long
 #' @param na.action  an aggregate
 #' @param formula Zeilen/Spalten Lang/Weit
 #' @param margins,margins_name  Gesamt
@@ -50,9 +50,14 @@ Summarise <- function(...,
                        na.action = na.pass,
                        formula = NULL,
                        margins = FALSE,
-                       margins_name = "Total") {
+                       margins_name = "Total",
+                      include.label=TRUE
+                      # use.label=TRUE
+
+
+                      ) {
   nmbr_msr <- 1
-  molten <- stp25tools::Long(..., key = key, value = value)
+  molten <- stp25tools::Long(..., key = key, value = value, use.label=include.label)
 
   default_formula <-
     formula(paste(value, "~", paste(names(molten)[-ncol(molten)], collapse = "+")))

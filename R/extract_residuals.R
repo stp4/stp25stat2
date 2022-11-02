@@ -8,7 +8,7 @@
 #' @param term  x-var
 #' @param response y-var
 #'
-#' @return
+#' @return data.frame
 #' @export
 #'
 #' @examples

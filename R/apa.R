@@ -188,46 +188,131 @@ APA.factor <- function(x,
 #'
 #'  # APA( ~ rrs0 + rrs1 + g, hyper)
 #'  # APA(chol0+chol1 ~ g, hyper) das geht nicht
-#'
+
 APA.formula <- function(x,
-                        data,
-                        exclude = NA,
-                        max_factor_length = 25,
-                        ...) {
+                       data,
+                       exclude = NA,
+                       max_factor_length = 25,
+                       ...) {
   X <- stp25tools::prepare_data2(x, data)
   res <- NULL
-  for (i in 1:length(X$measure)) {
-    x <- X$data[[X$measure.vars[i]]]
-    x    <- na.omit(x)
-    n    <- length(x)
+  if (is.null(X$group.vars)) {
+    for (i in seq_along(X$measure)) {
+      x <- X$data[[X$measure.vars[i]]]
+      x    <- na.omit(x)
+      n    <- length(x)
 
-    if (all(is.na(x)))
-      X$measure[i] <- "all_NA"
+      if (all(is.na(x)))
+        X$measure[i] <- "all_NA"
 
-    res1 <- switch(
-      X$measure[i],
-      numeric = mean_tbll(x, X$digits[i], n),
-      integer = mean_tbll(x, X$digits[i], n),
-      factor =  prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
-      logical = prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
-      freq =    prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
-      mean =    mean_tbll(x, X$digits[i], n),
-      median =   median_tbll(x, X$digits[i], n),
-      multi =    multi_tbll(x, X$digits[i], n),
+      res1 <- switch(
+        X$measure[i],
+        numeric = mean_tbll(x, X$digits[i], n),
+        integer = mean_tbll(x, X$digits[i], n),
+        factor =  prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
+        logical = prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
+        freq =    prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
+        mean =    mean_tbll(x, X$digits[i], n),
+        median =   median_tbll(x, X$digits[i], n),
+        multi =    multi_tbll(x, X$digits[i], n),
 
-      c(lev = "NA", n = "NA", m = "NA")
-    )
-    m <- as.character(res1$m)
-    if (length(m) == 1)
+        c(lev = "NA", n = "NA", m = "NA")
+      )
+      m <- as.character(res1$m)
       names(m) <- X$measure.vars[i]
-    else
-      names(m) <- paste(X$measure.vars[i], res1$lev, sep = "_")
-    res <- c(res, m)
+      res <- c(res, m)
+
+    }
+  }
+  else{
+    # cat("\ngroups\n")
+    if (length(X$measure) != 1)
+      stop("Nur eine Measure-Variable ist erlaubt!")
+
+    if (length(X$group.vars) > 1) {
+      X$data$group <- interaction2(X$data[X$group.vars])
+      caption <- paste(X$group.vars, collapse = ", ")
+      X$group.vars <- "group"
+    } else {
+      caption <-  X$group.vars
+    }
+
+    data <- split(X$data[X$measure.vars], X$data[[X$group.vars]])
+    # return(data)
+    for (i in seq_along(levels(X$data[[X$group.vars]]))) {
+      x <- data[[i]][[1]]
+      x    <- na.omit(x)
+      n    <- length(x)
+
+      if (all(is.na(x)))
+        X$measure[i] <- "all_NA"
+
+      res1 <- switch(
+        X$measure[1],
+        numeric = mean_tbll(x, X$digits[1], n),
+        integer = mean_tbll(x, X$digits[1], n),
+        factor =  prct_tbll(x, X$digits[1], n, exclude, max_factor_length),
+        logical = prct_tbll(x, X$digits[1], n, exclude, max_factor_length),
+        freq =    prct_tbll(x, X$digits[1], n, exclude, max_factor_length),
+        mean =    mean_tbll(x, X$digits[1], n),
+        median =   median_tbll(x, X$digits[1], n),
+        multi =    multi_tbll(x, X$digits[1], n),
+
+        c(lev = "NA", n = "NA", m = "NA")
+      )
+
+      # print(res1)
+      m <- as.character(res1$m)
+      names(m) <- names(data)[i]
+
+      res <- c(res, m)
+
+    }
 
   }
   res
 }
 
+
+# APA.formula <- function(x,
+#                         data,
+#                         exclude = NA,
+#                         max_factor_length = 25,
+#                         ...) {
+#   X <- stp25tools::prepare_data2(x, data)
+#   res <- NULL
+#   for (i in 1:length(X$measure)) {
+#     x <- X$data[[X$measure.vars[i]]]
+#     x    <- na.omit(x)
+#     n    <- length(x)
+#
+#     if (all(is.na(x)))
+#       X$measure[i] <- "all_NA"
+#
+#     res1 <- switch(
+#       X$measure[i],
+#       numeric = mean_tbll(x, X$digits[i], n),
+#       integer = mean_tbll(x, X$digits[i], n),
+#       factor =  prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
+#       logical = prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
+#       freq =    prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
+#       mean =    mean_tbll(x, X$digits[i], n),
+#       median =   median_tbll(x, X$digits[i], n),
+#       multi =    multi_tbll(x, X$digits[i], n),
+#
+#       c(lev = "NA", n = "NA", m = "NA")
+#     )
+#     m <- as.character(res1$m)
+#     if (length(m) == 1)
+#       names(m) <- X$measure.vars[i]
+#     else
+#       names(m) <- paste(X$measure.vars[i], res1$lev, sep = "_")
+#     res <- c(res, m)
+#
+#   }
+#   res
+# }
+#
 
 #' @rdname APA
 #' @param include.r APA.lm: R-Squar

@@ -71,8 +71,8 @@ Tbll_desc_long <- function(...,
                            include.n = TRUE,
                            include.test = FALSE,
                            include.label = TRUE,
-                           digits = NULL,
-                           measure.name = "m"
+                           digits = NULL#,
+                         #  measure.name = "m"
                           ) {
 
   X <- stp25tools::prepare_data2(...)
@@ -82,7 +82,7 @@ Tbll_desc_long <- function(...,
   rslt <-
     analyse_sesc_long(X,
                type = type,
-               measure.name = measure.name,
+               measure.name = get_opt("table", "measure.name.m"),
                digits = digits, include.label=include.label)
 
   if (include.n) {
@@ -105,7 +105,7 @@ Tbll_desc_long <- function(...,
 
 
 analyse_sesc_long <- function(X,
-                       measure.name = "m",
+                       measure.name = get_opt("table", "measure.name.m"),
                        fun = NULL,
                        digits = NULL,
                        type =  "auto_kurz",
@@ -184,7 +184,7 @@ berechne_all <- function(data,
                          type = "1",
                          fun = function(x)length(na.omit(x)),
                          fm = NULL,
-                         digits = get_opt("mittelwert","digits" ),
+                         digits = get_opt("mean","digits" ),
                          measure.name = NULL
 ) {
 

@@ -33,7 +33,7 @@ make_numeric <- function(x) {
     return(x)
   else if (is.factor(x)) {
     if (nlevels(x) == 2)
-      as.numeric(x) - 1
+      ifelse(x == levels(x)[1], 1, 0)
     else
       as.numeric(x)
   }
@@ -53,24 +53,47 @@ median2 <-
 
 
 # calc_ --------------------------------------------------------------------
-
-
-
+#' @rdname Mittelwert
+#' @export
+#' @examples
+#' percent2(gl(2, 8, labels = c("Control", "Treat")))
+percent2 <- function(x, ...) calc_percent(x, ...)
 
 #' @rdname Mittelwert
+#'
+#' @description Format Prozent
+#'  style = 1    50% (27)
+#'  style = 2    27 (50%)
+#'  style = 3    50%
+#'  style = 4    27
+#'  style = 5    27/54
 calc_percent <- function(x,
-                         digits = 0,
+                         digits = get_opt("prozent", "digits") ,
                          n = length(x),
                          exclude =   c(NA, NaN),
                          max_factor_length = 25,
-                         style = 1,
+                         style = get_opt("prozent", "style") ,
                          is_true_false = FALSE,
                          ...) {
-  if (is.null(style))
-    style <- 1
+
+
+  if(missing(x)) return( switch(style,
+                                "1" = "percent (count)",
+                                "2" = "count (percent)",
+                                "3" = "percent",
+                                "4" = "count",
+                                "percent (count)"
+  ))
+
+  if (is.null(style)) style <- 1
+
+
   # Table Creation
   if (is.factor(x)) {
     tbl <- table(x, exclude = exclude)
+
+    # print(tbl)
+    # cat("\n")
     if (length(tbl) > max_factor_length) {
       naLev <- levels(x)[-(1:max_factor_length)]
       Text("NA = ", paste(naLev, collapse = ", "))
@@ -80,19 +103,23 @@ calc_percent <- function(x,
         addNA(x)  #- addNA modifies a factor by turning NA into an extra level
       tbl <- table(x)
     }
-  } else if (is.logical(x)) {
+  }
+  else if (is.logical(x)) {
     x <- factor(x, c(TRUE, FALSE), c("true", "false"))
     is_true_false <- TRUE
     tbl <- table(x, exclude = exclude)
 
 
-  } else {
+  }
+  else {
     xt <- factor(x)
     if (nlevels(xt) > max_factor_length)
       stop("class = ", class(xt), " nlevels = ", nlevels(xt))
     else
       tbl <- table(xt, exclude = exclude)
   }
+
+  # print(sum(tbl))
 
   # Leerer Weret
   if (n == 0) {
@@ -160,10 +187,16 @@ calc_percent <- function(x,
 #' @param unit Einheiten
 #'
 calc_mean <-  function(x,
-                       digits = get_opt("digits", "mittelwert") ,
+                       digits = get_opt("mean", "digits") ,
                        n = length(x),
-                       style = get_opt("mittelwert", "mean.style"),
+                       style = get_opt("mean", "style"),
                        unit=NULL) {
+
+  if(missing(x)) return( switch(style,
+                                "1" = "mean (sd)",
+                                "2" = "mean (sd, range)",
+                                "mean (sd)"
+  ))
 
   if(all(is.na(x))) return(NaN)
 
@@ -179,15 +212,15 @@ calc_mean <-  function(x,
   # calc and format
   if (is.null(style)) {
     rndr_mean(mean(x, na.rm = TRUE),
-                         ifelse(n > 2, sd(x, na.rm = TRUE), NA),
-                         digits=digits,
-                         unit=unit)
+              ifelse(n > 2, sd(x, na.rm = TRUE), NA),
+              digits=digits,
+              unit=unit)
   }
   else if (style == "1") {
     rndr_mean(mean(x, na.rm = TRUE),
-                         ifelse(n > 2, sd (x, na.rm = TRUE), NA),
-                         digits=digits,
-                         unit=unit)
+              ifelse(n > 2, sd (x, na.rm = TRUE), NA),
+              digits=digits,
+              unit=unit)
   }
   else if (style == "2" | style == "long") {
     rndr_mean_range(
@@ -208,71 +241,158 @@ calc_mean <-  function(x,
   }
   else {
     rndr_mean(mean(x),
-                         ifelse(n > 2, sd(x), NA),
-                         digits=digits,
-                         unit=unit)
+              ifelse(n > 2, sd(x), NA),
+              digits=digits,
+              unit=unit)
   }
 }
 
 #' @noRd
 calc_median <-
   function(x,
-           digits = 2,
+           digits = get_opt("median", "digits"),
            n = length(x),
-           style = get_opt("mittelwert", "median.style"),
-           unit=NULL) {
+           style = get_opt("median", "style"),
+           unit = NULL) {
 
-    if(all(is.na(x))) return(NaN)
+    if(missing(x)) return( switch(style,
+                                  "1" = "median (quantile)",
+                                  "2" = "median (IQR, range)",
+                                  "3" = "median (range)",
+                                  "4" =  "median (IQR)",
+                                  "median (IQR)"
+    ))
 
-    if (!is.numeric(x)) {
-      x <- make_numeric(x)
-    } else if (inherits(x, "units")) {
-      gr <- c("[", "]")
-      unit <- paste0(gr[1], as.character(attr(x, "units")), gr[2])
-      x <- units::drop_units(x)
-    }
 
-    if (is.null(style)) {
+    median_quantil <- function()
       rndr_median_quant(quantile(x, na.rm = TRUE),
-                                   digits=digits,
-                                   unit=unit)
-    }
-    else if (style == 1) {
-      rndr_median_quant(quantile(x, na.rm = TRUE),
-                                   digits=digits,
-                                   unit=unit)
-    }
-    else if (style == "IQR" | style == "IRQ") {
-      rndr_median(median(x),
-                             ifelse(n > 2, IQR(x), NA),
-                             digits=digits,
-                             unit=unit)
-    }
-    else if (style == "2" | style == "long") {
-      rndr_median_range(
+                        digits = digits,
+                        unit = unit)
+
+
+    median_iqr <- function()
+      rndr_median_iqr(median(x),
+                      ifelse(n > 2, IQR(x), NA),
+                      digits = digits,
+                      unit = unit)
+
+
+    median_range <-  function()
+      rndr_median_range(quantile(x, na.rm = TRUE),
+                        digits = digits,
+                        unit = unit)
+
+    median_iqr_range <- function()
+      rndr_median_iqr_range(
         median(x, na.rm = TRUE),
         IQR(x, na.rm = TRUE),
         min(x, na.rm = TRUE),
         max(x, na.rm = TRUE),
         digits = digits,
-        unit=unit
+        unit = unit
       )
+
+    median_iqr_two_values <- function()
+      cbind(m =  render_f(median(x), digits = digits),
+            sd = ifelse(n > 2, render_f(IQR(x), digits = digits), NA))
+
+
+
+
+
+
+    if (all(is.na(x)))
+      return(NaN)
+
+    if (!is.numeric(x)) {
+      x <- make_numeric(x)
+    }
+    else if (inherits(x, "units")) {
+      gr <- c("[", "]")
+      unit <- paste0(gr[1], as.character(attr(x, "units")), gr[2])
+      x <- units::drop_units(x)
     }
 
-    # else if(style=="3"| style=="ci"| style=="CI"){
-    #   Medianci2(x, digits=digits)
-    # }
-    else if (style == "two_values"){
-      cbind(m =  render_f(median(x),digits=digits),
-            sd = ifelse(n > 2, render_f(IQR(x),digits=digits), NA))
-    }
 
-    else {
-      rndr_median_quant(quantile(x, na.rm = TRUE),
-                                   digits=digits,
-                                   unit=unit)
-    }
+    if (is.null(style))
+      median_quantil()
+    else if (style == "IQR" | style=="4" | style == "IRQ")
+      median_iqr()
+    else if (style == 1)
+      median_quantil()
+    else if (style == 2 | style == "long")
+      median_iqr_range()
+    else if (style == 3)
+      median_range()
+    else if (style == "two_values")
+      median_iqr_two_values()
+
+    else
+      rndr_median_quant()
+
   }
+
+
+
+
+# calc_median <-
+#   function(x,
+#            digits = get_opt("median", "digits"),
+#            n = length(x),
+#            style = get_opt("median", "style"),
+#            unit=NULL) {
+#
+#     if(all(is.na(x))) return(NaN)
+#
+#     if (!is.numeric(x)) {
+#       x <- make_numeric(x)
+#     } else if (inherits(x, "units")) {
+#       gr <- c("[", "]")
+#       unit <- paste0(gr[1], as.character(attr(x, "units")), gr[2])
+#       x <- units::drop_units(x)
+#     }
+#
+#     if (is.null(style)) {
+#       rndr_median_quant(quantile(x, na.rm = TRUE),
+#                         digits = digits,
+#                         unit = unit)
+#     }
+#     else if (style == 1) {
+#       rndr_median_quant(quantile(x, na.rm = TRUE),
+#                         digits = digits,
+#                         unit = unit)
+#     }
+#     else if (style == "IQR" | style == "IRQ") {
+#       rndr_median(median(x),
+#                   ifelse(n > 2, IQR(x), NA),
+#                   digits = digits,
+#                   unit = unit)
+#     }
+#     else if (style == "2" | style == "long") {
+#       rndr_median_range(
+#         median(x, na.rm = TRUE),
+#         IQR(x, na.rm = TRUE),
+#         min(x, na.rm = TRUE),
+#         max(x, na.rm = TRUE),
+#         digits = digits,
+#         unit = unit
+#       )
+#     }
+#
+#     # else if(style=="3"| style=="ci"| style=="CI"){
+#     #   Medianci2(x, digits=digits)
+#     # }
+#     else if (style == "two_values"){
+#       cbind(m =  render_f(median(x),digits=digits),
+#             sd = ifelse(n > 2, render_f(IQR(x),digits=digits), NA))
+#     }
+#
+#     else {
+#       rndr_median_quant(quantile(x, na.rm = TRUE),
+#                                    digits=digits,
+#                                    unit=unit)
+#     }
+#   }
 
 
 
