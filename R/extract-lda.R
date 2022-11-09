@@ -21,17 +21,17 @@ fix_and_format<- function(x, caption, digits=2, ...) {
 #' @examples
 #'
 #'  require(MASS)
-#' DF2 <- stp25aggregate::GetData(
-#'   "C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/discrim.sav")
+#' #DF2 <- stp25aggregate::GetData(
+#'   #"C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/discrim.sav")
 #' #--https://stats.idre.ucla.edu/spss/dae/discriminant-function-analysis/
-#' DF2$Job <- factor(DF2$JOB, 1:3, Cs("customer service", "mechanic","dispatcher"))
-#' DF2$Job2 <- factor(DF2$JOB, c(2,3,1), Cs( "mechanic","dispatcher","customer service"))
-#'
-#' fit2 <- lda(Job ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
-#' fit3 <- lda(Job2 ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
-#'
-#' tbll_extract.lda(fit2)
-#' tbll_extract.lda(fit3)
+#'# DF2$Job <- factor(DF2$JOB, 1:3, Cs("customer service", "mechanic","dispatcher"))
+#' #DF2$Job2 <- factor(DF2$JOB, c(2,3,1), Cs( "mechanic","dispatcher","customer service"))
+#'#
+#' #fit2 <- lda(Job ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
+#' #fit3 <- lda(Job2 ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
+#'#
+#' #tbll_extract.lda(fit2)
+#' #tbll_extract.lda(fit3)
 #'
 #'
 tbll_extract.lda <-

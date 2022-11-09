@@ -20,7 +20,7 @@
 #'
 #'
 #'
-#'  DF<-stp25aggregate::GetData(
+#'  DF<- get_data(
 #' "C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/manova.sav"
 #' )
 #'

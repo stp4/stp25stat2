@@ -249,13 +249,13 @@ format_rank <- function(r, include.mean, include.z,
                      stringsAsFactors = FALSE )
   if (include.percent & include.freq)
     res <- cbind( res,
-                  stp25rndr::rndr_percent(r$rel.freq * 100,
+                  rndr_percent(r$rel.freq * 100,
                                           r$freq,
                                           return_as_vector = FALSE),
                   stringsAsFactors = FALSE)
   else if (include.percent)
     res <- cbind( res,
-                  stp25rndr::rndr_percent(r$rel.freq * 100,
+                  rndr_percent(r$rel.freq * 100,
                                           return_as_vector = FALSE),
                   stringsAsFactors = FALSE)
   else{
@@ -265,16 +265,16 @@ format_rank <- function(r, include.mean, include.z,
 
   if (include.mean & include.z)
     res <- cbind( res,
-                  stp25rndr::Format2(r$mean[, c( "mean","sd", "z.score")],
+                  render_f(r$mean[, c( "mean","sd", "z.score")],
                                      digits.mean)
     )
   else if (include.z)
     res <- cbind( res,
-                  stp25rndr::Format2(r$mean[, "z.score"],
+                  render_f(r$mean[, "z.score"],
                                      digits.mean))
   else if (include.mean)
     res <- cbind( res,
-                  stp25rndr::Format2(r$mean[, c( "mean","sd")],
+                  render_f(r$mean[, c( "mean","sd")],
                                      digits.mean))
 
   if (order)
