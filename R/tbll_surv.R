@@ -463,6 +463,11 @@ extract_survfit <- function(x,
   }
   else
   {
+
+  #  print(mdn[["0.95LCL"]])
+  #  print(render_f(mdn[["0.95LCL"]], digits))
+
+
     mdn  <-   data.frame(
       Source = "Null",
       median = render_f(mdn[["median"]], digits),

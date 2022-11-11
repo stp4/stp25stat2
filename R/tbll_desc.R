@@ -164,6 +164,15 @@ Tbll_desc <- function (...,
            function(x) length(na.omit(x)))
  if (!include.label)
      X$row_name <- X$measure.vars
+
+ # print( list(
+ #
+ #   include.n=   include.n ,
+ #   header=  any_missing_measure[X$measure!="header"] ,
+ #
+ # N=   X$N
+ # ))
+
  if (include.n & sum(any_missing_measure[X$measure!="header"] - X$N) == 0) {
     # keine fehlenden dann nur erste Zeile mit N
     include.n <- FALSE
@@ -658,10 +667,16 @@ measure_info <- function(measure,
                        #  contest = c("Wilcoxon-Test", "Kruskal-Wallis-Test"),
                        #  cattest = "Pearson Chi-squared",
                          note="") {
-
+return("")
+ # measure<- na.omit(measure)
   fctr <- any(measure == "factor") | any(measure == "logical")
   rtio <-  any(measure == "ratio")
+ #if(is.na(rtio)) rtio <- FALSE
 
+  # cat("\nin measure_info:\n")
+  # print(measure )
+  # print(rtio)
+  # print(measure_percent)
   mn <- any(measure == "numeric") | any(measure == "mean")
   md <- any(measure == "median")
 
