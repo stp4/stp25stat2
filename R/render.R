@@ -134,7 +134,7 @@ render_f.default <- function(x,
                              drop0leading = FALSE,
                              na.strings = "NA",
                              na.symbol = "",
-                             decimal.mark = getOption("OutDec"),
+                             decimal.mark = OutDec(),
                              ...) {
   x <- as.character(x)
   if (!is.null(na.strings))
@@ -152,7 +152,11 @@ render_f.default <- function(x,
 
 # helper ------------------------------------------------------------------
 
+OutDec <- function() {
+  if(is.null( get_opt("OutDec") ))  "."
+  else get_opt("OutDec")
 
+}
 
 #' formatC
 #'
@@ -161,7 +165,7 @@ make_format <- function(x,
                         digits = format_guess(x),
                         drop0leading  = FALSE,
                         format = "f",
-                        decimal.mark = getOption("OutDec"),
+                        decimal.mark = OutDec(),
                         na.strings = "NA",
                         na.symbol = "",
                         unit = NULL,
@@ -241,7 +245,7 @@ format_guess <- function(x) {
 #'
 #' @noRd
 drop_0_leading <- function(x,
-                           OutDec = getOption("OutDec")) {
+                           OutDec = OutDec()) {
   sub(glue::glue('^(-)?0[{OutDec}]'),
       glue::glue('\\1{OutDec}'),
       x)
