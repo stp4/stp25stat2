@@ -1,3 +1,12 @@
+
+ #: possible error in
+ # 'rndr_percent(r$rel.freq * ': unused argument (return_as_vector = FALSE)
+ # at tbll_ranking.R:250
+
+
+
+
+
 #' Tbll_ranking
 #'
 #' Rangordnungen von Objekten koennen durch eine Transformation der Rangreihen in
@@ -249,14 +258,11 @@ format_rank <- function(r, include.mean, include.z,
                      stringsAsFactors = FALSE )
   if (include.percent & include.freq)
     res <- cbind( res,
-                  rndr_percent(r$rel.freq * 100,
-                                          r$freq,
-                                          return_as_vector = FALSE),
+                  rndr_percent(r$rel.freq * 100, r$freq),
                   stringsAsFactors = FALSE)
   else if (include.percent)
     res <- cbind( res,
-                  rndr_percent(r$rel.freq * 100,
-                                          return_as_vector = FALSE),
+                  rndr_percent(r$rel.freq * 100),
                   stringsAsFactors = FALSE)
   else{
     res <- cbind(res, as.data.frame.array(r$freq))
