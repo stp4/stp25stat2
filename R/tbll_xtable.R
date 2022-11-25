@@ -109,13 +109,17 @@ Tbll_xtabs.formula <-
            drop.unused.levels = FALSE,
            margin = NULL,
            add.margins = NULL,
+           N_data = nrow(data),
            ...) {
+
     x_tab <- stats::xtabs(
       x, data,
       addNA = addNA,
       exclude = exclude,
       drop.unused.levels = drop.unused.levels
     )
+    N_data <- nrow(data)
+    N_table <- sum(x_tab)
 
     dnn <- dimnames(x_tab)
     names(dnn) <- stp25tools:::get_label2(data[all.vars(x)] )
@@ -144,6 +148,7 @@ Tbll_xtabs.formula <-
     Tbll_xtabs.xtabs(x_tab,
                      margin = margin,
                      add.margins = add.margins,
+                     N_data = N_data,
                      ...)
   }
 
@@ -157,7 +162,7 @@ Tbll_xtabs.formula <-
 #' @export
 #'
 Tbll_xtabs.data.frame <-
-  function(data ,
+  function(data,
            ...,
            include.count = TRUE,
            include.percent = TRUE,
@@ -197,7 +202,8 @@ if(!is.null( X$group.vars ))
       digits = digits,
       addNA = addNA,
       exclude = exclude,
-      drop.unused.levels = drop.unused.levels
+      drop.unused.levels = drop.unused.levels,
+      N_data = nrow(data)
     )
   }
 
@@ -258,6 +264,7 @@ Tbll_xtabs.xtabs  <- function(x,
                               add.margins = NULL,
                               digits = get_opt("prozent", "digits"),
                               prevalence = NULL,
+                              N_data = sum(x),
                               ...) {
   # cat( "\n in Tbll_xtabs.xtabs\n" )
   res <- list()
@@ -281,7 +288,8 @@ Tbll_xtabs.xtabs  <- function(x,
       digits = digits,
       dim_x = dim_x
     ),
-    caption = "Haeufigkeitstabellen"
+    caption = "Haeufigkeitstabellen",
+    N =  N_data
   )
 
   if (include.test) {
@@ -314,7 +322,8 @@ Tbll_xtabs.xtabs  <- function(x,
           p   = rndr_P(fisher_test$p.value),
           stringsAsFactors = FALSE
         ),
-        caption = "Fisher's Exact Test"
+        caption = "Fisher's Exact Test",
+        N =  N_data
       )
     }
     else if (include.chisq & dim_x == 2) {
@@ -327,7 +336,8 @@ Tbll_xtabs.xtabs  <- function(x,
           p    = rndr_P(chisq_tests$chisq_tests[, 3]),
           stringsAsFactors = FALSE
         ),
-        caption = "Chi-Squared Test"
+        caption = "Chi-Squared Test",
+        N =  N_data
       )
     }
     else if (include.chisq.sumary) {
@@ -353,7 +363,8 @@ Tbll_xtabs.xtabs  <- function(x,
       ),
       stringsAsFactors = FALSE
     ),
-    caption = "Correlation Test")
+    caption = "Correlation Test",
+    N =  N_data)
   }
 
   if (include.diagnostic) {
