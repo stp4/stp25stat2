@@ -26,14 +26,12 @@
 #' @export
 
 Tbll_ranking <- function(...,
-
                       na.action = na.pass,
                       include.percent = TRUE,
                       include.freq = TRUE,
                       include.mean = TRUE,
                       include.z = TRUE,
                       include.na = TRUE,
-
                       include.order = TRUE,
                       decreasing = TRUE,
                       digits.mean = 2) {

@@ -20,6 +20,7 @@ prepare_output <- function(x,
                            include.n =  get_opt("caption"),
                            rgroup = NULL,
                            n.rgroup = NULL,
+                          # class = NULL,
                            ...) {
 
 
@@ -49,7 +50,7 @@ prepare_output <- function(x,
  # attr(x, "col_header") <- NULL
 
   x <-  tibble::as_tibble(x, .name_repair = "unique", rownames=NA)
-
+  #if(!is.null(class)) class(x) <- c(class(x), class)
 #  if(!is.null(get_lang()))
 #    names(x) <- get_lang(names(x))
 
