@@ -67,6 +67,13 @@ Tbll_reliability <- function(...) {
   UseMethod("Tbll_reliability")
 }
 
+
+
+
+
+
+
+
 #' @rdname Tbll_reliability
 #' @export
 Tbll_reliability.default <-
@@ -74,31 +81,26 @@ Tbll_reliability.default <-
            include.label = TRUE,
            include.item_statistics = TRUE,
            include.scale_statistics = TRUE,
-          # include.scale.value = include.scale_statistics,
            include.cronbachs.alpha = TRUE,
-
            include.inter.item.correlation = FALSE,
            revcoded = FALSE,
            check.keys = NULL,
-           keys = NULL,
+           keys = revcoded,
            digits = 2) {
-
     X <- stp25tools::prepare_data2(...)
     n <- length(X$measure.vars)
     if (!include.label)
       X$row_name <- X$measure.vars
 
     if (length(X$measure.vars) > 1)   {
-      X$data[X$measure.vars] <- stp25tools:::dapply1(X$data[X$measure.vars])
-
+      X$data[X$measure.vars] <-
+        stp25tools:::dapply1(X$data[X$measure.vars])
 
       rslt <- item_statistik(X$data[X$measure.vars],
-                             revcoded = revcoded,
                              check.keys = check.keys,
-                             keys = keys
-                             )
+                             keys = keys)
       rslt <- skala_statistik(rslt)
-      rslt$labels <-  X$row_name
+      rslt$labels <- X$row_name
 
       item <-
         data.frame(
@@ -106,26 +108,27 @@ Tbll_reliability.default <-
           n = rslt$item_statistik$n,
           M = render_f(rslt$item_statistik$m, 2),
           SD = render_f(rslt$item_statistik$sd, 2),
-          Alpha.if.Item.Deleted = render_f(rslt$psych$item.stats$r.drop, 2)
+          Alpha.if.Deleted = render_f(rslt$psych$item.stats$r.drop, 2)
         )
 
-      aplha_statistik <- with(
-        rslt,
-        data.frame(
-          Items = Items,
-          n = n,
-          M = render_f(M, 2),
-          SD = render_f(SD, 2),
-
-          Range = paste(render_f(range, 2), collapse = "; "),
-          Skew = render_f(Skew, 2),
-          Kurtosi = render_f(Kurtosi, 2) ,
-          Shapiro.Test = shapiro
+      aplha_statistik <-
+        with(
+          rslt,
+          data.frame(
+            Items = Items,
+            n = n,
+            M = render_f(M, 2),
+            SD = render_f(SD, 2),
+            Range = paste(render_f(range, 2), collapse = "; "),
+            Skew = render_f(Skew, 2),
+            Kurtosi = render_f(Kurtosi, 2) ,
+            Shapiro.Test = shapiro
+          )
         )
-      )
 
       if (include.cronbachs.alpha)
-        aplha_statistik$Alpha <- render_f(rslt$Alpha, 2)
+        aplha_statistik$Alpha <-
+        render_f(rslt$Alpha, 2)
 
       if (include.inter.item.correlation)
         aplha_statistik$inter.item.correlation <-
@@ -137,18 +140,20 @@ Tbll_reliability.default <-
       scale_statistics  <-
         prepare_output(aplha_statistik, caption = "Item-Mittelwerte", N = n)
 
-      if (include.item_statistics & include.scale_statistics)
-        return(list(
+      if (include.item_statistics & include.scale_statistics) {
+        rslt <-  list(
           item_statistics = item_statistics,
           scale_statistics = scale_statistics,
-          index= rslt$index,
+          index = rslt$index,
           keys = rslt$keys
-
-          ))
-      else if (include.item_statistics)
+        )
+        class(rslt) <- c(class(rslt), "psych_alpha")
+        return(rslt)
+      } else if (include.item_statistics) {
         return(item_statistics)
-      else
+      } else{
         return(scale_statistics)
+      }
     }
     else{
       x <- as.numeric(X$data[[1]])
@@ -195,7 +200,7 @@ Tbll_reliability.psych <-
         n = x$item.stats$n,
         M = render_f(x$item.stats$mean, 2),
         SD = render_f(x$item.stats$sd, 2),
-        Alpha.if.Item.Deleted = render_f(x$item.stats$r.drop, 2)
+        Alpha.if.Deleted = render_f(x$item.stats$r.drop, 2)
       )
 
 
@@ -214,38 +219,71 @@ Tbll_reliability.psych <-
     item_statistics <-
       prepare_output(item_statistics, caption = "Itemstatistiken", N = n)
 
-    return(
+    rslt <-
       list(
         item_statistics = item_statistics,
         scale_statistics = scale_statistics,
         index =  x$scores,
         keys = x$keys
       )
-    )
+      class(rslt) <- c(class(rslt), "psych_alpha")
+      rslt
   }
+
+
+#' @rdname APA
+#' @export
+#'
+#'
+APA.psych  <- function(x) {
+  paste("Alpha =", render_f(x$total$raw_alpha, digits = 2))
+}
+#' @rdname APA
+#' @export
+#'
+#'
+APA.psych_alpha <- function(x) {
+  paste("Alpha =", x$scale_statistics$Alpha)
+}
 
 #' @rdname Tbll_reliability
 #' @export
 Tbll_Alpha <- function(...,
                        type = 1,
                        names = NULL) {
-  if (is.null(names)) {
+  if (is.null(names))
     names <-  paste(as.list(sys.call())[-1])
-  }
-
   skalen <- list(...)
   rslt <- NULL
+
   for (i in seq_along(skalen)) {
-    if (!is.data.frame(skalen[[i]]))
-      skalen[[i]] <- skalen[[i]]$scale_statistics
-       rslt <- rbind(rslt, skalen[[i]])
+    if (inherits(skalen[[i]], "psych"))
+      rslt <- rbind(rslt, .alpha_psych(skalen[[i]]))
+    else{
+      if (!is.data.frame(skalen[[i]]))
+        skalen[[i]] <- skalen[[i]]$scale_statistics
+      rslt <- rbind(rslt, skalen[[i]])
+    }
   }
 
- prepare_output(cbind(Source= names, rslt))
-
+  prepare_output(cbind(Source = names, rslt),
+                 caption = "Cronbach's alpha"
+                )
 }
 
-
+.alpha_psych<- function(x){
+  data.frame(
+    Items = nrow(x$item.stats),
+    n=NA,
+    M = render_f(x$total$mean, 2),
+    SD = render_f(x$total$sd, 2),
+    Range =NA,
+    Skew = NA,
+    Kurtosi = NA ,
+    Shapiro.Test = NA,
+    Alpha = render_f(x$total$raw_alpha, 2)
+  )
+}
 
 
 #'  es werden immer die Werte mit  check.keys = FALSE berechnet
@@ -253,36 +291,48 @@ Tbll_Alpha <- function(...,
 #'
 #' @noRd
 item_statistik <- function(data,
-                           revcoded = FALSE,
-                           check.keys = NULL,
-                           keys = NULL) {
-
-
-  if (all(abs(revcoded) == 1)) {
-    keys <-  revcoded
-    revcoded <- NULL
+                        #    revcoded = FALSE,
+                            check.keys = NULL,
+                            keys = FALSE) {
+  # revcoded = keys = c(1,1,1,1,-1)
+  if (is.numeric(keys) & length(keys) > 1){
+    if( all(abs(keys) == 1) )
+    keys <- which(keys == -1)
   }
 
-  if (is.numeric(revcoded)) {
-    min.level <- min(data, na.rm = TRUE)
-    max.level <- max(data, na.rm = TRUE)
 
-    data[revcoded] <-
-      stp25tools:::dapply1(data[revcoded],
-                           function(x) max.level + min.level - x)
-
-    keys <-  ifelse(1:ncol(data) %in% revcoded, -1, 1)
+  if (is.null(check.keys) & isFALSE(keys)) {
+  #   cat("\n keine Vorgaben\n")
+    keys <- rep(1, ncol(data))
     psych <- psych::alpha(data, check.keys = FALSE)
   }
-  else if (isTRUE(revcoded) | isTRUE(check.keys)) {
-    alp_check <- psych::alpha(data, check.keys = TRUE)
-    keys <- alp_check$keys
+  else  if (is.numeric(keys)) {
+   #   cat("\n  keys vorgegeben\n")
+    min.level <- min(data, na.rm = TRUE)
+    max.level <- max(data, na.rm = TRUE)
+    data[keys] <-
+      stp25tools:::dapply1(data[keys],
+                           function(x)
+                             max.level + min.level - x)
 
-    if (any(alp_check$keys == -1)) {
+    keys <-  ifelse(seq_along(data) %in% keys, -1, 1)
+    psych <- psych::alpha(data, check.keys = FALSE)
+  }
+  else if (isTRUE(keys) | isTRUE(check.keys)) {
+   #  cat("\n  keys prüfen\n")
+    alp_check <-
+      psych::alpha(data, check.keys = TRUE, warnings = FALSE)
+    keys <- unlist(alp_check$keys)
+    keys <-  ifelse(grepl("\\-", keys), -1, 1)
+
+  #   print(keys)
+    if ( any(keys) ) {
       min.level <- min(data, na.rm = TRUE)
       max.level <- max(data, na.rm = TRUE)
-
-      revcoded <-  which(keys == -1)
+      revcoded <-  which( keys == -1 )
+      cat("\nAutomatisch Umkodieren!\n")
+      print(revcoded)
+      cat("\n")
 
       data[revcoded] <-
         stp25tools:::dapply1(data[revcoded], function(x)
@@ -290,24 +340,11 @@ item_statistik <- function(data,
       psych <- psych::alpha(data, check.keys = FALSE)
 
     } else{
+       # cat("\n nix Umzukodieren!\n")
       psych <- alp_check
     }
   }
-  if (is.numeric(keys)) {
-    min.level <- min(data, na.rm = TRUE)
-    max.level <- max(data, na.rm = TRUE)
-    revcoded <- which(keys == -1)
-    data[revcoded] <-
-      stp25tools:::dapply1(data[revcoded],
-                           function(x) max.level + min.level - x)
 
-  #  keys <-  ifelse(1:ncol(data) %in% revcoded, -1, 1)
-    psych <- psych::alpha(data, check.keys = FALSE)
-  }
-  else{
-    keys <- rep(1, ncol(data))
-    psych <- psych::alpha(data, check.keys = FALSE)
-  }
 
   #- library Pych Version: 1.4.3
   #- Date:	 2014--March--25
@@ -331,6 +368,85 @@ item_statistik <- function(data,
     Alpha = Alpha
   )
 }
+# item_statistik <- function(data,
+#                            revcoded = FALSE,
+#                            check.keys = NULL,
+#                            keys = NULL) {
+#
+#
+#   if (all(abs(revcoded) == 1)) {
+#     keys <-  revcoded
+#     revcoded <- NULL
+#   }
+#
+#   if (is.numeric(revcoded)) {
+#     min.level <- min(data, na.rm = TRUE)
+#     max.level <- max(data, na.rm = TRUE)
+#
+#     data[revcoded] <-
+#       stp25tools:::dapply1(data[revcoded],
+#                            function(x) max.level + min.level - x)
+#
+#     keys <-  ifelse(1:ncol(data) %in% revcoded, -1, 1)
+#     psych <- psych::alpha(data, check.keys = FALSE)
+#   }
+#   else if (isTRUE(revcoded) | isTRUE(check.keys)) {
+#     alp_check <- psych::alpha(data, check.keys = TRUE)
+#     keys <- alp_check$keys
+#
+#     if (any(alp_check$keys == -1)) {
+#       min.level <- min(data, na.rm = TRUE)
+#       max.level <- max(data, na.rm = TRUE)
+#
+#       revcoded <-  which(keys == -1)
+#
+#       data[revcoded] <-
+#         stp25tools:::dapply1(data[revcoded], function(x)
+#           max.level + min.level - x)
+#       psych <- psych::alpha(data, check.keys = FALSE)
+#
+#     } else{
+#       psych <- alp_check
+#     }
+#   }
+#   if (is.numeric(keys)) {
+#     min.level <- min(data, na.rm = TRUE)
+#     max.level <- max(data, na.rm = TRUE)
+#     revcoded <- which(keys == -1)
+#     data[revcoded] <-
+#       stp25tools:::dapply1(data[revcoded],
+#                            function(x) max.level + min.level - x)
+#
+#   #  keys <-  ifelse(1:ncol(data) %in% revcoded, -1, 1)
+#     psych <- psych::alpha(data, check.keys = FALSE)
+#   }
+#   else{
+#     keys <- rep(1, ncol(data))
+#     psych <- psych::alpha(data, check.keys = FALSE)
+#   }
+#
+#   #- library Pych Version: 1.4.3
+#   #- Date:	 2014--March--25
+#   #- liefert falsche n (bei n>120 wird 122 ausgegeben)
+#   item_statistik <-
+#     list(
+#       m = sapply(data, mean, na.rm = TRUE),
+#       sd = sapply(data, sd, na.rm = TRUE),
+#       n = sapply(data, function(x)
+#         length(na.omit(x)))
+#     )
+#
+#
+#   Alpha <- as.numeric(psych$total$raw_alpha)
+#
+#   list(
+#     data = data,
+#     keys = keys,
+#     psych = psych,
+#     item_statistik = item_statistik,
+#     Alpha = Alpha
+#   )
+# }
 
 
 #' Die Funktion Tbll_desc_item() berechnet das gleiche nur mit der Summary() Funktion
