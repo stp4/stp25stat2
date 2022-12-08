@@ -39,7 +39,8 @@ model_info.default <- function(x) {
     y = NULL ,
     x = NULL ,
     labels = NULL,
-    N = NULL
+    N = NULL,
+    missing = NULL
   )
 }
 
@@ -53,20 +54,28 @@ model_info.data.frame <- function(x) {
     y = NULL ,
     x = NULL ,
     labels = NULL,
-    N = nrow(x)
+    N = nrow(x),
+    missing = NULL
   )
 }
 
 #' @rdname model_info
 #' @export
+Infomation <- function(...) {
+  my_fit <- list(...)
+  names <- abbreviate(gsub("[~??+\\:=]", "",
+                           as.character(as.list(sys.call(
+                           )))[seq_len(length(my_fit)) + 1]),
+                      minlength = 7)
+  rslt <-
+    data.frame(Info = c("Dependent Variable", "Observations", "Missing", "Type"))
+  for (i in seq_along(my_fit)) {
+    rs <-  model_info(my_fit[[i]])
 
-Infomation <- function(x) {
-  if (!is.null(comment(x)))
-     Text(comment(x))
-  else
-    Text("Daten: N = ", nrow(x), ", Col = ", ncol(x))
+    rslt[names[i]] <- c(rs$y, rs$N, rs$missing, rs$family[1])
+  }
 
-  invisible(x)
+  rslt
 }
 
 #' @rdname model_info
@@ -80,7 +89,8 @@ model_info.formula <- function(x) {
     y = fm$yname,
     x = fm$xname,
     labels = NULL,
-    N = NULL
+    N = NULL,
+    missing = NULL
   )
 }
 
@@ -96,7 +106,8 @@ model_info.eff <- function(x) {
     x = names(x$variables) ,
     # data = x$model,
     labels =  stp25tools::get_label(x$data),
-    N = nrow(x$data)
+    N = nrow(x$data),
+    missing = NULL
   )
 
 
@@ -116,7 +127,8 @@ model_info.htest <- function(x) {
       y = strsplit(x$data.name, " by ")[[1]][1] ,
       x = strsplit(x$data.name, " by ")[[1]][2] ,
       labels = NULL,
-      N = NULL
+      N = NULL,
+      missing = NULL
     )
   } else {
     list(
@@ -125,7 +137,8 @@ model_info.htest <- function(x) {
       y = strsplit(x$data.name, " by ")[[1]][1] ,
       x = strsplit(x$data.name, " by ")[[1]][2] ,
       labels = NULL,
-      N = NULL
+      N = NULL,
+      missing = NULL
     )
   }
 
@@ -158,7 +171,8 @@ model_info.anova  <- function(x) {
     y = y,
     x = x,
     labels =  labels,
-    N = NA
+    N = NA,
+    missing = NULL
   )
 
 
@@ -173,7 +187,9 @@ model_info_glm <- function(x) {
     y = all.vars(formula(fm))[1],
     x = all.vars(formula(fm))[-1],
     labels =  stp25tools::get_label(x$model),
-    N = nrow(x$model)
+    N = nrow(x$model),
+    missing = length(attr(x$model, "na.action"))
+
   )
 }
 
@@ -210,7 +226,8 @@ model_info_lmer <- function(x) {
     x = all.vars(formula(fm))[-1],
     # data = x@frame,
     labels =  stp25tools::get_label(x@frame),
-    N = nrow(x@frame)
+    N = nrow(x@frame),
+    missing = NULL
   )
 
 }
@@ -229,7 +246,8 @@ model_info.lme <- function(x) {
     y = yn,
     x =  xn,
     labels = stp25tools::get_label(insight::get_data(x)[-1]),
-    N = fm$n_obs
+    N = fm$n_obs,
+    missing = NULL
   )
 
 }
@@ -248,7 +266,8 @@ model_info.ScalarIndependenceTest <- function(x) {
     y = NULL ,
     x = NULL ,
     labels = NULL,
-    N = NULL
+    N = NULL,
+    missing = NULL
   )
 }
 
@@ -264,7 +283,8 @@ model_info.biVar <- function(x) {
     y = NULL ,
     x = NULL ,
     labels = NULL,
-    N = NULL
+    N = NULL,
+    missing = NULL
   )
 }
 
@@ -290,7 +310,8 @@ model_info_surv <- function(x) {
     y = all.vars(formula(fm))[1],
     x = all.vars(formula(fm))[-1],
     labels = NULL,
-    N = x$n
+    N = x$n,
+    missing = NULL
   )
 }
 
@@ -304,7 +325,8 @@ model_info.survdiff <- function(x) {
     y = all.vars(formula(fm))[1],
     x = all.vars(formula(fm))[-1],
     labels = NULL,
-    N = sum(x$n)
+    N = sum(x$n),
+    missing = NULL
   )
 }
 
@@ -332,6 +354,7 @@ model_info.polr <- function(x) {
     y = names(x$model)[1],
     x = names(x$model)[-1],
     labels =  stp25tools::get_label(x$model),
-    N = x$n
+    N = x$n,
+    missing = NULL
   )
 }
