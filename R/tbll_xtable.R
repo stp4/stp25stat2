@@ -126,9 +126,9 @@ Tbll_xtabs.formula <-
     dimnames(x_tab) <- dnn
 
     if (is.character(margin))
-      margin <- which(all.vars(x) == margin)
+      margin <- which(all.vars(x) %in% margin)
     if (is.character(add.margins))
-      add.margins <- which(all.vars(x) == add.margins)
+      add.margins <- which(all.vars(x) %in% add.margins)
 
     #  if (is.logical(labels)) {
     #    if (labels) {
@@ -272,9 +272,9 @@ Tbll_xtabs.xtabs  <- function(x,
   # get position of margin
   var_nms <- names(dimnames(x))
   if (is.character(margin))
-    margin <- which(var_nms == margin)
+    margin <- which(var_nms %in% margin)
   if (is.character(add.margins))
-    add.margins <- which(var_nms == add.margins)
+    add.margins <- which(var_nms %in% add.margins)
 
   res$xtab <- prepare_output(
     format_xtab(
@@ -526,7 +526,8 @@ Tbll.summary.table <- function(x, ...) {
 #'
 #' @noRd
 #' @param x xtabs Tabelle
-#' @param margin,add.margins welche Margins
+#' @param margin  Prozent geht an prop.table
+#' @param add.margins welche Spalten  add.margins geht am addmargins()
 #' @param include.count,include.percent Include
 #' @param digits Komastellen
 #' @param dim_x was fuer eine Tabelle kommt
