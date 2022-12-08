@@ -40,6 +40,7 @@ tbll_extract.default <- function(x, ...) {
 #' @export
 #'
 tbll_extract.anova <- function(x, include.eta = TRUE, ...) {
+  cat("\n   tbll_extract.anova\n")
   rslt <- x
   rslt[-ncol(rslt)] <-
     stp25stat2:::render_f(rslt[-ncol(rslt)], digits = 2)
@@ -57,7 +58,9 @@ tbll_extract.anova <- function(x, include.eta = TRUE, ...) {
                   rslt[ncol(rslt)])
   }
 
-  prepare_output(stp25tools::fix_to_df(rslt, include.colnames = TRUE),
+
+ # print(rslt)
+  prepare_output(stp25tools::fix_to_df(rslt, include.rownames = TRUE),
                  caption =   attr(rslt, "heading")[1])
 }
 
@@ -80,8 +83,9 @@ tbll_extract.lm <- function(...) {
 #' @rdname extract
 #' @export
 tbll_extract.aov <- function(...) {
-  prepare_output(extract_param_aov(..., fix_format=TRUE),
-                 caption="Analysis of Variance"
+  prepare_output(
+    extract_param_aov(..., fix_format=TRUE),
+    caption="Analysis of Variance"
   )
 }
 

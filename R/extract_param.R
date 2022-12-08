@@ -258,19 +258,54 @@ extract_param  <- function(x,
 
 
 
+#' @param x Objekt
+#' @param effects,scales,ran_prefix,conf.int,conf.level,conf.method Param antidy
+#' @param ... extra params
+#'
+#' @return data.frame tibble
+#'
+#' @noRd
+tidy_lmer <- function(x,
+                      effects = c("ran_pars", "fixed"),
+                      scales = NULL,
+                      ## c("sdcor",NA),
+                      ran_prefix = NULL,
+                      conf.int = FALSE,
+                      conf.level = 0.95,
+                      conf.method = "Wald",# should be one of “profile”, “Wald”, “boot”
+                      ...) {
+
+  rslt<-broom.mixed::tidy(x,
+                          effects = effects,
+                          scales = scales,
+                          ran_prefix = ran_prefix,
+                          conf.int = conf.int,
+                          conf.level = conf.level,
+                          conf.method=conf.method)
+
+  rslt$group<- ifelse( is.na(rslt$group), rslt$effect, rslt$group)
+  rslt <- rslt[c(3:ncol(rslt), 2)]
+
+  rslt
+}
+
+
+
 #' @rdname extract
 #'
 #' @export
 #'
 #'
 extract_param_aov <- function(x,
-                               include.eta = TRUE,
+                               include.eta = FALSE,
                                include.sumsq = TRUE,
                                include.meansq = FALSE,
                                include.omega = FALSE,
                                include.power = FALSE,
                                fix_format = FALSE,
                                ...) {
+
+  cat("\n  extract_param_aov\n")
   # include.term <-
   #   include.df <- include.f <- include.chi <- include.p <- TRUE
   if (inherits(x, "manova")) {
