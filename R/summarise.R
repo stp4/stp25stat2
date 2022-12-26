@@ -43,26 +43,26 @@
 #'   value = "Cholesterin"
 #' )
 Summarise <- function(...,
-                       fun = function(x)
-                         length(na.omit(x)),
-                       key = "variable",
-                       value = "value",
-                       na.action = na.pass,
-                       formula = NULL,
-                       margins = FALSE,
-                       margins_name = "Total",
-                      include.label=TRUE
-                      # use.label=TRUE
-
-
-                      ) {
+                      fun = function(x)
+                        length(na.omit(x)),
+                      key = "variable",
+                      value = "value",
+                      na.action = na.pass,
+                      formula = NULL,
+                      margins = FALSE,
+                      margins_name = "Total",
+                      include.label = TRUE) {
   nmbr_msr <- 1
-  molten <- stp25tools::Long(..., key = key, value = value, use.label=include.label)
+  molten <-
+    stp25tools::Long(...,
+                     key = key,
+                     value = value,
+                     use.label = include.label)
 
   default_formula <-
     formula(paste(value, "~", paste(names(molten)[-ncol(molten)], collapse = "+")))
 
-   rslts <-
+  rslts <-
     aggregate(default_formula,
               molten,
               FUN = fun,
@@ -70,10 +70,11 @@ Summarise <- function(...,
 
   rslts <- rslts[order(rslts[[1]]), ]
 
-  rst<- rslts[ncol(rslts)]
+  rst <- rslts[ncol(rslts)]
   if (class(rst[[1]])[1] == "matrix") {
     nmbr_msr <- colnames(rst[[1]])
-    rslts <- cbind(rslts[-ncol(rslts)], rst[[1]])
+    rslts <-
+      cbind(rslts[-ncol(rslts)], rst[[1]])
   } else{
     names(rslts)[ncol(rslts)] <- value
   }
@@ -89,15 +90,17 @@ Summarise <- function(...,
                 FUN = fun,
                 na.action = na.action)
 
-     rst <- rslts_m[ncol(rslts_m)]
-     if(class(rst[[1]])[1] == "matrix")
-        rslts_m <- cbind(rslts_m[-ncol(rslts_m)], rst[[1]])
+    rst <- rslts_m[ncol(rslts_m)]
+    if (class(rst[[1]])[1] == "matrix")
+      rslts_m <-
+      cbind(rslts_m[-ncol(rslts_m)], rst[[1]])
 
     rslts <- dplyr::bind_rows(rslts, rslts_m)
 
-    frst<-  rslts[[1]]
-    if(is.factor(frst))
-        rslts[[1]] <-  factor(frst, c(levels(frst), margins_name))
+    frst <-  rslts[[1]]
+    if (is.factor(frst))
+      rslts[[1]] <-
+      factor(frst, c(levels(frst), margins_name))
 
 
     rslts[[1]][is.na(frst)] <- margins_name
@@ -108,4 +111,3 @@ Summarise <- function(...,
   }
   rslts
 }
-
