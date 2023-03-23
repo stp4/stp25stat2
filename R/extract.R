@@ -17,6 +17,9 @@ tbll_extract <- function(...) {
 #' @export
 #'
 tbll_extract.default <- function(x, ...) {
+
+
+
   cat("\n Es ist keine Methode feur die Class",
       class(x)[1],
       " in tbll_extract() implementiert.\nIch versuche daher mal das mit broom zu extrahieren.\n")

@@ -128,9 +128,12 @@ calc_percent <- function(x,
       names(rslt) <- levels(x)
     }
     else {
-      nlevels(x) <- matrix(NA, ncol = 2, nrow = nlevels(x))
+      ##cat("\nIn Fehler\n")
+     ## print(x)
+      # Ich verstehe die Logik nicht mehr
+      rslt <- matrix(NA, ncol = 2, nrow = nlevels(x))
       colnames(rslt) <- levels(x)
-      return(rslt)
+      # return(rslt)
     }
   }
 
