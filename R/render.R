@@ -344,193 +344,182 @@ rndr_Stars <- function (x,
 
 
 
-# percent --------------------------------------------------------------------
-
-#' @rdname render_f
-#' @examples
-#'
-#' rndr_percent(47, 154)
-#' rndr_percent(c(12, 36, 36), c(148, 36, 154))
-#' rndr_percent(data.frame(p = c(1, 2, 3),
-#'                         p2 = c(10, 0, 36),
-#'                         p3 = c(1, 2, NA)
-#' ) ,
-#' data.frame(n = c(148, 363, 454),
-#'            n1 = c(141, 362, 453),
-#'            n2 = c(141, 362, 453)
-#' )
-#' )
-#'
-rndr_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
-                         n = NULL,
-                         digits = get_opt("prozent", "digits") ,
-                         symbol.trailing = get_opt("prozent", "percentage_str"),
-                         symbol.na = "n.a.",
-                         style = get_opt("prozent", "style"),
-                         null_percent_sign = get_opt("prozent", "null_percent_sign"),
-                         small_values = x < 1 / (10 ^ digits)
-                        ) {
-
-  res <- NULL
-  n_total <-  sum(n, na.rm = TRUE)
-  # cat("\nrndr_percent\n")
-  #  print(x)
-  #   print(n)
-  # print(n_total)
-  n <-  render_f(
-    n,
-    digits = 0,
-    drop0leading  = FALSE,
-    format = "f",
-    na.strings = NULL
-  )
-  prc <-   render_f(
-    x,
-    digits = digits,
-    drop0leading  = FALSE,
-    format = "f",
-    na.strings = NULL
-  )
 
 
-
-  paste_prc <- function() {
-    if (any(small_values))
-      prc[which(small_values)] <- paste0("<", 1 / (10 ^ digits))
-
-    if (!is.null(n)) {
-      if (style == 1)
-        res <-  paste0(prc, symbol.trailing, " (", n, ")")
-      else  if (style == 2)
-        res <- paste0(n, " (", prc, symbol.trailing, ")")
-      else if (style == 3)
-        res <- paste0(prc,  symbol.trailing)
-      else if (style == 4)
-        res <- n
-      else
-        res <- paste0(n, "/", n_total)
-    }
-    else{
-      res <- paste0(prc, symbol.trailing)
-    }
-
-    if (!is.null(null_percent_sign)) {
-      res[which(x == 0)] <- null_percent_sign
-    }
-
-    if (any(is.na(x)))
-      res[which(is.na(x))]  <-   symbol.na
-
-    res
-  }
-
-  if (is.vector(x)) {
-    res <- paste_prc()
-  }
-  else if (is.matrix(x) & !is.table(x) & !inherits(x, "ftable"))  {
-    res <-   matrix(
-      paste_prc(),
-      ncol = ncol(x),
-      nrow = nrow(x),
-      dimnames = dimnames(x)
-    )
-  }
-  else if (is.data.frame(x))  {
-    n <- as.matrix(n)
-    prc <- as.matrix(prc)
-    res <-   matrix(
-      paste_prc(),
-      ncol = ncol(x),
-      nrow = nrow(x),
-      dimnames = dimnames(as.matrix(x))
-    )
-  } else{
-    prc <-   render_f(
-      as.vector(x),
-      digits = digits,
-      drop0leading  = FALSE,
-      format = "f",
-      na.strings = NULL
-    )
-
-    if (length(dim(x)) == 2) {
-      res <- fix_tbl_to_df(paste_prc(), x)
-    }
-    else{
-      res <- matrix(paste_prc(),
-                    dimnames = dimnames(as.matrix(x)))
-    }
-  }
-
-  res
-}
-
-
-
-#' Workaraund fuer format_xtab
-#'
-#' @param res formatierte Werte als Vector
-#' @param x orginale ftable
-#' @param sep intern
-#' @param col_split moegliche auswahl ein oder zwei Spalten
-#'
-#' @noRd
-fix_tbl_to_df <- function(res,
-                          x,
-                          sep = "___",
-                          col_split = TRUE) {
-
-  nms2 <- NULL
-  if (inherits(x, "ftable"))
-  {
-    if (length(attr(x, "row.vars")) == 1) {
-      nms <- names(attr(x, "row.vars"))
-      dms <- list(attr(x, "row.vars")[[1]],
-                  paste(names(attr(x, "col.vars")),
-                        attr(x, "col.vars")[[1]], sep = "_"))
-    }
-    else{
-      nms <- paste(names(attr(x, "row.vars")), collapse = sep)
-      nms2 <-  names(attr(x, "row.vars"))
-
-      dms <- list(paste(rep(
-        attr(x, "row.vars")[[1]], each = length(attr(x, "row.vars")[[2]])
-      ),
-      attr(x, "row.vars")[[2]], sep = sep)
-      ,
-      paste(names(attr(x, "col.vars")),
-            attr(x, "col.vars")[[1]], sep = "_"))
-    }
-  }
-  else
-  {
-    nms <- names(dimnames(x))[1]
-    dms <-  list(dimnames(x)[[1]] ,
-                 paste(names(dimnames(x))[2],
-                       dimnames(x)[[2]], sep = "_"))
-  }
-
-  res <-
-    matrix(
-      res,
-      nrow = dim(x)[1],
-      ncol = dim(x)[2],
-      byrow = FALSE,
-      dimnames = dms
-    )
-
-
-  res <- as.data.frame(res)
-  if ( length(attr(x, "row.vars")) == 1 |  !col_split) {
-    res <- cbind(Source = row.names(res),  res)
-    names(res)[1] <- nms[1]
-  }  else{
-    res2 <-  stringr::str_split_fixed(row.names(res), sep, 2)
-   if(!is.null(nms2)) colnames(res2) <- nms2
-    res <- cbind(res2, res)
-  }
-  res
-}
+# rndr_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
+#                          n = NULL,
+#                          digits = get_opt("prozent", "digits") ,
+#                          symbol.trailing = get_opt("prozent", "percentage_str"),
+#                          symbol.na = "n.a.",
+#                          style = get_opt("prozent", "style"),
+#                          null_percent_sign = get_opt("prozent", "null_percent_sign"),
+#                          small_values = x < 1 / (10 ^ digits)
+#                         ) {
+#
+#   res <- NULL
+#   n_total <-  sum(n, na.rm = TRUE)
+#   # cat("\nrndr_percent\n")
+#     # print(x)
+#     #  print(n)
+#   # print(n_total)
+#   n <-  render_f(
+#     n,
+#     digits = 0,
+#     drop0leading  = FALSE,
+#     format = "f",
+#     na.strings = NULL
+#   )
+#   prc <-   render_f(
+#     x,
+#     digits = digits,
+#     drop0leading  = FALSE,
+#     format = "f",
+#     na.strings = NULL
+#   )
+#
+#
+#
+#   paste_prc <- function() {
+#     if (all(is.na(x)))
+#       return(x)
+#
+#     if (any(small_values))
+#       prc[which(small_values)] <- paste0("<", 1 / (10 ^ digits))
+#
+#     if (!is.null(n)) {
+#       if (style == 1)
+#         res <-  paste0(prc, symbol.trailing, " (", n, ")")
+#       else  if (style == 2)
+#         res <- paste0(n, " (", prc, symbol.trailing, ")")
+#       else if (style == 3)
+#         res <- paste0(prc,  symbol.trailing)
+#       else if (style == 4)
+#         res <- n
+#       else
+#         res <- paste0(n, "/", n_total)
+#     }
+#     else{
+#       res <- paste0(prc, symbol.trailing)
+#     }
+#
+#     if (!is.null(null_percent_sign)) {
+#       res[which(x == 0)] <- null_percent_sign
+#     }
+#
+#     if (any(is.na(x)))
+#       res[which(is.na(x))]  <-   symbol.na
+#     res
+#   }
+#
+#
+#
+#   if (is.vector(x)) {
+#     res <- paste_prc()
+#   }
+#   else if (is.matrix(x) & !is.table(x) & !inherits(x, "ftable"))  {
+#     res <-   matrix(
+#       paste_prc(),
+#       ncol = ncol(x),
+#       nrow = nrow(x),
+#       dimnames = dimnames(x)
+#     )
+#   }
+#   else if (is.data.frame(x))  {
+#     n <- as.matrix(n)
+#     prc <- as.matrix(prc)
+#     res <-   matrix(
+#       paste_prc(),
+#       ncol = ncol(x),
+#       nrow = nrow(x),
+#       dimnames = dimnames(as.matrix(x))
+#     )
+#   } else{
+#     prc <-   render_f(
+#       as.vector(x),
+#       digits = digits,
+#       drop0leading  = FALSE,
+#       format = "f",
+#       na.strings = NULL
+#     )
+#
+#     if (length(dim(x)) == 2) {
+#       res <- fix_tbl_to_df(paste_prc(), x)
+#     }
+#     else{
+#       res <- matrix(paste_prc(),
+#                     dimnames = dimnames(as.matrix(x)))
+#     }
+#   }
+#
+#   res
+# }
+#
+#
+#
+# # Workaraund fuer format_xtab
+# #
+# # @param res formatierte Werte als Vector
+# # @param x orginale ftable
+# # @param sep intern
+# # @param col_split moegliche auswahl ein oder zwei Spalten
+# #
+# # @noRd
+# fix_tbl_to_df <- function(res,
+#                           x,
+#                           sep = "___",
+#                           col_split = TRUE) {
+#
+#   nms2 <- NULL
+#   if (inherits(x, "ftable"))
+#   {
+#     if (length(attr(x, "row.vars")) == 1) {
+#       nms <- names(attr(x, "row.vars"))
+#       dms <- list(attr(x, "row.vars")[[1]],
+#                   paste(names(attr(x, "col.vars")),
+#                         attr(x, "col.vars")[[1]], sep = "_"))
+#     }
+#     else{
+#       nms <- paste(names(attr(x, "row.vars")), collapse = sep)
+#       nms2 <-  names(attr(x, "row.vars"))
+#
+#       dms <- list(paste(rep(
+#         attr(x, "row.vars")[[1]], each = length(attr(x, "row.vars")[[2]])
+#       ),
+#       attr(x, "row.vars")[[2]], sep = sep)
+#       ,
+#       paste(names(attr(x, "col.vars")),
+#             attr(x, "col.vars")[[1]], sep = "_"))
+#     }
+#   }
+#   else
+#   {
+#     nms <- names(dimnames(x))[1]
+#     dms <-  list(dimnames(x)[[1]] ,
+#                  paste(names(dimnames(x))[2],
+#                        dimnames(x)[[2]], sep = "_"))
+#   }
+#
+#   res <-
+#     matrix(
+#       res,
+#       nrow = dim(x)[1],
+#       ncol = dim(x)[2],
+#       byrow = FALSE,
+#       dimnames = dms
+#     )
+#
+#
+#   res <- as.data.frame(res)
+#   if ( length(attr(x, "row.vars")) == 1 |  !col_split) {
+#     res <- cbind(Source = row.names(res),  res)
+#     names(res)[1] <- nms[1]
+#   }  else{
+#     res2 <-  stringr::str_split_fixed(row.names(res), sep, 2)
+#    if(!is.null(nms2)) colnames(res2) <- nms2
+#     res <- cbind(res2, res)
+#   }
+#   res
+# }
 
 
 
