@@ -505,4 +505,65 @@ APA.summary.table <- function(x,
 }
 
 
+  
+#' @rdname APA
+#' @export 
+APA.meta <- function(x) {
+  # sprintf("Heterogeneity: Cochran’s Q = %.1f, I^2 = %.0f %%",   x$Q, x$I2 *100)
+  c (100 * c(x$I2, x$lower.I2, x$upper.I2)) # I-squared
+  paste(
+    "Heterogeneity: Cochran’s ",
+    rndr_test(x$Q, x$df.Q,  x$pval.Q,  symbol = "Q"),
+    ", I^2 = ",
+    formatC(x$I2 * 100, format = "f", digits = 1),
+    " %",
+    sep = ""
+  )
+  
+}
 
+
+# Experimental
+rndr_test  <-
+  function (x,
+            df1 = NULL,
+            df2 = NULL,
+            p = NULL,
+            symbol = "F",
+            digits = get_opt("Fstat", "digits") ,
+            drop0leading = !get_opt("Fstat", "lead.zero")) {
+    input <- c(!is.null(df1) ,!is.null(df2),!is.null(p))
+    if (all(input))
+      paste(
+        symbol,
+        "(",
+        formatC(df1, format = "f", digits = 0),
+        ",",
+        formatC(df, format = "f", digits = 1),
+        ") = ",
+        formatC(x, format = "f", digits = digits),
+        ", ",
+        stp25stat2:::rndr_P(p, symbol.leading = c("p = ", "p < "), ),
+        sep = ""
+      )
+    else  if (sum(input) == 2)
+      paste(
+        symbol,
+        "(",
+        formatC(df1, format = "f", digits = 0),
+        ") = ",
+        formatC(x, format = "f", digits = digits),
+        ", ",
+        stp25stat2:::rndr_P(if (is.null(p))
+          df2
+          else
+            p,  symbol.leading = c("p = ", "p < "), ),
+        sep = ""
+      )
+    else
+      paste(symbol, " = ", formatC(x, format = "f", digits = digits),
+            sep =
+              "")
+    
+  }
+  
