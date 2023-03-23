@@ -156,13 +156,7 @@ Tbll_reg_long  <- function(...,
                            #  include.deviance=TRUE,
                            include.custom = NULL) {
   fit <- list(...)
-  # if( is.null(names)){
-  #   names <- abbreviate(
-  #     gsub("[~??+\\:=]", "",
-  #          as.character(as.list(sys.call()))[seq_len(length(fit))+1]),
-  #     minlength=7
-  #   )
-  # }
+
 
   regression_table(
     fit,
