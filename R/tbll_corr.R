@@ -84,7 +84,7 @@ Hmisc_rcorr <- function(...,
   type <-  match.arg(type)
   condition <- X$condition.vars
   measure.vars <- X$measure.vars
-  measure_data <- apply(X$data[measure.vars], 2, as.numeric)
+  measure_data <- as.matrix(sapply(X$data[measure.vars], as.numeric))
   group.vars <- X$group.vars
   N <- nrow(X$data[measure.vars])
 
@@ -102,7 +102,8 @@ Hmisc_rcorr <- function(...,
       return(head(data))
     }
 
-    group_data <- apply(X$data[group.vars], 2, as.numeric)
+    group_data <- as.matrix(sapply(X$data[group.vars], as.numeric))
+
     condition <- droplevels(condition)
     lvls <- levels(condition)
 
@@ -136,10 +137,12 @@ Hmisc_rcorr <- function(...,
     }
   }
   else if (!is.null(group.vars)) {  #   a + b ~ c + d
-    group_data <- apply(X$data[group.vars], 2, as.numeric)
+   group_data <- as.matrix(sapply(X$data[group.vars], as.numeric))
 
     for (i in 1:(length(group.vars))) {
-      ans_corr <- Hmisc::rcorr(measure_data, group_data[, i], type = type)
+      ans_corr <- Hmisc::rcorr(measure_data,
+                               group_data[, i],
+                               type = type)
       k <- ncol(ans_corr$r)
       r <- ans_corr$r[-k, k]
       p <- ans_corr$P[-k, k]
@@ -164,7 +167,8 @@ Hmisc_rcorr <- function(...,
     }
   }
   else{ # Korrelations_Matrix  ~ a + b + c
-    ans_list <- Hmisc::rcorr(measure_data, type = type)
+    ans_list <- Hmisc::rcorr(measure_data,
+                             type = type)
     r <- rndr_r(ans_list$r, FALSE)
 
     if (include.stars & !include.p) {
