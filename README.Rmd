@@ -1,5 +1,5 @@
 ---
-title: "stp25settings"
+title: "stp25stat2"
 output: github_document
 editor_options: 
   chunk_output_type: console
@@ -25,35 +25,29 @@ options(
 
 ```
 
-# stp25stat2
-
-
-
 Bietet ein einfaches und intuitives Formula und Pipe-freundliches Framework, um grundlegende statistische Tests durchzuführen, zum Beispiel t-Test, Wilcoxon-Test, ANOVA, Kruskal-Wallis und Korrelationsanalysen.
    
 Die Ausgabe jedes Tests wird automatisch in einen APA-Style conforme Tabelle umgewandelt.
      
 Zusätzliche Funktionen  zum Umformen, Neuordnen, Manipulieren sind in *spp25tools* enthalten. Funktionen zur Visualisierung sind in *stp25plot* enthalten.
   
-## Key functions 
 
 ```{r}
-require(stp25settings)
 require(stp25stat2)
-
-which_output()
+# which_output()
 ```
 
   
-### Descriptive statistics
+## Descriptive statistics
    
 - `Tbll_desc`, `Tbll_desc_long()`,  `Tbll_desc_item()` und `Tbll_desc_multi` : Berechnen deskriptive Statistiken für eine oder mehrere numerische Variablen. Kann mit gruppierten Daten umgehen.
-- `Tbll_xtabs()`: Berechnet Häufigkeitstabelle kategorialer Variablen.
+- `Tbll_xtabs()`: Berechnet Kreuztabelle kategorialer Variablen.
+- `Tbll_corr()`: Korrelationstest zwischen zwei oder mehr Variablen mit Pearson-, Spearman- oder Kendall-Methoden.
+
+### Tbll_desc
 
 
-
-
-```{r, Tbll_desc, error=TRUE}
+```{r, Tbll_desc-basic, error=TRUE}
 
 Tbll_desc(~ breaks + wool, warpbreaks)
 
@@ -63,7 +57,7 @@ warpbreaks %>% Tbll_desc(breaks, wool)
 ```
     
     
-```{r, Tbll_desc_adv}
+```{r, Tbll_desc-groups-test}
 warpbreaks %>% Tbll_desc(
   "H1",
   breaks,
@@ -76,7 +70,7 @@ warpbreaks %>% Tbll_desc(
     
     
      
-```{r, Tbll_desc_long, results='asis'}
+```{r, Tbll_desc_long-basic, results='asis'}
 mtcars %>% Tbll_desc_long(
   mpg[mean, 1],  cyl[median],  disp[0],
   hp[0],  drat,  wt,  qsec[1],  vs[freq],
@@ -86,7 +80,7 @@ mtcars %>% Tbll_desc_long(
 ```
  
  
-```{r, include=FALSE}
+```{r data-set-2, include=FALSE}
 require(stp25stat2)
 require(stp25tools)
 n<- 100
@@ -122,8 +116,7 @@ DF <- data.frame(
       
 ```
 
-
-```{r}
+```{r set_opt}
 set_opt(
   caption=TRUE,
   median = list(digits = 0, style=1),
@@ -136,11 +129,8 @@ set_opt(
                  include_level_multi = TRUE)
 ) 
 ```
-
-
-
  
-```{r, results='asis'}
+```{r tbll_desc-options, results='asis'}
 DF %>%
   Tbll_desc(
     sex[ratio],
@@ -168,8 +158,7 @@ DF %>%
   ) %>% stp25output2::Output()
 ```
  
- 
-```{r}
+```{r tbll-desc-add-df}
 Info <- data.frame( var_name=c("age", "sex"), y=1:2)
 rownames(Info) <- c("age", "sex" )
 DF %>%
@@ -185,22 +174,220 @@ DF %>%
   ) %>% kable()
 ```
  
-     
-     
-### Correlation analysis
-   
+### Tbll_likert 
  
-   
-- `Tbll_corr()()`: Korrelationstest zwischen zwei oder mehr Variablen mit Pearson-, Spearman- oder Kendall-Methoden.
- 
- 
- 
- 
- 
- 
-- `Tbll_corr()`: Compute the mode of a vector, that is the most frequent values.
-- `Tbll_desc_long()`: Detect univariate outliers using boxplot methods. 
-- `Tbll_desc_item()`: Compute Mahalanobis Distance and Flag Multivariate Outliers.
-- `Tbll_likert()` and `mshapiro_test()`: Univariate and multivariate Shapiro-Wilk normality test.
+- `Tbll_likert()`: Univariate
     
+```{r data-likert, include=FALSE}
+#'set.seed(1)
+n <- 100
+lvs <- c("--", "-", "o", "+", "++")
+DF2 <- data.frame(
+  Magazines = cut(rnorm(n), 5, lvs),
+  Comic.books = cut(rnorm(n), 5, lvs),
+  Fiction = cut(rnorm(n), 5, lvs),
+  Newspapers = cut(rnorm(n), 5, lvs),
+  Geschlecht = cut(rnorm(n), 2, c("m", "f"))
+)
+
+
+```
+
+```{r Tbll_likert}
+Lik <- Tbll_likert(DF2,
+                   Magazines, Comic.books, Fiction, Newspapers,
+                   ReferenceZero=2)
+
+Lik
+```
+  
+```
+stp25plot::likertplot(
+     Item  ~ . , 
+     data = Lik)
+```
+  
+
+### Tbll_xtabs 
+         
+     
+```{r data_xtab, include=FALSE}
+data(infert, package = "datasets")
+DF <- infert
+DF$case  <- factor(DF$case , 1:0, c("case", "control"))
+
+DF$spontaneous <- factor(DF$spontaneous)
+DF$induced2    <- factor(DF$induced == 0)
+
+```
+   
+```{r}
+Tbll_xtabs( ~ induced + education + case,
+            DF,
+            margin = "case",
+            include.count = FALSE)
+```
+   
+  
+```{r}
+Tbll_xtabs(
+  ~ induced + education + case,
+  DF,
+  margin = "case",
+  add.margins =1:3,
+  include.count = FALSE,
+  include.test =TRUE
+)
+```
+   
+   
+   
+   
+   
+   
+     
+### Tbll_corr
+   
  
+```{r data-corr, include=FALSE}
+n <- 2 * 20
+e <- rnorm(n)
+dat <-  Label(
+  data.frame(
+    a = rnorm(n) + e / 2,
+    b = rnorm(n) + e,
+    c = rnorm(n),
+    d = rnorm(n) + e * 10,
+    g = gl(2, 20, labels = c("Control", "Treat"))
+  ),
+  a = "Alpha",
+  b = "Beta",
+  c = "Gamma"
+)
+
+```
+ 
+ 
+```{r Tbll_corr}
+Tbll_corr( ~ a + b + c, dat)
+Tbll_corr(a ~ c, dat)
+Tbll_corr(a + b + c ~ d, dat)
+Tbll_corr(a + b + c ~ d, 
+          dat, 
+          groups = ~ g, 
+          include.n=FALSE) %>%  kable
+```
+ 
+ 
+``` 
+stp25plot::corr_plot( ~ a + b + c + d, 
+                       dat,
+                       resize=TRUE
+ )
+```
+ 
+ 
+  
+    
+## Reliability
+ 
+- `Tbll_desc_item()`, `Tbll_reliability()` and  `Tbll_item_analysis()`: 
+
+ 
+```{r data-set-3, include=FALSE}
+df <- data.frame(
+  A = c(1,2,3,4,5, 1,1,1,2, 1,1,1,5,5,5),
+  B = c(1,2,3,4,5, 2,2,2,1, 1,1,1,5,5,5),
+  C = c(1,2,3,4,5, 3,3,3,4, 1,1,1,5,5,5),
+  D = c(1,2,3,5,5, 4,5,4,5, 1,1,1,5,5,5),
+  E = c(1,2,3,4,5, 3,2,1,1, 1,1,1,5,5,5)
+)
+
+df$index <-scale( rowSums(df) )
+```
+
+```{r Tbll_desc_item}
+Tbll_desc_item( ~ A + B + C + D + E, df)
+```
+
+```{r Tbll_reliability}
+Tbll_reliability( ~ A + B + C + D + E, df,
+                 include.item_statistics = TRUE)
+```
+ 
+```{r Tbll_item_analysis}
+Tbll_item_analysis(  A + B + C + D + E ~ index, df,
+                     include.Sample.SD =  TRUE,
+                     include.Item.total = TRUE,   #  (unkorrigierte) Trennschärfe
+           
+                     include.Item.Tot.woi = TRUE, # korrigierte Trennschärfe Alpha if Item Deleted
+                     include.Difficulty = TRUE,    # Itemschwierigkeit
+                     include.Discrimination = TRUE,
+                     
+                     include.Item.Reliab = TRUE,
+                     include.Item.Rel.woi = TRUE
+                     )
+```
+
+
+
+### Síg. Test
+
+
+
+
+```{r}
+t1 <- wilcox.test(mpg ~ vs, mtcars)
+t1
+Tbll(t1)
+APA(t1)
+
+ 
+```
+
+
+
+### Regression
+
+
+```{r}
+
+ lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
+ lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
+
+
+ Tbll_reg(
+  lm1,
+  lm2,
+  include.p = FALSE,
+  include.ci = TRUE,
+  include.se=FALSE
+)
+
+
+ Tbll_reg(
+   lm2,
+   include.p = TRUE,
+   include.beta = TRUE,
+   include.gof = FALSE,
+   include.statistic = TRUE,
+   include.stars = TRUE
+ )
+
+
+
+
+
+```
+
+```{r}
+ counts <- c(18,17,15,20,10,20,25,13,12)
+ outcome <- gl(3,1,9)
+ treatment <- gl(3,3)
+ data.frame(treatment, outcome, counts) # showing data
+ lm.D93 <- lm(counts ~ outcome + treatment )
+ glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
+ Tbll_reg(lm.D93, glm.D93, digits=2)
+ Tbll_reg(lm.D93, glm.D93, digits=c(0,2,2,1,1))
+```
+
