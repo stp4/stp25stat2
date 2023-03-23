@@ -241,8 +241,33 @@ Tbll_desc <- function (...,
     }
 
     data <- split(X$data[X$measure.vars], X$data[[X$group.vars]])
+    if(any(sapply(data, lengths) == 0 )) {
+      cat("\n\nMögliche Fehlerquelle:\nIn der Gruppen-variable gibt es Leere Factoren!\n\n")
+
+      print(table( X$data[[X$group.vars]], useNA =  "ifany"))
+
+      }
+
+
+# print(data)
+#     print(names(data))
+#    print( lengths(data) )
 
     for (i in names(data)) {
+
+      # cat("\n in stp25stat2/R/tbll_desc.R:246:6 \n")
+      #
+      # print( list(
+      #   x = head(data[[i]]),
+      #   digits = X$digits,
+      #   measure = X$measure,
+      #   row_name = X$row_name,
+      #   use.level = use.level,
+      #   include.single.value = include.single.value
+      # ))
+
+
+
       tbl_part_i <-
         list_rbind(purrr::pmap(
           list(
@@ -1066,13 +1091,14 @@ prct_tbll <-
                          style=style,
                          is_true_false = is_true_false)
 
+
     if (style != "two_values")
       data.frame(
         lev = names(tbl),
         n = c(n, rep("", length(tbl) - 1)),
         m = tbl,
         stringsAsFactors = FALSE,
-        row.names = paste("[", abbreviate(names(tbl)), "]",  sep = "")
+        row.names = paste("[", stp25tools::abbreviate2(names(tbl)), "]",  sep = "")
       )
     else
       data.frame(
@@ -1080,7 +1106,7 @@ prct_tbll <-
         n = c(n, rep("", nrow(tbl) - 1)),
         m = tbl,
         stringsAsFactors = FALSE,
-        row.names =  paste("[", abbreviate(names(tbl)), "]",  sep = "")
+        row.names =  paste("[", stp25tools::abbreviate2(names(tbl)), "]",  sep = "")
       )
 
   }
