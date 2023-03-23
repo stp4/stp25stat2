@@ -24,6 +24,20 @@
 
 
 
+
+#' Analytics
+#'
+#' Collection of convenient functions for common statistical computations.
+#'
+#' @md
+#' @name stp25stat2
+#' @docType package
+#' @author Wolfgang Peter (w.peter@@statistik-peter.at)
+"_PACKAGE"
+
+
+
+
 #' @importFrom stp25settings get_opt
 #' @export
 stp25settings::get_opt
