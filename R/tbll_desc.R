@@ -10,7 +10,6 @@
 #' x <- scale(as.numeric(x))
 #' diff(sapply(split(x, by), mean, na.rm=TRUE))})
 #' @param include.value vector oder data.frame in exact der reihenfolge wie die meassure-variablen.
-#' @param include.single.value M und SD in separaten Spalten
 #' @return data.frame
 #' @export
 #' @examples
@@ -114,8 +113,8 @@
 #'
 #'
 #' Tbll_reg(lm1, lm2)
-
-Tbll_desc <- function (...,
+Tbll_desc <-
+  function (...,
                        include.label=TRUE,
                        include.n = TRUE,
                        include.nr = FALSE,
@@ -125,14 +124,10 @@ Tbll_desc <- function (...,
                        include.multiresponse=FALSE,
                        include.custom = NULL,
                        include.value = NULL,
-                     #  include.ci=FALSE,
                      ## #' @param exclude,exclude.level,max_factor_length fuer factor
-                       include.single.value =TRUE,
                        digits=NULL,
                        use.level=1 # multiresponse
                        ) {
-
-
   rslt_all <- NULL
   tbl_rstl <- NULL
   #
@@ -165,13 +160,6 @@ Tbll_desc <- function (...,
  if (!include.label)
      X$row_name <- X$measure.vars
 
- # print( list(
- #
- #   include.n=   include.n ,
- #   header=  any_missing_measure[X$measure!="header"] ,
- #
- # N=   X$N
- # ))
 
  if (include.n & sum(any_missing_measure[X$measure!="header"] - X$N) == 0) {
     # keine fehlenden dann nur erste Zeile mit N
@@ -184,7 +172,7 @@ Tbll_desc <- function (...,
       X$measure <- rep("multi", length(X$measure))
  }
 
-  # Start der Auswertung -------------------------------------------------------
+  # Start der Auswertung
   #
   # 1. Mittelweret mit purrr::pmap
   #
@@ -197,8 +185,7 @@ Tbll_desc <- function (...,
           digits = X$digits,
           measure = X$measure,
           row_name = X$row_name,
-          use.level = use.level,
-          include.single.value = include.single.value
+          use.level = use.level
         ),
         prct_or_mean
       ))
@@ -214,14 +201,10 @@ Tbll_desc <- function (...,
           digits = X$digits,
           measure = X$measure,
           row_name = X$row_name,
-          use.level = use.level,
-          include.single.value = include.single.value
+          use.level = use.level
         ),
         prct_or_mean
       ))
-
-
-  #  print(rslt_all)
       names(rslt_all)[3:ncol(rslt_all)] <-
         paste0("Total_", names(rslt_all)[3:ncol(rslt_all)])
   }
@@ -243,31 +226,11 @@ Tbll_desc <- function (...,
     data <- split(X$data[X$measure.vars], X$data[[X$group.vars]])
     if(any(sapply(data, lengths) == 0 )) {
       cat("\n\nMögliche Fehlerquelle:\nIn der Gruppen-variable gibt es Leere Factoren!\n\n")
-
-      print(table( X$data[[X$group.vars]], useNA =  "ifany"))
-
+      print(table( X$data[[X$group.vars]], useNA ="ifany"))
       }
 
 
-# print(data)
-#     print(names(data))
-#    print( lengths(data) )
-
     for (i in names(data)) {
-
-      # cat("\n in stp25stat2/R/tbll_desc.R:246:6 \n")
-      #
-      # print( list(
-      #   x = head(data[[i]]),
-      #   digits = X$digits,
-      #   measure = X$measure,
-      #   row_name = X$row_name,
-      #   use.level = use.level,
-      #   include.single.value = include.single.value
-      # ))
-
-
-
       tbl_part_i <-
         list_rbind(purrr::pmap(
           list(
@@ -275,12 +238,10 @@ Tbll_desc <- function (...,
             digits = X$digits,
             measure = X$measure,
             row_name = X$row_name,
-            use.level = use.level,
-            include.single.value = include.single.value
+            use.level = use.level
           ),
           prct_or_mean
         ))
-
 
       if (is.null(tbl_rstl))
         tbl_rstl <- tbl_part_i[1:2] # Linke Seite der Tabelle
@@ -288,7 +249,6 @@ Tbll_desc <- function (...,
       names(tbl_part_i) <-  paste0(i, "_", names(tbl_part_i))
       tbl_rstl <- cbind(tbl_rstl, tbl_part_i[-c(1:2)])
     }
-
 
     if (include.total)
       rslt_all <- cbind(rslt_all, tbl_rstl[-c(1:2)])
@@ -321,8 +281,6 @@ Tbll_desc <- function (...,
   }
  if (!include.n) {
     length.out <- if (is.null(X$group.vars)) 1 else nlevels(X$data[[X$group.vars]]) + include.total
-
-    if (include.single.value) {
       rslt_all <-
         rslt_all[-(seq(
           from = 3,
@@ -330,16 +288,6 @@ Tbll_desc <- function (...,
           length.out = length.out
         ))]
       names(rslt_all) <- gsub("_m$", "", names(rslt_all))
-    }
-    else{
-      rslt_all <-
-        rslt_all[-(seq(
-          from = 3,
-          by = 3,
-          length.out = length.out
-        ))]
-    }
-
  }
   #
   # workaround um eindeitige row-names zu bekommen
@@ -413,12 +361,8 @@ Tbll_desc <- function (...,
         } else{
           stop("In rslt_custom stimmen die Laenge der Rueckgabe nicht!")
         }
-
-
-
       }
     }
-
 
     if (is.vector(rslt_custom)) {
       if (include.nr)
@@ -537,9 +481,6 @@ Tbll_desc <- function (...,
         stop("Fehler in include.value, jetzt sind zwingend rownames bei 'data.frames' erforderlich!")
       }
       if (lng_rslt_all != nrow(rslt_all)){
-      #  print(rslt_all)
-      #  print(c(lng_rslt_all, nrow(rslt_all)))
-
         warning("Fehler in include.value, eventuell stimmen die rownames nicht")
       }
     }
@@ -576,94 +517,6 @@ Tbll_desc <- function (...,
 
   }
 
-# if (!is.null(include.value)) {
-#   rslt_custom <- NULL
-#
-#   if (is.vector(include.value)) {
-#     if (!is.null(names(include.value))) {
-#       rslt_custom <- rep("", nrow(rslt_all))
-#       for (i in names(include.value)) {
-#         pos <- which(rownames(rslt_all) == i)
-#         rslt_custom[pos] <- include.value[i]
-#       }
-#     }
-#     else{
-#       for (i in seq_len(n)) {
-#         # include.value[i] kann ein vector der laenge 1 oder eine matrix sein
-#         if (X$measure[i] != "factor") {
-#           rslt_custom <- append(rslt_custom, include.value[i])
-#         }
-#         else if (X$measure[i] == "factor" &
-#                   length(include.value[i]) == 1) {
-#           rslt_custom <- append(rslt_custom, include.value[i])
-#           rslt_custom <-
-#             append(rslt_custom, rep("", nlevels(X$data[[X$measure.vars[i]]])))
-#         } else if (X$measure[i] == "factor" &
-#                    length(include.value[i]) == nlevels(X$data[[X$measure.vars[i]]])) {
-#           rslt_custom <- append(rslt_custom, c("", include.value[i]))
-#         } else{
-#           stop("In rslt_custom stimmen die Laenge der Rueckgabe nicht!")
-#         }
-#       }
-#     }
-#   }
-#   else{
-#     for (i in seq_len(n)) {
-#       if (X$measure[i] != "factor") {
-#         rslt_custom <- rbind(rslt_custom, include.value[i, ])
-#       }
-#       else if (X$measure[i] == "factor" &
-#                nrow(include.value[i, ]) == 1) {
-#         rslt_custom <- rbind(rslt_custom, include.value[i, ])
-#
-#         rslt_custom <- rbind(rslt_custom,
-#                              matrix(
-#                                "",
-#                                ncol = ncol(rslt_custom),
-#                                nrow = nlevels(X$data[[X$measure.vars[i]]]),
-#                                dimnames = list(NULL,
-#                                                colnames((
-#                                                  include.value
-#                                                )))))
-#       }
-#       else if (X$measure[i] == "factor" &
-#                nrow(include.value[i, ]) == nlevels(X$data[[X$measure.vars[i]]])) {
-#         rslt_custom <- rbind(rslt_custom,
-#                              matrix(
-#                                "",
-#                                ncol = ncol(rslt_custom),
-#                                nrow = 1,
-#                                dimnames = list(NULL,
-#                                                colnames((
-#                                                  include.value
-#                                                )))
-#                              ))
-#         rslt_custom <- rbind(rslt_custom, include.value[i, ])
-#       } else{
-#         stop("In rslt_custom stimmen die Laenge der Rueckgabe nicht!")
-#       }
-#     }
-#   }
-#
-#
-#
-#   if (is.vector(rslt_custom)) {
-#     if ((nrow(rslt_all) ==  length(rslt_custom)))
-#       rslt_all$value <- rslt_custom
-#     else  {
-#       if (include.nr)
-#         rslt_custom <-  append(rslt_custom, "", after = 0)
-#      rslt_all$value <- rslt_custom
-#     }
-#   }
-#   else {
-#     # is.matrix
-#     if (include.nr)
-#       rslt_custom <-
-#         rbind(rep("", ncol(rslt_custom)), rslt_custom)
-#     rslt_all <- cbind(rslt_all, rslt_custom)
-#   }
-# }
 
 names_option <- function(rslt_all) {
   names(rslt_all)[1] <- get_opt("table", "stubhead")
@@ -744,12 +597,6 @@ return("")
 }
 
 
-
-
-
-
-
-
 #' @rdname Tbll_desc
 #' @export
 #'
@@ -774,9 +621,8 @@ return("")
 #'                  Airbnb,
 #'                  Campingplatz,
 #'                  Couchsurfing)
-
-
-Tbll_desc_multi <- function(...,
+Tbll_desc_multi <-
+  function(...,
                             by = NULL,
                             digits = 0,
                             include.order = TRUE,
@@ -874,8 +720,6 @@ interaction2 <-
     }
     # orginal  for (i in narg:1L)
     for (i in 1L:narg) {
-
-
       f <- as.factor(args[[i]])[, drop = FALSE]
       l <- levels(f)
       if1 <- as.integer(f) - 1L
@@ -910,23 +754,20 @@ interaction2 <-
 #' Leerer Data.Frame
 #'
 #' @noRd
-emty_tbll <- function(include.single.value = TRUE) {
-  if (include.single.value)
+emty_tbll <-
+  function() {
     data.frame(
       lev = "",
       n = "",
       m = "",
       stringsAsFactors = FALSE
     )
-  else
-    data.frame(
-      lev = "",
-      n = "",
-      m.m = "",
-      m.sd = "",
-      stringsAsFactors = FALSE
-    )
-}
+  }
+
+
+
+
+
 
 
 
@@ -940,16 +781,14 @@ prct_or_mean <- function(x,
                            sep = paste(symbol_nbsp(), symbol_nbsp()),
                            exclude = get_opt("prozent", "exclude"),
                            max_factor_length = 35,
-                           use.level = 1,
-                           include.single.value = TRUE) {
- # cat("\nprct_or_mean\n")
+                           use.level = 1
+                         ) {
   if (!(measure %in% c("factor", "logical")) | (!is.null(exclude)))
     x  <- na.omit(x)
 
   n  <- length(x)
   rslt <- NULL
 
-  if (include.single.value) {
     res <- switch(
       measure,
       numeric = mean_tbll(x, digits, n),
@@ -964,7 +803,6 @@ prct_or_mean <- function(x,
       header =  emty_tbll(),
       emty_tbll()
     )
-  #  print(rownames(rslt))
 
     if (measure == "factor") {
       x0 <- data.frame(
@@ -978,50 +816,10 @@ prct_or_mean <- function(x,
       res$n <- ""
       x1 <- cbind(Item = sep, res)
       rslt <- rbind(x0, x1)
-
-
-
-    } else {
-      rslt <-  cbind(Item = c(row_name, rep("", nrow(res) - 1)), res)
-    }
-  } else{
-    res <- switch(
-      measure,
-      numeric = mean_tbll(x, digits, n, style = "two_values"),
-      integer = mean_tbll(x, digits, n, style = "two_values"),
-      factor =  prct_tbll(x, digits, n, exclude, max_factor_length, style = "two_values"),
-      logical = prct_tbll(x, digits, n, exclude, max_factor_length, style = "two_values"),
-      mean =    mean_tbll(x, digits, n, style = "two_values"),
-      median =  median_tbll(x, digits, n, style = "two_values"),
-      multi =   multi_tbll(x, digits, n, use.level = use.level, style = "two_values"),
-      header =  emty_tbll(include.single.value = include.single.value),
-      emty_tbll(include.single.value = include.single.value)
-
-    )
-
-
-    if (measure == "factor") {
-      x0 <- data.frame(
-        Item = row_name,
-        lev = "",
-        n = res$n[1] ,
-        m.m = "",
-        m.sd = "",
-        stringsAsFactors = FALSE
-      )
-      res$n <- ""
-      x1 <- cbind(Item = sep, res)
-      rslt <- rbind(x0, x1)
     } else {
       rslt <-  cbind(Item = c(row_name, rep("", nrow(res) - 1)), res)
     }
 
-    names(rslt) <- c( "Item", "lev", "n", "m", "sd")
-  }
-
-
-#print(rownames(rslt))
- # row.names(rslt)[1] <- measure.vars
   rslt
 }
 
@@ -1063,7 +861,6 @@ mean_tbll <- function(x,
   )
 }
 
-#x, digits, n, exclude, max_factor_length
 
 #' @noRd
 #' @param n intern
@@ -1077,37 +874,25 @@ prct_tbll <-
            exclude = NA,
            # c(NA, NaN),
            max_factor_length = 25,
-           #  return_data_frame = TRUE,
            style = get_opt("prozent", "style"),
-        #   include.level = get_opt("prozent", "include_name"),
-           is_true_false = FALSE
-           )  {
+           is_true_false = FALSE)  {
+    tbl <-  calc_percent(
+      x,
+      digits = digits,
+      n = n,
+      exclude = exclude,
+      max_factor_length = max_factor_length,
+      style = style,
+      is_true_false = is_true_false
+    )
 
-    tbl <-  calc_percent(x,
-                         digits=digits,
-                         n=n,
-                         exclude=exclude,
-                         max_factor_length=max_factor_length,
-                         style=style,
-                         is_true_false = is_true_false)
-
-
-    if (style != "two_values")
-      data.frame(
-        lev = names(tbl),
-        n = c(n, rep("", length(tbl) - 1)),
-        m = tbl,
-        stringsAsFactors = FALSE,
-        row.names = paste("[", stp25tools::abbreviate2(names(tbl)), "]",  sep = "")
-      )
-    else
-      data.frame(
-        lev = rownames(tbl),
-        n = c(n, rep("", nrow(tbl) - 1)),
-        m = tbl,
-        stringsAsFactors = FALSE,
-        row.names =  paste("[", stp25tools::abbreviate2(names(tbl)), "]",  sep = "")
-      )
+    data.frame(
+      lev = names(tbl),
+      n = c(n, rep("", length(tbl) - 1)),
+      m = tbl,
+      stringsAsFactors = FALSE,
+      row.names = paste("[", stp25tools::abbreviate2(names(tbl)), "]",  sep = "")
+    )
 
   }
 
@@ -1121,7 +906,6 @@ multi_tbll <- function(x,
                        use.level = 1,
                        include.level = get_opt("prozent", "include_level_multi"),
                        style = get_opt("prozent", "style")) {
-# cat("\nmulti_tbll\n")
  if (is.null(include.level)) include.level <- TRUE
 
  if (is.logical(x)) {
@@ -1152,7 +936,6 @@ multi_tbll <- function(x,
   else
     (stop(class(x)))
 
-# print(res)
   if (!include.level)
     res$lev <- ""
 
