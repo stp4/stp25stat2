@@ -42,6 +42,40 @@
 #'   key = "Zeit",
 #'   value = "Cholesterin"
 #' )
+#'
+#' Summarise(
+#' chol0 + chol1 + chol6 + chol12 ~ g,
+#' hyper,
+#' fun = mean,  # function(x) c(m=mean(x), sd = sd(x)),
+#' # key = "Zeit",
+#' #  value = "Cholesterin",
+#' formula = variable~g
+#'  )
+#'
+#'
+#'
+#' Summarise(
+#'   chol0 + chol1 + chol6 + chol12 ~ g,
+#'   hyper,
+#'   fun =  function(x)
+#'     c(m = mean(x), sd = sd(x)),
+#'   magin = TRUE,
+#'   formula = variable ~ g
+#' )
+#'
+#'
+#'
+#' Summarise(
+#'   hyper,
+#'   chol0 ,
+#'   chol1 ,
+#'   chol6 ,
+#'   chol12,
+#'   by = ~ g + med,
+#'   fun =  function(x)
+#'     c(m = mean(x), sd = sd(x)),
+#'   formula = ~ g + med
+#' )
 Summarise <- function(...,
                       fun = function(x)
                         length(na.omit(x)),
@@ -52,7 +86,7 @@ Summarise <- function(...,
                       margins = FALSE,
                       margins_name = "Total",
                       include.label = TRUE) {
-  nmbr_msr <- 1
+  values_from <- value
   molten <-
     stp25tools::Long(...,
                      key = key,
@@ -68,11 +102,13 @@ Summarise <- function(...,
               FUN = fun,
               na.action = na.action)
 
-  rslts <- rslts[order(rslts[[1]]), ]
+  rslts <- rslts[order(rslts[[1]]),]
 
   rst <- rslts[ncol(rslts)]
+
   if (class(rst[[1]])[1] == "matrix") {
     nmbr_msr <- colnames(rst[[1]])
+    values_from <- dimnames(rst[[1]])[[2]]
     rslts <-
       cbind(rslts[-ncol(rslts)], rst[[1]])
   } else{
@@ -107,7 +143,30 @@ Summarise <- function(...,
   }
 
   if (!is.null(formula)) {
-    rslts <- stp25tools::Wide(formula, rslts, value)
+    rhs <- check_formula(formula, key, value)
+    rslts <- tidyr::pivot_wider(rslts,
+                                names_from = !!rhs,
+                                values_from = values_from)
   }
   rslts
 }
+
+
+check_formula <- function(formula, key, value) {
+  if (key != "variable" | value != "value") {
+    print(list(formula = formula, c(key = key, value = value)))
+    stop("Sorry das geht nicht key und value dürfen nicht verändert werden!")
+  }
+
+  if (length(formula) == 3)
+    all.vars(formula[-2])
+  else
+    all.vars(formula)
+
+}
+
+
+
+
+
+
