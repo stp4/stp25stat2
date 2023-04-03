@@ -283,7 +283,7 @@ regression_table <-
         length(custom.model.names) != n)
       custom.model.names <- paste0("m", 1:n)
 
-
+    response <-  list()
     #-- param ----------------------------------
     for (i in seq_along(x)) {
       if (!is.null(digits)) {
@@ -296,6 +296,9 @@ regression_table <-
           #  digits.odds = digits
         }
       }
+      response[i] <- insight::find_terms(x[[i]])$response
+
+
       model <- extract_param(
         x[[i]],
         include.b = include.b,
@@ -345,6 +348,8 @@ regression_table <-
       coefs <- coefs[[1]]
 
     # rownames(coefs) <- NULL
+    if(!is.null(response))
+      note <- paste(note,"Response: ", paste(unique(response), collapse =", "))
 
 
     #-- gof ----------------------------------
@@ -381,9 +386,9 @@ regression_table <-
       }
 
 
-      if (n > 1) {
+      if (n > 1)
         gofs <- stp25tools::list_to_df(gofs, last = "Obs")
-      } else
+      else
         gofs <- gofs[[1]]
 
 
@@ -420,7 +425,8 @@ regression_table <-
             n.rgroup = n.rgroup
           )
 
-      } else if (!include.param) {
+      }
+      else if (!include.param) {
         rgroup <- n.rgroup <- NULL
         result <-
           prepare_output(
@@ -435,7 +441,8 @@ regression_table <-
 
       }
 
-    } else {
+    }
+    else {
       rgroup <- n.rgroup <- NULL
       result <-
         prepare_output(
