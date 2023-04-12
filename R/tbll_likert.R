@@ -4,7 +4,7 @@
 #' @param caption,note an prepare Data
 #' @param ReferenceZero,labels   ReferenceZero=2 Neutrales Element in Kombination mit
 #'  labels = c("low", "neutral", "high")
-#' @param include.mean,include.n,include.na,include.order,include.percent,include.count Zusatz
+#' @param include.mean,include.n,include.na,include.order,include.percent,include.count,include.total Zusatz
 
 #' @param reverse.levels an Likert
 #'
@@ -50,13 +50,15 @@ Tbll_likert.default <- function(...,
                                 include.order = TRUE,
                                 include.percent = TRUE,
                                 include.count = TRUE,
+                                include.total=FALSE,
                                 decreasing = TRUE,
                                 labels = c("low", "neutral", "high"),
                                 reverse.levels = FALSE,
                                 reorder.levels = NA) {
   rslt <-   Likert(...,
                    reverse.levels = reverse.levels,
-                   reorder.levels = reorder.levels)
+                   reorder.levels = reorder.levels,
+                   include.total=include.total)
 
   tbl <-  Tbll_likert.likert(
       rslt,
@@ -211,7 +213,8 @@ Tbll_likert.likert <- function(x,
 Likert <- function(...,
                    labels = NULL,
                    reverse.levels = FALSE,
-                   reorder.levels = NA
+                   reorder.levels = NA,
+                   include.total = FALSE
                    ) {
   if (!reverse.levels) {
     if (is.na(reorder.levels)) {
@@ -303,6 +306,7 @@ Likert <- function(...,
   }
 
 
+  # - hier kommt  results, item_mean, item_sd
   nms <-  sapply(results, is.integer)
   ncl <- ncol(results)
   names(results)[ncl] <- "NA"
@@ -310,6 +314,24 @@ Likert <- function(...,
 
   col_names <- names(results[-ncl])
   pos_col_names <- grep("Item", col_names)
+
+
+  if (include.total) {
+    dotts <- stp25tools::prepare_data2(...)
+    rslt_total <-
+      Likert(
+        formula(paste("~", paste(dotts$measure.vars, collapse = "+"))),
+        dotts$data)
+
+    results<-   dplyr::bind_rows(results, rslt_total$results )
+    results[[1]] <- factor(  results[[1]], c("Total", levels( results[[1]])))
+    results[[1]][is.na(  results[[1]] )] <- "Total"
+
+    item_mean <- c(item_mean,  rslt_total$m)
+    item_sd <- c(item_sd,  rslt_total$sd)
+  }
+
+
 
 
   rslt <- list(
@@ -322,8 +344,7 @@ Likert <- function(...,
     m =       item_mean,
     sd =      item_sd,
     Mittelwert = rndr_mean(item_mean, item_sd),
-    # items =  data.frame(),
-    #  grouping = NULL,
+    # items =  data.frame(),#  grouping = NULL,
     formula =  if (pos_col_names == 1) {Item ~ .}
                else{formula(paste("Item ~ .|",
                                   paste(col_names[1:(pos_col_names - 1)], collapse = "+")))},
@@ -333,6 +354,8 @@ Likert <- function(...,
   )
   class(rslt) <- c('likert', class(rslt))
   rslt
+
+
 }
 
 
