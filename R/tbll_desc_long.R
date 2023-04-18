@@ -71,7 +71,9 @@ Tbll_desc_long <- function(...,
                            include.n = TRUE,
                            include.test = FALSE,
                            include.label = TRUE,
-                           digits = NULL#,
+
+                           digits = NULL,
+                           abbreviate = TRUE
                          #  measure.name = "m"
                           ) {
 
@@ -83,7 +85,12 @@ Tbll_desc_long <- function(...,
     analyse_sesc_long(X,
                type = type,
                measure.name = get_opt("table", "measure.name.m"),
-               digits = digits, include.label=include.label)
+               digits = digits,
+               include.label=include.label,
+
+               abbreviate =  abbreviate
+
+               )
 
   if (include.n) {
     X$measure <- ifelse(X$measure == "header", "header", "custom_fun")
@@ -109,7 +116,8 @@ analyse_sesc_long <- function(X,
                        fun = NULL,
                        digits = NULL,
                        type =  "auto_kurz",
-                       include.label=FALSE)
+                       include.label=FALSE,
+                       abbreviate = FALSE)
 {
   rslt <- NULL
 
@@ -119,8 +127,12 @@ analyse_sesc_long <- function(X,
         X$data[[X$measure.vars[i]]] <- factor(X$data[[X$measure.vars[i]]])
         # warning("Konvertiere die Variable ", X$measure.vars[i], " zu Factor!")
       }
+
+      lvl <- levels(X$data[[X$measure.vars[i]]])
+      if(abbreviate) lvl <- abbreviate(lvl)
+
       X$row_name[i] <- paste0(X$row_name[i], " (",
-                              paste0(levels(X$data[[X$measure.vars[i]]]),
+                              paste0(lvl,
                                      collapse = "/"), ")")
     }
     else if (X$measure[i] %in%  c("mean", "numeric")) {
@@ -194,8 +206,11 @@ berechne_all <- function(data,
       fm,
       data,
       FUN = function(x) {
+        cat("\n median\n")
+
+        print(type)
         if (type == "auto_long")
-          rndr_median_range(
+          rndr_median_iqr_range(
             median(x, na.rm = TRUE),
             ifelse(length(x) > 2, IQR(x, na.rm = TRUE), NA),
             min(x, na.rm = TRUE),
@@ -203,7 +218,7 @@ berechne_all <- function(data,
             digits = digits
           )
         else
-          rndr_median(median(x),
+          rndr_median(median(x, na.rm = TRUE),
                                  ifelse(length(x) > 2, IQR(x, na.rm = TRUE), NA),
                                  digits = digits)
 
