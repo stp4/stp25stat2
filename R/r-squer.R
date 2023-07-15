@@ -127,8 +127,8 @@ R2.lm <- function(x, ...) {
 #' @export
 #' @description coxph:
 #' 	an approximate R^2 based on Nagelkirke (Biometrika 1991)
-R2.coxph <- function(x,...){
-  sfit <-summary(cfit2)
+R2.coxph <- function(x, ...){
+  sfit <-summary(x)
   c(R2=sfit$rsq[[1]])
 
 }

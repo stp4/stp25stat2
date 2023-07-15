@@ -316,19 +316,38 @@ Likert <- function(...,
   pos_col_names <- grep("Item", col_names)
 
 
+ str_total <- "Total"
+ if(is.character(include.total)) {
+  str_total <- include.total
+  include.total <- TRUE
+ }
+
   if (include.total) {
     dotts <- stp25tools::prepare_data2(...)
     rslt_total <-
       Likert(
         formula(paste("~", paste(dotts$measure.vars, collapse = "+"))),
         dotts$data)
+cat("\nWorkaraund")
+    print(results)
+    print(rslt_total$results)
+    cat("\n")
 
-    results<-   dplyr::bind_rows(results, rslt_total$results )
-    results[[1]] <- factor(  results[[1]], c("Total", levels( results[[1]])))
-    results[[1]][is.na(  results[[1]] )] <- "Total"
+    rslt_total$results<-  cbind(rslt_total$results[1], rslt_total$freq.na)
 
-    item_mean <- c(item_mean,  rslt_total$m)
-    item_sd <- c(item_sd,  rslt_total$sd)
+    results <- dplyr::bind_rows(results, rslt_total$results )
+    results[[1]] <- factor(results[[1]], c(str_total, levels( results[[1]])))
+    results[[1]][is.na( results[[1]] )] <- str_total
+
+
+
+    item_mean <- c(item_mean, rslt_total$m)
+    item_sd <- c(item_sd, rslt_total$sd)
+
+#print(str_total)
+    print(results[which(nms)])
+    print(rslt_total$freq.na)
+
   }
 
 

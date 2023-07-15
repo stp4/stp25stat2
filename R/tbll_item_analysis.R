@@ -28,8 +28,7 @@
 #'                  include.item_statistics = TRUE)
 #' Tbll_item_analysis(  A + B + C + D + E ~ index, df)
 Tbll_desc_item <- function(...,
-
-                           #   include.label = TRUE,
+                           include.label = FALSE,
                            include.n = TRUE,
                            #  include.missing = TRUE,
                            include.mean = TRUE,
@@ -45,6 +44,9 @@ Tbll_desc_item <- function(...,
   caption<- "Summary"
   note <- ""
   X <- stp25tools::prepare_data2(...)
+  if (!include.label)
+    X$row_name <- X$measure.vars
+
   # n_col <- length(X$measure.vars)
   n_row <- length(X$data)
   X$data[X$measure.vars] <-  stp25tools:::dapply1(X$data[X$measure.vars])
@@ -210,8 +212,6 @@ Tbll_desc_item <- function(...,
 Tbll_item_analysis <-
   function (...,
             include.label = FALSE,
-
-
             include.Sample.SD =  FALSE,
             include.Item.total = FALSE,   #  (unkorrigierte) Trennschärfe
             include.Alpha = TRUE,
@@ -296,18 +296,18 @@ Tbll_item_analysis <-
 
 
 
-discrim<-function (x,
-                   k =ncol(x),
-                   N = nrow(x)) {
 
-  ni <- as.integer(N/3)
+discrim <- function (x,
+                     k = ncol(x),
+                     N = nrow(x)) {
+  ni <- as.integer(N / 3)
   TOT <- apply(x, 1, mean)
-  tmpx <- cbind(x, TOT)[order(TOT), ]
-  tmpxU <- tmpx[(N + 1 - ni):N, ]
-  tmpxL <- tmpx[1:ni, ]
+  tmpx <- cbind(x, TOT)[order(TOT),]
+  tmpxU <- tmpx[(N + 1 - ni):N,]
+  tmpxL <- tmpx[1:ni,]
   Ui <- apply(tmpxU, 2, sum)
   Li <- apply(tmpxL, 2, sum)
-  discrim <- (Ui - Li)/ni
+  discrim <- (Ui - Li) / ni
   discrim[1:k]
 }
 

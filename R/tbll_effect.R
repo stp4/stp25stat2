@@ -129,6 +129,98 @@ Tbll_effect <-
   }
 
 
+#' @rdname Tbll_effect
+#' @param transformation an effects::allEffect
+#' @param names erste Spalte
+#' @export
+#' @description
+#' Extrahiert die Effectte (magrinal-means) mit effects::allEffects
+#' alternative ist  marginaleffects::marginal_means aber hier können nur
+#'  Factoren untersucht werden.
+#'
+#' @return data.frame(term, level, fit, se,lower, upper, value)
+#' Ausgabe der Effekte als dataframe zum erstellen von Grafiken
+#'
+#' @examples
+#' set.seed(1)
+#'
+#' g<- gl(2, 8, labels = c("Control", "Treat"))
+#' x<- rnorm(2*8)
+#' y<- rnorm(2*8)/10 + x
+#' fit1<-lm(y~x)
+#' fit2<-lm(y~x+g)
+#'
+#' extract_effect(fit1, xlevels=list(x=c(-3,0,1)))
+#' extract_effect(fit1, fit2, xlevels=list(x=c(-1,0,1)))
+extract_effect <-
+  function(...,
+           names = NULL,
+           transformation,
+           xlevels=list()) {
+  fit <- list(...)
+  if (is.null(names)) {
+    names <- abbreviate(gsub("[~??+\\:=]", "",
+                             as.character(
+                               as.list(
+                                 sys.call()
+                                 ))[seq_len(length(fit)) + 1]),
+                        minlength = 7)
+  }
+  rslt <- NULL
+ # print( seq_along(fit) )
+  for (i in seq_along(fit)) {
+
+#print(fit[i])
+
+    rslt[names[i]] <-
+      purrr::pmap(list(mod = fit[i]),
+                  extraxt_all_effects,
+                  transformation = transformation,
+                  xlevels = xlevels)
+  }
+
+ # cat("\n  purrr::pmap ??\n")
+  stp25tools::Rbind2(rslt)
+}
+
+#-
+extraxt_all_effects <- function(mod, ...){
+#  cat("\n   in extraxt_all_effects\n")
+ # print(mod)
+  extract_effect2(effects::allEffects(mod, ...))
+
+  }
+
+extract_effect2 <- function(x,
+                            ...,
+                            .id = "term") {
+ # cat("\n   in extract_effect2\n")
+  rslt <-
+    tbll_extract_eff(x, ..., return.data.frame = TRUE)
+  data <- dplyr::bind_rows(rslt, .id = .id)
+ # print(length(data))
+#  print(data)
+
+  if (length(data) == 8) {
+    #print(names(data)[2])
+    data[.id] <- names(data)[2]
+    data[[2]] <- as.character( data[[2]] )
+    names(data)[2] <- "level"
+
+
+  }
+  else {
+    data <-
+      cbind(data[1],
+            tidyr::unite(data[names(data)[-c(1, 3:8)]], level, na.rm = TRUE),
+            data[3:8])
+
+  }
+
+  # print(data)
+#  cat("\n   raus aus  extract_effect2\n")
+  data
+}
 
 
 # Tbll_effect <-
@@ -219,23 +311,37 @@ tbll_extract.efflist <-
 #' @noRd
 #'
 extract_n <- function (x, i) {
+#  cat(" \n in  extract_n\n ")
   if (inherits(x, "eff"))
     x <- list(i = x)
+
   y <- names(x[[i]]$data)[1L]
 
   fm <-
     formula(paste0(y, "~", paste0(names(x[[i]]$variables), collapse = "+")))
 
+
   var_is_factor <-
-    lapply(x[[i]]$variables, function(z)
-      z$is.factor)
+    lapply(x[[i]]$variables, function(z) z$is.factor)
+
+
   var_source <- lapply(x[[i]]$variables, function(z)
     z$levels)
+
   for (j in names(var_source)) {
-    if (!var_is_factor[[i]])
+
+    if (!var_is_factor[[1]]){
+       breaks <- var_source[[j]]
+    breaks <- rowMeans (cbind(dplyr::lag(breaks)[-1],
+                              dplyr::lead(breaks)[-length(breaks)]))
+
       x[[i]]$data[[j]] <-
-        cut(x[[i]]$data[[j]], length(var_source[[j]]))
+        cut(x[[i]]$data[[j]], c( -Inf, breaks, Inf))
+      }
+
   }
+
+
   rslt_n <- aggregate(
     fm,
     x[[i]]$data,
@@ -243,6 +349,8 @@ extract_n <- function (x, i) {
       length(n),
     drop = FALSE
   )
+
+#  print(rslt_n )
   rslt_n[[ncol(rslt_n)]]
 }
 
@@ -319,6 +427,7 @@ tbll_extract_eff <-
            # include.format = TRUE,@param include.format Zahl oder Text
            digits = 2,
            type = c("response", "link"),
+           return.data.frame=FALSE,
            ...)  {
     # das ist die eigendliche Funktion die sowol efflist als auch eff  aufloest.
     type <- match.arg(type)
@@ -330,19 +439,8 @@ tbll_extract_eff <-
       rslt <-  lapply(x, effects_as.data.frame.eff, type = type)
     }
 
-    # if (!include.format)
-    #   return(if (length(rslt) == 1)
-    #     rslt[[1]]
-    #     else
-    #       rslt)
-    #print(rslt)
     for (i in seq_along(rslt)) {
-      #  cat("\n include: ", include.fit, " ",  include.ci, "\n")
-
       if (include.fit & include.ci) {
-        #         print(rslt[[i]]$fit )
-        #         print(cbind(rslt[[i]]$lower, rslt[[i]]$upper) )
-        # print( rndr_mean_CI(rslt[[i]]["fit"], cbind(rslt[[i]]$lower, rslt[[i]]$upper), digits = digits))
         rslt[[i]]$value <-
           rndr_mean_CI(rslt[[i]]$fit, cbind(rslt[[i]]$lower, rslt[[i]]$upper), digits = digits)
         note <- "mean [95%-CI]"
@@ -363,24 +461,42 @@ tbll_extract_eff <-
 
 
       if (include.n) {
+
         rslt[[i]]$value <-
           paste0("(", extract_n(x, i), ") ", rslt[[i]]$value)
       }
 
+      if(!return.data.frame){
       rslt[[i]] <-  rslt[[i]][-(1:4 + (ncol(rslt[[i]]) - 1 - 4))]
-      if (ncol(rslt[[i]]) == 2)
+
+      if (ncol(rslt[[i]]) == 2){
         rslt[[i]] <-
-        prepare_output(rslt[[i]], caption = caption, note = note)
+        prepare_output(rslt[[i]],
+                       caption = caption,
+                       note = note)}
       else {
         rslt[[i]] <- prepare_output(
           tidyr::pivot_wider(rslt[[i]],
                              names_from = 2,
                              values_from = "value"),
           caption = caption,
-          note = note
-        )
+          note = note)}
       }
-    }
+      else{
+#cat("\nist hier der Fehler??\n")
+
+     #   print(x)
+     #   print(i)
+        rslt[[i]]$n <- extract_n(x, i)
+        nn<- length(rslt[[i]])
+        rslt[[i]] <- rslt[[i]][c(1:(nn-2), nn, nn-1)]
+      }
+
+
+    } # end for-loop
+
+#print(rslt)
+
     if (length(rslt) == 1)
       rslt[[1]]
     else

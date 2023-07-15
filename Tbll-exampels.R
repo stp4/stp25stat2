@@ -243,7 +243,7 @@ Tbll_corr(breaks ~ tension2, warpbreaks2,  groups = ~ wool)
 
 n <- 2 * 20
 e <- rnorm(n)
-dat <- stp25aggregate::Label(
+dat <- stp25tools::Label(
   data.frame(
     a = rnorm(n) + e / 2,
     b = rnorm(n) + e,
@@ -474,6 +474,6 @@ DF2 <- data.frame(
   Geschlecht = cut(rnorm(n), 2, c("m", "f"))
 )
 
-x<-Tbll_likert(DF2, Magazines, Comic.books, Fiction, Newspapers, ReferenceZero=2)
+ Tbll_likert(DF2, Magazines, Comic.books, Fiction, Newspapers, ReferenceZero=2)
 
-stp25output::Output(x)
+

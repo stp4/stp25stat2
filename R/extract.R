@@ -17,9 +17,6 @@ tbll_extract <- function(...) {
 #' @export
 #'
 tbll_extract.default <- function(x, ...) {
-
-
-
   cat("\n Es ist keine Methode feur die Class",
       class(x)[1],
       " in tbll_extract() implementiert.\nIch versuche daher mal das mit broom zu extrahieren.\n")
@@ -297,21 +294,16 @@ tbll_extract.htest <- function(x,
 #' ## These give warnings because of ties :
 #' tbll_extract(pairwise.wilcox.test(Ozone, Month))
 #'
-tbll_extract.pairwise.htest <-  function(x,
-                                         ...) {
-  #pairwise.t.test
-  #?pairwise.wilcox.test
-  prepare_output(
-    data.frame(
-      Source = row.names(x$p.value),
-      render_f(
-        as.data.frame(x$p.value)
-        ,digits = 3 , lead.zero = FALSE
-      )
-    ),
-    caption = paste(x$data.name, x$method )
-  )
-}
+tbll_extract.pairwise.htest <- function(x,
+                                        caption = paste(x$data.name, x$method),
+                                        ...) {
+    rslt <- stp25tools::fix_to_df(x$p.value)
+    for (i in seq_along(rslt))
+      rslt[[i]] <- rndr_P(rslt[[i]], FALSE)
+    prepare_output(rslt,
+                   caption = caption)
+  }
+
 
 
 
