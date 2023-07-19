@@ -40,7 +40,7 @@ tbll_extract.default <- function(x, ...) {
 #' @export
 #'
 tbll_extract.anova <- function(x, include.eta = TRUE, ...) {
-  cat("\n   tbll_extract.anova\n")
+ # cat("\n   tbll_extract.anova\n")
   rslt <- x
   rslt[-ncol(rslt)] <-
     stp25stat2:::render_f(rslt[-ncol(rslt)], digits = 2)

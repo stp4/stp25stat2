@@ -26,7 +26,7 @@
 #' @export
 #'
 #' @examples
-#'
+#' #'
 #' require(magrittr)
 #' library(stp25data)
 #'
@@ -36,6 +36,7 @@
 #' rslt  %>%  Tbll_pca_loadings()
 #' rslt  %>%  Tbll_pca_eigen()
 #' rslt  %>%  Tbll_pca_test()
+#'
 #'
 Tbll_pca <- function(x,
                     cut = .30,

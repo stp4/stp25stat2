@@ -3,7 +3,7 @@
   # oldc <- getOption("contrasts")
   # contrasts =  c("contr.Treatment", "contr.poly")
   # options(contrasts = contrasts)
-  packageStartupMessage("\nHallo Wolfgang!\n\n")
+  packageStartupMessage("\nHallo Wolfgang!\n\nIch wünsche dir einen guten und erfolgreichen Arbeitstag.\n\n")
 }
 
 .onAttach <- function(...) {
