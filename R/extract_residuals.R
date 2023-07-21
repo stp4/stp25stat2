@@ -4,9 +4,8 @@
 #'
 
 #' @rdname extract
-#' @param eff  eff-model
-#' @param term  x-var
-#' @param response y-var
+#' @param term  effects: x-var
+#' @param response effects: y-var
 #'
 #' @return data.frame
 #' @export

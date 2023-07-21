@@ -115,18 +115,18 @@
 #' Tbll_reg(lm1, lm2)
 Tbll_desc <-
   function (...,
-                       include.label=TRUE,
-                       include.n = TRUE,
-                       include.nr = FALSE,
-                       include.total = FALSE,
-                       include.test = FALSE,
-                       include.normality.tests=FALSE,
-                       include.multiresponse=FALSE,
-                       include.custom = NULL,
-                       include.value = NULL,
-                     ## #' @param exclude,exclude.level,max_factor_length fuer factor
-                       digits=NULL,
-                       use.level=1 # multiresponse
+            include.label = TRUE,
+            include.n = TRUE,
+            include.nr = FALSE,
+            include.total = FALSE,
+            include.test = FALSE,
+            include.normality.tests = FALSE,
+            include.multiresponse = FALSE,
+            include.custom = NULL,
+            include.value = NULL,
+            ## #' @param exclude,exclude.level,max_factor_length fuer factor
+            digits = NULL,
+            use.level = 1 # multiresponse
                        ) {
   rslt_all <- NULL
   tbl_rstl <- NULL
@@ -151,7 +151,7 @@ Tbll_desc <-
 
   caption <- "Summary"
   n <- length(X$measure.vars)
-  note <- measure_info(X$measure)
+  note <-  "" # measure_info(X$measure)
 
 
  any_missing_measure <-
@@ -534,67 +534,67 @@ names_option <- function(rslt_all) {
 
 
 
-measure_info <- function(measure,
-                        # include.test=FALSE,
-                        #  test= NULL,
-                        #  groups=NULL,
-                         measure_mean = calc_mean(),
-                         measure_median = calc_median(),
-                         measure_percent = calc_percent(),
-                         measure_ratio = "ratio",
-                       #  contest = c("Wilcoxon-Test", "Kruskal-Wallis-Test"),
-                       #  cattest = "Pearson Chi-squared",
-                         note="") {
-return("")
- # measure<- na.omit(measure)
-  fctr <- any(measure == "factor") | any(measure == "logical")
-  rtio <-  any(measure == "ratio")
- #if(is.na(rtio)) rtio <- FALSE
-
-  # cat("\nin measure_info:\n")
-  # print(measure )
-  # print(rtio)
-  # print(measure_percent)
-  mn <- any(measure == "numeric") | any(measure == "mean")
-  md <- any(measure == "median")
-
-  if (fctr | rtio) {
-    note <- paste(note, "Categorical date: ", sep = "")
-
-    if (!rtio)
-      note <- paste(note, measure_percent, sep = "")
-    if (fctr & rtio)
-      note <-
-        paste(note, measure_percent, ", ", measure_ratio,  sep = "")
-    else
-      note <-  paste(note, measure_ratio, sep = "")
-
-
-  }
-  if (mn | md) {
-    if (note != "")
-      note <- paste(note, "; ", sep = "")
-    note <- paste(note, "Continuous date: ", sep = "")
-
-
-    if (mn & md)
-      note <-
-      paste(note, measure_mean, ", ", measure_median,  sep = "")
-    else if (mn)
-      note <- paste(note, measure_mean, sep = "")
-    else
-      note <- paste(note, measure_median, sep = "")
-  }
-
-  # if( include.test & !is.null(groups)) {
-  #   cat("\n", test, "\n")
-  #   note<- paste(note, ". Test Statistic:", sep = "")
-  #   if(any("contest" %in% test))   note<- paste(note, " ", contest[ifelse(groups==2, 1,2)], ".", sep = "")
-  #   if(any("cattest" %in% test))   note<- paste(note, " ", cattest, ".", sep = "")
-  # }
-  #paste("Values are ", note,  sep = "")
-  note
-}
+# measure_info <- function(measure,
+#                          # include.test=FALSE,
+#                          #  test= NULL,
+#                          #  groups=NULL,
+#                          measure_mean = calc_mean(),
+#                          measure_median = calc_median(),
+#                          measure_percent = calc_percent(),
+#                          measure_ratio = "ratio",
+#                          #  contest = c("Wilcoxon-Test", "Kruskal-Wallis-Test"),
+#                          #  cattest = "Pearson Chi-squared",
+#                          note = "") {
+# return("")
+#  # measure<- na.omit(measure)
+#   fctr <- any(measure == "factor") | any(measure == "logical")
+#   rtio <-  any(measure == "ratio")
+#  #if(is.na(rtio)) rtio <- FALSE
+#
+#   # cat("\nin measure_info:\n")
+#   # print(measure )
+#   # print(rtio)
+#   # print(measure_percent)
+#   mn <- any(measure == "numeric") | any(measure == "mean")
+#   md <- any(measure == "median")
+#
+#   if (fctr | rtio) {
+#     note <- paste(note, "Categorical date: ", sep = "")
+#
+#     if (!rtio)
+#       note <- paste(note, measure_percent, sep = "")
+#     if (fctr & rtio)
+#       note <-
+#         paste(note, measure_percent, ", ", measure_ratio,  sep = "")
+#     else
+#       note <-  paste(note, measure_ratio, sep = "")
+#
+#
+#   }
+#   if (mn | md) {
+#     if (note != "")
+#       note <- paste(note, "; ", sep = "")
+#     note <- paste(note, "Continuous date: ", sep = "")
+#
+#
+#     if (mn & md)
+#       note <-
+#       paste(note, measure_mean, ", ", measure_median,  sep = "")
+#     else if (mn)
+#       note <- paste(note, measure_mean, sep = "")
+#     else
+#       note <- paste(note, measure_median, sep = "")
+#   }
+#
+#   # if( include.test & !is.null(groups)) {
+#   #   cat("\n", test, "\n")
+#   #   note<- paste(note, ". Test Statistic:", sep = "")
+#   #   if(any("contest" %in% test))   note<- paste(note, " ", contest[ifelse(groups==2, 1,2)], ".", sep = "")
+#   #   if(any("cattest" %in% test))   note<- paste(note, " ", cattest, ".", sep = "")
+#   # }
+#   #paste("Values are ", note,  sep = "")
+#   note
+# }
 
 
 #' @rdname Tbll_desc

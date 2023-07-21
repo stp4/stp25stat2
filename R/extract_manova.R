@@ -1,4 +1,5 @@
 #' @rdname extract
+#'
 #' @description MANOVA: extract.manova(x, , test="Wilks") test : "Wilks", "Pillai"
 #' @param include.eta die Manova wird ueber heplots::etasq berechnet und die anova mit den SS eta2=SS/SS_total
 #' @examples
@@ -64,8 +65,6 @@
 #'
 #'
 #'
-#'
-
 extract.manova <-
   function(x,
            test = "Wilks",

@@ -1,8 +1,8 @@
-
-
 #' @rdname extract
 #' @description  tbll_extract.meta: Ausgabe von print.meta als tabelle
 #' @examples
+#'
+#'
 #' # library(meta)
 #' data(Olkin1995)
 #' head(Olkin1995)

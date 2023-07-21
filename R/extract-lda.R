@@ -1,24 +1,13 @@
-fix_and_format<- function(x, caption, digits=2, ...) {
-  prepare_output(
-    fix_format(
-      stp25tools::fix_to_df(x),
-      digits=digits),
-    caption=caption
-  )
-}
-
-
 #' @rdname extract
 #'
 #' @param fit_predict an MASS predict.lda
 #' @param newdata model.frame(x)
-#' @param digits nur fuer die means
-#' @param ... nicht benztzt
 #'
 #' @return data.frame
-#' @export
 #'
 #' @examples
+#'
+#' #' Linear Discriminant Analysis
 #'
 #'  require(MASS)
 #' #DF2 <- stp25aggregate::GetData(
@@ -87,3 +76,11 @@ tbll_extract.lda <-
   }
 
 
+fix_and_format<- function(x, caption, digits=2, ...) {
+  prepare_output(
+    fix_format(
+      stp25tools::fix_to_df(x),
+      digits=digits),
+    caption=caption
+  )
+}

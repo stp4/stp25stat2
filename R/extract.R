@@ -1,9 +1,12 @@
-#' extract
+#' Extract
 #'
 #' Turn an object into a tidy table
 #'
 #' @name extract
-#' @param ... Objekte
+#' @param x  Objekte
+#' @param caption,note Ueberschrift
+#' @param digits Nachkomastellen
+#' @param ...  weitere Argumente
 #'
 #' @return data.frame
 #' @export
@@ -12,7 +15,6 @@ tbll_extract <- function(...) {
   UseMethod("tbll_extract")
 }
 
-#' @param x Objekt
 #' @rdname extract
 #' @export
 #'
@@ -24,18 +26,6 @@ tbll_extract.default <- function(x, ...) {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-#' @param x Objekt
 #' @rdname extract
 #' @export
 #'
@@ -64,7 +54,7 @@ tbll_extract.anova <- function(x, include.eta = TRUE, ...) {
                  caption =   attr(rslt, "heading")[1])
 }
 
-#' @param x Objekt
+
 #' @rdname extract
 #' @export
 #'
@@ -130,7 +120,7 @@ tbll_extract.aovlist <- function(x, ...) {
 
 
 
-#' @rdname Tbll
+#' @rdname extract
 #' @export
 #'
 tbll_extract.summary.aov <- function(x,
@@ -142,9 +132,6 @@ tbll_extract.summary.aov <- function(x,
                               paste(options()$contrasts,
                                     collapse = ", ")))
 }
-
-
-
 
 
 
@@ -204,8 +191,6 @@ tbll_extract.step <- function(x,
 
   res
 }
-
-
 
 
 #' @rdname extract
@@ -354,7 +339,6 @@ tbll_extract.principal <- function (x,
 
 
 
-#' @param x Objekt
 #' @rdname extract
 #' @export
 tbll_extract.confusionMatrix <-
@@ -406,7 +390,7 @@ tbll_extract.confusionMatrix <-
   }
 
 
-#' @param x Objekt
+
 #' @rdname extract
 #' @export
 #'

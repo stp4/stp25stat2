@@ -2,9 +2,8 @@
 #'
 #' lavaan: Struckturgleichungs Modelle mit lavaan.
 #'
-#' @param x lavaan
 #' @param baseline.model an lavaan
-#' @param include.ci,include.model,include.varianz,include.latent was soll ausgegeben werden
+#' @param include.ci,include.model,include.varianz,include.latent Lavan: was soll ausgegeben werden
 #' @param ...  Fehler abfangen
 #'
 #' @rdname Tbll_cfa
