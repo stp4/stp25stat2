@@ -65,4 +65,38 @@ Summarise(
   key = "Zeit",
   value = "Cholesterin"
 )
+
+Summarise(
+chol0 + chol1 + chol6 + chol12 ~ g,
+hyper,
+fun = mean,  # function(x) c(m=mean(x), sd = sd(x)),
+# key = "Zeit",
+#  value = "Cholesterin",
+formula = variable~g
+ )
+
+
+
+Summarise(
+  chol0 + chol1 + chol6 + chol12 ~ g,
+  hyper,
+  fun =  function(x)
+    c(m = mean(x), sd = sd(x)),
+  magin = TRUE,
+  formula = variable ~ g
+)
+
+
+
+Summarise(
+  hyper,
+  chol0 ,
+  chol1 ,
+  chol6 ,
+  chol12,
+  by = ~ g + med,
+  fun =  function(x)
+    c(m = mean(x), sd = sd(x)),
+  formula = ~ g + med
+)
 }
