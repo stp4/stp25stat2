@@ -16,11 +16,9 @@
 )
 }
 \arguments{
-\item{x}{lavaan}
-
 \item{baseline.model}{an lavaan}
 
-\item{include.ci, include.model, include.varianz, include.latent}{was soll ausgegeben werden}
+\item{include.ci, include.model, include.varianz, include.latent}{Lavan: was soll ausgegeben werden}
 
 \item{...}{Fehler abfangen}
 }

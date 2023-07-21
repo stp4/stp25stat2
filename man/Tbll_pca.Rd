@@ -46,7 +46,7 @@ Stichprobengroesse: Wenn je Faktor zehn oder mehr Variablken anfallen,
  Eigenwert ~ Gesamt-Varianz aller Variablen bezogen auf die Faktoren.
 }
 \examples{
-
+#'
 require(magrittr)
 library(stp25data)
 
@@ -56,5 +56,6 @@ rslt <- psych::principal(fkv, 5)
 rslt  \%>\%  Tbll_pca_loadings()
 rslt  \%>\%  Tbll_pca_eigen()
 rslt  \%>\%  Tbll_pca_test()
+
 
 }

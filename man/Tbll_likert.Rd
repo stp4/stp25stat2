@@ -19,6 +19,7 @@ Tbll_likert(...)
   include.order = TRUE,
   include.percent = TRUE,
   include.count = TRUE,
+  include.total = FALSE,
   decreasing = TRUE,
   labels = c("low", "neutral", "high"),
   reverse.levels = FALSE,
@@ -38,7 +39,13 @@ Tbll_likert(...)
   decreasing = TRUE
 )
 
-Likert(..., labels = NULL, reverse.levels = FALSE, reorder.levels = NA)
+Likert(
+  ...,
+  labels = NULL,
+  reverse.levels = FALSE,
+  reorder.levels = NA,
+  include.total = FALSE
+)
 
 \method{print}{likert}(x, ...)
 }
@@ -48,7 +55,7 @@ Likert(..., labels = NULL, reverse.levels = FALSE, reorder.levels = NA)
 \item{ReferenceZero, labels}{ReferenceZero=2 Neutrales Element in Kombination mit
 labels = c("low", "neutral", "high")}
 
-\item{include.mean, include.n, include.na, include.order, include.percent, include.count}{Zusatz}
+\item{include.mean, include.n, include.na, include.order, include.percent, include.count, include.total}{Zusatz}
 
 \item{reverse.levels}{an Likert}
 

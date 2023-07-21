@@ -30,7 +30,7 @@ model_info(x)
 
 \method{model_info}{data.frame}(x)
 
-Infomation(x)
+Infomation(...)
 
 \method{model_info}{formula}(x)
 

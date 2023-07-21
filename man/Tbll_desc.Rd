@@ -32,7 +32,6 @@ Tbll_desc(
   include.multiresponse = FALSE,
   include.custom = NULL,
   include.value = NULL,
-  include.single.value = TRUE,
   digits = NULL,
   use.level = 1
 )
@@ -60,11 +59,13 @@ Tbll_desc_long(
   include.n = TRUE,
   include.test = FALSE,
   include.label = TRUE,
-  digits = NULL
+  digits = NULL,
+  abbreviate = TRUE
 )
 
 Tbll_desc_item(
   ...,
+  include.label = FALSE,
   include.n = TRUE,
   include.mean = TRUE,
   include.median = FALSE,
@@ -102,8 +103,6 @@ x <- scale(as.numeric(x))
 diff(sapply(split(x, by), mean, na.rm=TRUE))})}
 
 \item{include.value}{vector oder data.frame in exact der reihenfolge wie die meassure-variablen.}
-
-\item{include.single.value}{M und SD in separaten Spalten}
 
 \item{include.range}{lang oder kurz}
 

@@ -32,6 +32,7 @@ Tbll_xtabs(x, ...)
   drop.unused.levels = FALSE,
   margin = NULL,
   add.margins = NULL,
+  N_data = nrow(data),
   ...
 )
 
@@ -71,6 +72,7 @@ Tbll_xtabs(x, ...)
   add.margins = NULL,
   digits = get_opt("prozent", "digits"),
   prevalence = NULL,
+  N_data = sum(x),
   ...
 )
 
