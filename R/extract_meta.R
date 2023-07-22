@@ -3,7 +3,7 @@
 #' @examples
 #'
 #'
-#' # library(meta)
+#'  library(meta)
 #' data(Olkin1995)
 #' head(Olkin1995)
 #' m1 <- metabin(ev.exp, n.exp, ev.cont, n.cont,

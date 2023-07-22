@@ -174,7 +174,7 @@ Tbll_surv.coxph <- function(...,
 #'
 #' @examples
 #'
-#' Tbll_surv2(Surv(futime, fustat) ~ rx, data = ovarian)
+#' Tbll_surv(Surv(futime, fustat) ~ rx, data = ovarian)
 #'
 Tbll_surv.formula <-
   function(formula,

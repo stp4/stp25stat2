@@ -988,16 +988,16 @@ list_rbind <- function(l)
 #'
 #' @examples
 #'
-#'  effect_size(c(2, 3, 4, 2, 3, 4, 3, 6,
-#' 7, 6, 8, 9, 4, 5, 6, 7) ,
-#' gl(2, 8, labels = c("Control", "Treat")))
-#' x<- c(2, 3, 4, 2, 3, 4, 3, 6,7, 6, 8, 9, 4, 5, 6, 7)
-#' y<- factor(c(2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2))
-#' z<- gl(2, 8, labels = c("Control", "Treat"))
-#' rbind(
-#'   effect_size(x, z),
-#'   effect_size(y, z)
-#' )
+#'  # effect_size(c(2, 3, 4, 2, 3, 4, 3, 6,
+#'  # 7, 6, 8, 9, 4, 5, 6, 7) ,
+#'  # gl(2, 8, labels = c("Control", "Treat")))
+#'  # x<- c(2, 3, 4, 2, 3, 4, 3, 6,7, 6, 8, 9, 4, 5, 6, 7)
+#'  # y<- factor(c(2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2))
+#' #  z<- gl(2, 8, labels = c("Control", "Treat"))
+#'  #  rbind(
+#'  # effect_size(x, z),
+#'  # effect_size(y, z)
+#'  # )
 #'
 effect_size <- function(x,
                          by,

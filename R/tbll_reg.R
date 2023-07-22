@@ -22,13 +22,6 @@
 #'
 #' Tbll(lm1, lm2)
 #'
-#'
-#' #' lm1 <- lm(breaks ~ wool + tension, data = warpbreaks2)
-#'
-#'
-#' Tbll_reg(lm(breaks ~1, data = warpbreaks2),
-#'          lm1, lm2)
-#'
 Tbll_reg  <- function(...,
                       caption = "",
                       include.label = FALSE,

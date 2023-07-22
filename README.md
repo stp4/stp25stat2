@@ -71,67 +71,6 @@ warpbreaks %>% Tbll_desc(
   include.total = TRUE,
   include.n = FALSE,
   include.test = TRUE) %>% kable()
-# 
-#  in stp25stat2/R/tbll_desc.R:246:6 
-# $x
-# # A tibble: 6 × 3
-#   h__1__h breaks tension
-#   <lgl>    <dbl> <fct>  
-# 1 NA          26 L      
-# 2 NA          30 L      
-# 3 NA          54 L      
-# 4 NA          25 L      
-# 5 NA          70 L      
-# 6 NA          52 L      
-# 
-# $digits
-# h__1__h  breaks tension 
-#       0       2       0 
-# 
-# $measure
-#   h__1__h    breaks   tension 
-#  "header" "numeric"  "factor" 
-# 
-# $row_name
-#   h__1__h    breaks   tension 
-#      "H1"  "breaks" "tension" 
-# 
-# $use.level
-# [1] 1
-# 
-# $include.single.value
-# [1] TRUE
-# 
-# 
-#  in stp25stat2/R/tbll_desc.R:246:6 
-# $x
-# # A tibble: 6 × 3
-#   h__1__h breaks tension
-#   <lgl>    <dbl> <fct>  
-# 1 NA          27 L      
-# 2 NA          14 L      
-# 3 NA          29 L      
-# 4 NA          19 L      
-# 5 NA          29 L      
-# 6 NA          31 L      
-# 
-# $digits
-# h__1__h  breaks tension 
-#       0       2       0 
-# 
-# $measure
-#   h__1__h    breaks   tension 
-#  "header" "numeric"  "factor" 
-# 
-# $row_name
-#   h__1__h    breaks   tension 
-#      "H1"  "breaks" "tension" 
-# 
-# $use.level
-# [1] 1
-# 
-# $include.single.value
-# [1] TRUE
 ```
 
 | Item          | Total         | A             | B            | Statistics            |
@@ -152,19 +91,21 @@ mtcars %>% Tbll_desc_long(
 ) %>% kable(caption ="summary statistics" )
 ```
 
-| Item         |   n | m                                  |
-|:-------------|----:|:-----------------------------------|
-| mpg (mean)   |  32 | 20.1 (SD 6.0, range 10.4 to 33.9)  |
-| cyl (median) |  32 | (6.004)                            |
-| disp (mean)  |  32 | 231 (SD 124, range 71 to 472)      |
-| hp (mean)    |  32 | 147 (SD 69, range 52 to 335)       |
-| drat (mean)  |  32 | 3.60 (SD 0.53, range 2.76 to 4.93) |
-| wt (mean)    |  32 | 3.22 (SD 0.98, range 1.51 to 5.42) |
-| qsec (mean)  |  32 | 17.8 (SD 1.8, range 14.5 to 22.9)  |
-| vs (0/1)     |  32 | 18/14                              |
-| am (0/1)     |  32 | 19/13                              |
-| gear (mean)  |  32 | 3.69 (SD 0.74, range 3.00 to 5.00) |
-| carb (mean)  |  32 | 2.81 (SD 1.62, range 1.00 to 8.00) |
+median \[1\] “auto_long”
+
+| Item         |   n | m                                   |
+|:-------------|----:|:------------------------------------|
+| mpg (mean)   |  32 | 20.1 (SD 6.0, range 10.4 to 33.9)   |
+| cyl (median) |  32 | 6.00 (IQR 4.00, range 4.00 to 8.00) |
+| disp (mean)  |  32 | 231 (SD 124, range 71 to 472)       |
+| hp (mean)    |  32 | 147 (SD 69, range 52 to 335)        |
+| drat (mean)  |  32 | 3.60 (SD 0.53, range 2.76 to 4.93)  |
+| wt (mean)    |  32 | 3.22 (SD 0.98, range 1.51 to 5.42)  |
+| qsec (mean)  |  32 | 17.8 (SD 1.8, range 14.5 to 22.9)   |
+| vs (0/1)     |  32 | 18/14                               |
+| am (0/1)     |  32 | 19/13                               |
+| gear (mean)  |  32 | 3.69 (SD 0.74, range 3.00 to 5.00)  |
+| carb (mean)  |  32 | 2.81 (SD 1.62, range 1.00 to 8.00)  |
 
 summary statistics
 
@@ -210,61 +151,11 @@ DF %>%
   ) %>% stp25output2::Output()
 ```
 
-in stp25stat2/R/tbll_desc.R:246:6 \$x \# A tibble: 6 × 11 sex group age
-alc smoker h\_\_1\_\_h diabet cardo <fct> <fct> <dbl> <fct> <lgl> <lgl>
-<lgl> <lgl> 1 male Control 60.4 Occasion… FALSE NA TRUE FALSE 2 male
-Control 25.3 Occasion… FALSE NA FALSE FALSE 3 female Control 30.2
-Occasion… TRUE NA FALSE FALSE 4 male Control 25.2 Abuse FALSE NA FALSE
-FALSE 5 male Control 27.7 Abuse FALSE NA FALSE FALSE 6 male Control 28.6
-non FALSE NA TRUE FALSE \# … with 3 more variables: metabolic <lgl>,
-infect <fct>, \# bili <dbl>
-
-\$digits sex group age alc smoker h\_\_1\_\_h 0 1 0 1 0 0 diabet cardo
-metabolic infect bili 0 0 0 1 3
-
-\$measure sex group age alc smoker h\_\_1\_\_h “ratio” “factor” “median”
-“factor” “logical” “header” diabet cardo metabolic infect bili “logical”
-“logical” “logical” “multi” “median”
-
-\$row_name sex group “Sex” “Group” age alc “Age” “Alcohol Consumption”
-smoker h\_\_1\_\_h “Tobacco Smoker” “Clinical/Pretreatment” diabet cardo
-“Diabetes” “Cardiovascular Disease” metabolic infect “Chronic Metabolic
-Disease” “Chronic Infections” bili “Serum Bilirubin (mg/dl)”
-
-\$use.level \[1\] 1
-
-\$include.single.value \[1\] TRUE
-
-in stp25stat2/R/tbll_desc.R:246:6 \$x \# A tibble: 6 × 11 sex group age
-alc smoker h\_\_1\_\_h diabet cardo <fct> <fct> <dbl> <fct> <lgl> <lgl>
-<lgl> <lgl> 1 female Treat 44.3 Occasional… FALSE NA FALSE FALSE 2
-female Treat 19.5 Abuse FALSE NA FALSE FALSE 3 male Treat 38.5 non TRUE
-NA TRUE FALSE 4 female Treat 35.7 Abuse TRUE NA FALSE FALSE 5 female
-Treat 45.9 Abuse FALSE NA TRUE TRUE 6 male Treat 69.1 Abuse FALSE NA
-FALSE FALSE \# … with 3 more variables: metabolic <lgl>, infect <fct>,
-\# bili <dbl>
-
-\$digits sex group age alc smoker h\_\_1\_\_h 0 1 0 1 0 0 diabet cardo
-metabolic infect bili 0 0 0 1 3
-
-\$measure sex group age alc smoker h\_\_1\_\_h “ratio” “factor” “median”
-“factor” “logical” “header” diabet cardo metabolic infect bili “logical”
-“logical” “logical” “multi” “median”
-
-\$row_name sex group “Sex” “Group” age alc “Age” “Alcohol Consumption”
-smoker h\_\_1\_\_h “Tobacco Smoker” “Clinical/Pretreatment” diabet cardo
-“Diabetes” “Cardiovascular Disease” metabolic infect “Chronic Metabolic
-Disease” “Chronic Infections” bili “Serum Bilirubin (mg/dl)”
-
-\$use.level \[1\] 1
-
-\$include.single.value \[1\] TRUE
-
 <table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
 <thead>
 <tr>
 <td colspan="5" style="text-align: left;">
-Tab 1: group (N=47)
+Tab 1: group (N=47) (N=47)
 </td>
 </tr>
 <tr>
@@ -344,7 +235,7 @@ n.a.
 22 (100.0%)
 </td>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
- . 
+0 ( . )
 </td>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 </td>
@@ -357,7 +248,7 @@ n.a.
 25 (53.2%)
 </td>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
- . 
+0 ( . )
 </td>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 25 (100.0%)
@@ -582,71 +473,6 @@ DF %>%
     include.value = Info,
     include.nr = TRUE
   ) %>% kable()
-# 
-#  in stp25stat2/R/tbll_desc.R:246:6 
-# $x
-# # A tibble: 6 × 4
-#   sex    group   h__1__h   age
-#   <fct>  <fct>   <lgl>   <dbl>
-# 1 male   Control NA       60.4
-# 2 male   Control NA       25.3
-# 3 female Control NA       30.2
-# 4 male   Control NA       25.2
-# 5 male   Control NA       27.7
-# 6 male   Control NA       28.6
-# 
-# $digits
-#     sex   group h__1__h     age 
-#       0       1       0       0 
-# 
-# $measure
-#      sex    group  h__1__h      age 
-#  "ratio" "factor" "header" "median" 
-# 
-# $row_name
-#                    sex                  group 
-#                  "Sex"                "Group" 
-#                h__1__h                    age 
-# "Zwichen Ueberschrift"                  "Age" 
-# 
-# $use.level
-# [1] 1
-# 
-# $include.single.value
-# [1] TRUE
-# 
-# 
-#  in stp25stat2/R/tbll_desc.R:246:6 
-# $x
-# # A tibble: 6 × 4
-#   sex    group h__1__h   age
-#   <fct>  <fct> <lgl>   <dbl>
-# 1 female Treat NA       44.3
-# 2 female Treat NA       19.5
-# 3 male   Treat NA       38.5
-# 4 female Treat NA       35.7
-# 5 female Treat NA       45.9
-# 6 male   Treat NA       69.1
-# 
-# $digits
-#     sex   group h__1__h     age 
-#       0       1       0       0 
-# 
-# $measure
-#      sex    group  h__1__h      age 
-#  "ratio" "factor" "header" "median" 
-# 
-# $row_name
-#                    sex                  group 
-#                  "Sex"                "Group" 
-#                h__1__h                    age 
-# "Zwichen Ueberschrift"                  "Age" 
-# 
-# $use.level
-# [1] 1
-# 
-# $include.single.value
-# [1] TRUE
 ```
 
 <table>
@@ -737,7 +563,7 @@ y
     22 (100.0%)
     </td>
     <td style="text-align:left;">
-    .
+    0 ( . )
     </td>
     <td style="text-align:left;">
     </td>
@@ -752,7 +578,7 @@ y
     25 (53.2%)
     </td>
     <td style="text-align:left;">
-    .
+    0 ( . )
     </td>
     <td style="text-align:left;">
     25 (100.0%)
@@ -831,18 +657,18 @@ Tbll_xtabs( ~ induced + education + case,
             margin = "case",
             include.count = FALSE)
 # $xtab
-# # A tibble: 9 × 4
-#   induced education case_case case_control
-# * <chr>   <chr>     <chr>     <chr>       
-# 1 0       0-5yrs    " . "     "2.4%"      
-# 2 0       6-11yrs   "25.3%"   "34.5%"     
-# 3 0       12+ yrs   "31.3%"   "21.2%"     
-# 4 1       0-5yrs    "2.4%"    " . "       
-# 5 1       6-11yrs   "13.3%"   "9.7%"      
-# 6 1       12+ yrs   "12.0%"   "17.6%"     
-# 7 2       0-5yrs    "2.4%"    "2.4%"      
-# 8 2       6-11yrs   "9.6%"    "4.2%"      
-# 9 2       12+ yrs   "3.6%"    "7.9%"
+# # A tibble: 9 × 3
+#   induced_education case_case case_control
+# * <chr>             <chr>     <chr>       
+# 1 0_0-5yrs          " . "     "2.4%"      
+# 2 0_6-11yrs         "25.3%"   "34.5%"     
+# 3 0_12+ yrs         "31.3%"   "21.2%"     
+# 4 1_0-5yrs          "2.4%"    " . "       
+# 5 1_6-11yrs         "13.3%"   "9.7%"      
+# 6 1_12+ yrs         "12.0%"   "17.6%"     
+# 7 2_0-5yrs          "2.4%"    "2.4%"      
+# 8 2_6-11yrs         "9.6%"    "4.2%"      
+# 9 2_12+ yrs         "3.6%"    "7.9%"
 ```
 
 ``` r
@@ -855,25 +681,25 @@ Tbll_xtabs(
   include.test =TRUE
 )
 # $xtab
-# # A tibble: 16 × 5
-#    induced education case_case case_control case_Sum
-#  * <chr>   <chr>     <chr>     <chr>        <chr>   
-#  1 0       0-5yrs    " . "     "2.4%"       2.4%    
-#  2 0       6-11yrs   "25.3%"   "34.5%"      59.8%   
-#  3 0       12+ yrs   "31.3%"   "21.2%"      52.5%   
-#  4 0       Sum       "56.6%"   "58.2%"      114.8%  
-#  5 1       0-5yrs    "2.4%"    " . "        2.4%    
-#  6 1       6-11yrs   "13.3%"   "9.7%"       22.9%   
-#  7 1       12+ yrs   "12.0%"   "17.6%"      29.6%   
-#  8 1       Sum       "27.7%"   "27.3%"      55.0%   
-#  9 2       0-5yrs    "2.4%"    "2.4%"       4.8%    
-# 10 2       6-11yrs   "9.6%"    "4.2%"       13.9%   
-# 11 2       12+ yrs   "3.6%"    "7.9%"       11.5%   
-# 12 2       Sum       "15.7%"   "14.5%"      30.2%   
-# 13 Sum     0-5yrs    "4.8%"    "4.8%"       9.7%    
-# 14 Sum     6-11yrs   "48.2%"   "48.5%"      96.7%   
-# 15 Sum     12+ yrs   "47.0%"   "46.7%"      93.7%   
-# 16 Sum     Sum       "100.0%"  "100.0%"     200.0%  
+# # A tibble: 16 × 4
+#    induced_education case_case case_control case_Sum
+#  * <chr>             <chr>     <chr>        <chr>   
+#  1 0_0-5yrs          " . "     "2.4%"       2.4%    
+#  2 0_6-11yrs         "25.3%"   "34.5%"      59.8%   
+#  3 0_12+ yrs         "31.3%"   "21.2%"      52.5%   
+#  4 0_Sum             "56.6%"   "58.2%"      114.8%  
+#  5 1_0-5yrs          "2.4%"    " . "        2.4%    
+#  6 1_6-11yrs         "13.3%"   "9.7%"       22.9%   
+#  7 1_12+ yrs         "12.0%"   "17.6%"      29.6%   
+#  8 1_Sum             "27.7%"   "27.3%"      55.0%   
+#  9 2_0-5yrs          "2.4%"    "2.4%"       4.8%    
+# 10 2_6-11yrs         "9.6%"    "4.2%"       13.9%   
+# 11 2_12+ yrs         "3.6%"    "7.9%"       11.5%   
+# 12 2_Sum             "15.7%"   "14.5%"      30.2%   
+# 13 Sum_0-5yrs        "4.8%"    "4.8%"       9.7%    
+# 14 Sum_6-11yrs       "48.2%"   "48.5%"      96.7%   
+# 15 Sum_12+ yrs       "47.0%"   "46.7%"      93.7%   
+# 16 Sum_Sum           "100.0%"  "100.0%"     200.0%  
 # 
 # $chisq_tests
 # # A tibble: 1 × 3
@@ -997,14 +823,14 @@ Gamma
 ``` r
 Tbll_desc_item( ~ A + B + C + D + E, df)
 # # A tibble: 5 × 8
-#   variable n     M     SD    Range     Skew  Kurtosi Shapi…¹
-# * <chr>    <chr> <chr> <chr> <chr>     <chr> <chr>   <chr>  
-# 1 A        15    2.53  1.77  [1.00, 5… 0.46  -1.69   W=0.76…
-# 2 B        15    2.67  1.68  [1.00, 5… 0.41  -1.64   W=0.80…
-# 3 C        15    3.07  1.58  [1.00, 5… -0.10 -1.59   W=0.86…
-# 4 D        15    3.47  1.77  [1.00, 5… -0.46 -1.69   W=0.76…
-# 5 E        15    2.67  1.72  [1.00, 5… 0.33  -1.71   W=0.80…
-# # … with abbreviated variable name ¹​Shapiro.Test
+#   variable n     M     SD    Range        Skew  Kurtosi
+# * <chr>    <chr> <chr> <chr> <chr>        <chr> <chr>  
+# 1 A        15    2.53  1.77  [1.00, 5.00] 0.46  -1.69  
+# 2 B        15    2.67  1.68  [1.00, 5.00] 0.41  -1.64  
+# 3 C        15    3.07  1.58  [1.00, 5.00] -0.10 -1.59  
+# 4 D        15    3.47  1.77  [1.00, 5.00] -0.46 -1.69  
+# 5 E        15    2.67  1.72  [1.00, 5.00] 0.33  -1.71  
+# # ℹ 1 more variable: Shapiro.Test <chr>
 ```
 
 ``` r
@@ -1022,10 +848,10 @@ Tbll_reliability( ~ A + B + C + D + E, df,
 # 
 # $scale_statistics
 # # A tibble: 1 × 9
-#   Items     n M     SD    Range  Skew  Kurtosi Shapi…¹ Alpha
-#   <int> <int> <chr> <chr> <chr>  <chr> <chr>   <chr>   <chr>
-# 1     5    15 2.88  1.59  1.00;… 0.21  -1.59   W=0.86… 0.96 
-# # … with abbreviated variable name ¹​Shapiro.Test
+#   Items     n M     SD    Range   Skew  Kurtosi Shapiro.Test
+#   <int> <int> <chr> <chr> <chr>   <chr> <chr>   <chr>       
+# 1     5    15 2.88  1.59  1.00; … 0.21  -1.59   W=0.86, p=.…
+# # ℹ 1 more variable: Alpha <chr>
 # 
 # $index
 #  [1] 1.0 2.0 3.0 4.2 5.0 2.6 2.6 2.2 2.6 1.0 1.0 1.0 5.0 5.0
@@ -1106,21 +932,20 @@ APA(t1)
   include.se=FALSE
 )
 # # A tibble: 12 × 5
-#    term                   lm1_b      lm1_conf  lm2_b lm2_c…¹
-#    <chr>                  <chr>      <chr>     <chr> <chr>  
-#  1 (Intercept)            "39.3***"  [45.6, 3… "44.… [51.9,…
-#  2 wool[T.B]              "-5.78"    [0.573, … "-16… [-5.96…
-#  3 tension[T.M]           " -10*"    [-2.22, … "-20… [-10.2…
-#  4 tension[T.H]           "-14.7***" [-6.94, … " -2… [-9.63…
-#  5 wool[T.B]:tension[T.M]  <NA>      <NA>      "21.… [35.8,…
-#  6 wool[T.B]:tension[T.H]  <NA>      <NA>      "10.… [25.2,…
-#  7 R2                     "0.27"     <NA>      "0.3… <NA>   
-#  8 adj. R2                "0.23"     <NA>      "0.3… <NA>   
-#  9 AIC                    "424.0"    <NA>      "419… <NA>   
-# 10 BIC                    "433.9"    <NA>      "433… <NA>   
-# 11 RMSE                   "11.18"    <NA>      "10.… <NA>   
-# 12 Obs                    "54"       <NA>      "54"  <NA>   
-# # … with abbreviated variable name ¹​lm2_conf
+#    term                   lm1_b      lm1_conf lm2_b lm2_conf
+#    <chr>                  <chr>      <chr>    <chr> <chr>   
+#  1 (Intercept)            "39.3***"  [45.6, … "44.… [51.9, …
+#  2 wool[T.B]              "-5.78"    [0.573,… "-16… [-5.96,…
+#  3 tension[T.M]           " -10*"    [-2.22,… "-20… [-10.2,…
+#  4 tension[T.H]           "-14.7***" [-6.94,… " -2… [-9.63,…
+#  5 wool[T.B]:tension[T.M]  <NA>      <NA>     "21.… [35.8, …
+#  6 wool[T.B]:tension[T.H]  <NA>      <NA>     "10.… [25.2, …
+#  7 R2                     "0.27"     <NA>     "0.3… <NA>    
+#  8 adj. R2                "0.23"     <NA>     "0.3… <NA>    
+#  9 AIC                    "424.0"    <NA>     "419… <NA>    
+# 10 BIC                    "433.9"    <NA>     "433… <NA>    
+# 11 RMSE                   "11.18"    <NA>     "10.… <NA>    
+# 12 Obs                    "54"       <NA>     "54"  <NA>
 
 
  Tbll_reg(
@@ -1132,15 +957,14 @@ APA(t1)
    include.stars = TRUE
  )
 # # A tibble: 6 × 6
-#   term                   b         conf  beta  stati…¹ p    
-#   <chr>                  <chr>     <chr> <chr> <chr>   <chr>
-# 1 (Intercept)            "44.6***" [51.… ""    12.22   <.001
-# 2 wool[T.B]              "-16.3**" [-5.… "-0.… -3.17   .003 
-# 3 tension[T.M]           "-20.6**… [-10… "-0.… -3.99   <.001
-# 4 tension[T.H]           " -20***" [-9.… "-0.… -3.88   <.001
-# 5 wool[T.B]:tension[T.M] "21.1**"  [35.… "0.6… 2.89    .006 
-# 6 wool[T.B]:tension[T.H] "10.6"    [25.… "0.3… 1.45    .154 
-# # … with abbreviated variable name ¹​statistic
+#   term                   b       conf  beta  statistic p    
+#   <chr>                  <chr>   <chr> <chr> <chr>     <chr>
+# 1 (Intercept)            "44.6*… [51.… ""    12.22     <.001
+# 2 wool[T.B]              "-16.3… [-5.… "-0.… -3.17     .003 
+# 3 tension[T.M]           "-20.6… [-10… "-0.… -3.99     <.001
+# 4 tension[T.H]           " -20*… [-9.… "-0.… -3.88     <.001
+# 5 wool[T.B]:tension[T.M] "21.1*… [35.… "0.6… 2.89      .006 
+# 6 wool[T.B]:tension[T.H] "10.6"  [25.… "0.3… 1.45      .154
 ```
 
 ``` r
@@ -1162,40 +986,38 @@ APA(t1)
  glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
  Tbll_reg(lm.D93, glm.D93, digits=2)
 # # A tibble: 14 × 5
-#    term           lm.D93_b lm.D93_conf     glm.D93_b glm.D…¹
-#    <chr>          <chr>    <chr>           <chr>     <chr>  
-#  1 (Intercept)    21.00**  [30.45, 11.55]  3.04***   [3.37,…
-#  2 outcome[T.2]   -7.67    [2.68, -18.01]  -0.45*    [-0.06…
-#  3 outcome[T.3]   -5.33    [5.01, -15.68]  -0.29     [0.08,…
-#  4 treatment[T.2] 0.00     [10.35, -10.35] 0.00      [0.39,…
-#  5 treatment[T.3] 0.00     [10.35, -10.35] 0.00      [0.39,…
-#  6 R2             0.53     <NA>            <NA>      <NA>   
-#  7 adj. R2        0.05     <NA>            <NA>      <NA>   
-#  8 AIC            57.6     <NA>            56.8      <NA>   
-#  9 BIC            58.8     <NA>            57.7      <NA>   
-# 10 RMSE           3.04     <NA>            0.19      <NA>   
-# 11 McFadden       <NA>     <NA>            0.10      <NA>   
-# 12 CoxSnell       <NA>     <NA>            0.45      <NA>   
-# 13 Nagelkerke     <NA>     <NA>            0.46      <NA>   
-# 14 Obs            9        <NA>            9         <NA>   
-# # … with abbreviated variable name ¹​glm.D93_conf
+#    term          lm.D93_b lm.D93_conf glm.D93_b glm.D93_conf
+#    <chr>         <chr>    <chr>       <chr>     <chr>       
+#  1 (Intercept)   21.00**  [30.45, 11… 3.04***   [3.37, 2.70]
+#  2 outcome[T.2]  -7.67    [2.68, -18… -0.45*    [-0.06, -0.…
+#  3 outcome[T.3]  -5.33    [5.01, -15… -0.29     [0.08, -0.6…
+#  4 treatment[T.… 0.00     [10.35, -1… 0.00      [0.39, -0.3…
+#  5 treatment[T.… 0.00     [10.35, -1… 0.00      [0.39, -0.3…
+#  6 R2            0.53     <NA>        <NA>      <NA>        
+#  7 adj. R2       0.05     <NA>        <NA>      <NA>        
+#  8 AIC           57.6     <NA>        56.8      <NA>        
+#  9 BIC           58.8     <NA>        57.7      <NA>        
+# 10 RMSE          3.04     <NA>        0.19      <NA>        
+# 11 McFadden      <NA>     <NA>        0.10      <NA>        
+# 12 CoxSnell      <NA>     <NA>        0.45      <NA>        
+# 13 Nagelkerke    <NA>     <NA>        0.46      <NA>        
+# 14 Obs           9        <NA>        9         <NA>
  Tbll_reg(lm.D93, glm.D93, digits=c(0,2,2,1,1))
 # # A tibble: 14 × 5
-#    term           lm.D93_b lm.D93_conf    glm.D93_b glm.D9…¹
-#    <chr>          <chr>    <chr>          <chr>     <chr>   
-#  1 (Intercept)    21**     [30, 12]       3***      [3, 3]  
-#  2 outcome[T.2]   -7.67    [2.68, -18.01] -0.45*    [-0.06,…
-#  3 outcome[T.3]   -5.33    [5.01, -15.68] -0.29     [0.08, …
-#  4 treatment[T.2] 0.0      [10.3, -10.3]  0.0       [0.4, -…
-#  5 treatment[T.3] 0.0      [10.3, -10.3]  0.0       [0.4, -…
-#  6 R2             0.53     <NA>           <NA>      <NA>    
-#  7 adj. R2        0.05     <NA>           <NA>      <NA>    
-#  8 AIC            57.6     <NA>           56.8      <NA>    
-#  9 BIC            58.8     <NA>           57.7      <NA>    
-# 10 RMSE           3.04     <NA>           0.19      <NA>    
-# 11 McFadden       <NA>     <NA>           0.10      <NA>    
-# 12 CoxSnell       <NA>     <NA>           0.45      <NA>    
-# 13 Nagelkerke     <NA>     <NA>           0.46      <NA>    
-# 14 Obs            9        <NA>           9         <NA>    
-# # … with abbreviated variable name ¹​glm.D93_conf
+#    term          lm.D93_b lm.D93_conf glm.D93_b glm.D93_conf
+#    <chr>         <chr>    <chr>       <chr>     <chr>       
+#  1 (Intercept)   21**     [30, 12]    3***      [3, 3]      
+#  2 outcome[T.2]  -7.67    [2.68, -18… -0.45*    [-0.06, -0.…
+#  3 outcome[T.3]  -5.33    [5.01, -15… -0.29     [0.08, -0.6…
+#  4 treatment[T.… 0.0      [10.3, -10… 0.0       [0.4, -0.4] 
+#  5 treatment[T.… 0.0      [10.3, -10… 0.0       [0.4, -0.4] 
+#  6 R2            0.53     <NA>        <NA>      <NA>        
+#  7 adj. R2       0.05     <NA>        <NA>      <NA>        
+#  8 AIC           57.6     <NA>        56.8      <NA>        
+#  9 BIC           58.8     <NA>        57.7      <NA>        
+# 10 RMSE          3.04     <NA>        0.19      <NA>        
+# 11 McFadden      <NA>     <NA>        0.10      <NA>        
+# 12 CoxSnell      <NA>     <NA>        0.45      <NA>        
+# 13 Nagelkerke    <NA>     <NA>        0.46      <NA>        
+# 14 Obs           9        <NA>        9         <NA>
 ```

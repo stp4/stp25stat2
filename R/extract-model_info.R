@@ -10,7 +10,7 @@
 #' @return Liste mit c("class",  "family", "y", "x", "labels", "N")
 #' @export
 #' @examples
-#' model_info(mpg ~ cyl)
+#' # das geht nicht mehr model_info(mpg ~ cyl)
 #' model_info(glm(vs ~ mpg, mtcars, family = binomial()))
 #' model_info(lm(mpg ~ drat + wt + qsec, mtcars))
 #' model_info(wilcox.test(mpg ~ vs, mtcars))
@@ -78,21 +78,21 @@ Infomation <- function(...) {
   rslt
 }
 
-#' @rdname model_info
-#' @export
+# @rdname model_info
+# @export
 
-model_info.formula <- function(x) {
-  fm <-  Formula_Names(x)
-  list(
-    class = class(x) ,
-    family = NULL ,
-    y = fm$yname,
-    x = fm$xname,
-    labels = NULL,
-    N = NULL,
-    missing = NULL
-  )
-}
+# model_info.formula <- function(x) {
+#   fm <-  Formula_Names(x)
+#   list(
+#     class = class(x) ,
+#     family = NULL ,
+#     y = fm$yname,
+#     x = fm$xname,
+#     labels = NULL,
+#     N = NULL,
+#     missing = NULL
+#   )
+# }
 
 #' @rdname model_info
 #' @export

@@ -12,7 +12,7 @@
 #'
 #' @examples
 #'
-#'
+#'  data(Prestige, package = "carData")
 #' mod <- lm(log(prestige) ~ income:type + education, data=Prestige)
 #' eff = effect("education", mod, partial.residuals=T)
 #'

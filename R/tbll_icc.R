@@ -5,6 +5,7 @@
 #' @export
 #'
 #' @examples
+#'  require(lme4)
 #'
 #'  fm1 <- lme4::lmer(Reaction ~ Days + (Days | Subject), sleepstudy)
 #'  Tbll_icc(fm1)
