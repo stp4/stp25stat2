@@ -122,7 +122,7 @@ Tbll_desc_long
 }
 \examples{
 
-
+require(stp25tools)
 n <- 2 * 20
 e <- rnorm(n)
 dat <-  Label(

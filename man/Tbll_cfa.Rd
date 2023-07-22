@@ -141,13 +141,15 @@ x$latent # \%>\% Output()
 
 x$varianz # \%>\% Output()
 x  # \%>\% Output("Hallo")
+
+require(stp25data)
 head(fkv)
 
-library(arm)
+#library(arm)
 # windows(5,5)
 # corrplot(fkv, abs=TRUE, n.col.legend=7)#  corrplot {arm}
 #
-Principal2(fkv, 5, cut=.35)
+# nicht mehr vorhanden    Principal2(fkv, 5, cut=.35)
 
 library(lavaan)
 library(semPlot)

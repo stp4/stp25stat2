@@ -115,7 +115,7 @@ require(magrittr)
   m1[median, 1],
   m2,
   by = ~ geschl,
-  include.custom = auto_test,
+  include.custom = stp25stat2:::auto_test,
   # include.test = TRUE,
   include.total = TRUE
  )

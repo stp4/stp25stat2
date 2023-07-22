@@ -332,25 +332,25 @@ npk2 <- within(npk, foo <- rnorm(24))
 npk2 <- within(npk2, foo2 <- rnorm(24))
 npk2.aov <- manova(cbind(yield, foo, foo2) ~ block + N * P * K, npk2)
 
-extract.manova(npk2.aov) #wilks
-extract.manova(npk2.aov, "Pillai")
+stp25stat2:::extract.manova(npk2.aov) #wilks
+stp25stat2:::extract.manova(npk2.aov, "Pillai")
 
 #npk2.aovE <- manova(cbind(yield, foo) ~  N*P*K + Error(block), npk2)
-#extract.manova(npk2.aovE)
+# stp25stat2:::extract.manova(npk2.aovE)
 
 
 
- DF<- get_data(
+ DF<- stp25tools::get_data(
 "C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/manova.sav"
 )
 
 #information from
-DF$GROUP<- factor(DF$GROUP, 1:3, Cs("website", "nurse ", "video tape" ))
-#DF \%>\% Tabelle2(USEFUL, DIFFICULTY, IMPORTANCE, by=~GROUP )
+DF$group <- factor(DF$group , 1:3, Cs("website", "nurse ", "video tape" ))
 
 z<- as.matrix(DF[,-1])
-fit1<- manova(z ~ DF$GROUP)
-extract.manova(fit1)
+fit1<- manova(z ~ DF$group )
+stp25stat2:::extract.manova(fit1)
+
 summary(fit1)$Eigenvalues
 
 # SPSS
@@ -389,7 +389,7 @@ summary(fit1)$Eigenvalues
 
 
 
-# library(meta)
+ library(meta)
 data(Olkin1995)
 head(Olkin1995)
 m1 <- metabin(ev.exp, n.exp, ev.cont, n.cont,
@@ -424,7 +424,7 @@ fit1<-lm(y1~x1, anscombe)
 extract_etaSqr(fit1)
 
 
-
+ data(Prestige, package = "carData")
 mod <- lm(log(prestige) ~ income:type + education, data=Prestige)
 eff = effect("education", mod, partial.residuals=T)
 

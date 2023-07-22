@@ -81,11 +81,4 @@ Bei glm  kann mit dem Parameter conf.method Wald oder z-test für
 
 Tbll(lm1, lm2)
 
-
-#' lm1 <- lm(breaks ~ wool + tension, data = warpbreaks2)
-
-
-Tbll_reg(lm(breaks ~1, data = warpbreaks2),
-         lm1, lm2)
-
 }

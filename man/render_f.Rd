@@ -140,20 +140,22 @@ mx <- list(x = x, y = y, z = rnorm(10))
 render_f(mx)
 render_f(mx, digits = 2)
 render_f(mx, digits = list(2, 0, 1))
+
+
 #'
-rndr_percent(c(47.458, .154, 0, NA))
-# rndr_percent(47.458, 154)
-rndr_percent(c(12.148, 0.0266, 2, 0, 36.478, NA),
+stp25stat2:::rndr_percent(c(47.458, .154, 0, NA))
+# stp25stat2:::rndr_percent(47.458, 154)
+stp25stat2:::rndr_percent(c(12.148, 0.0266, 2, 0, 36.478, NA),
              c(148, 1, 14, 0, 154, NA),
              digits = 1)
-rndr_percent(
+stp25stat2:::rndr_percent(
   c(12.148, 0.0266, 2, 0, 36.478),
   c(148, 1, 14, 0, 154),
   digits = 1,
   style = 5
 )
 
-rndr_percent(data.frame(
+stp25stat2:::rndr_percent(data.frame(
   p = c(1, 2, 3),
   p2 = c(10, 0, 36),
   p3 = c(1.1, 2.1, NA)
@@ -181,10 +183,10 @@ cnt <- ftable(x)
 prop_table <- prop.table(x)
 prop_table[which(is.na(prop_table))] <- 0
 prc <-  ftable(prop_table * 100)
-rndr_percent(prc, cnt)
+stp25stat2:::rndr_percent(prc, cnt)
 
 x <- with(DF2, table(Magazines, Geschlecht))
 prop_table <- prop.table(x)
 
-rndr_percent(prop_table, x)
+stp25stat2:::rndr_percent(prop_table, x)
 }

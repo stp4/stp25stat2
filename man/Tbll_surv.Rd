@@ -142,7 +142,7 @@ Tbll_surv(
 )
 
 
-Tbll_surv2(Surv(futime, fustat) ~ rx, data = ovarian)
+Tbll_surv(Surv(futime, fustat) ~ rx, data = ovarian)
 
 
 #'

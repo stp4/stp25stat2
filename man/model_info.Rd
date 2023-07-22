@@ -5,7 +5,6 @@
 \alias{model_info.default}
 \alias{model_info.data.frame}
 \alias{Infomation}
-\alias{model_info.formula}
 \alias{model_info.eff}
 \alias{model_info.htest}
 \alias{model_info.lm}
@@ -31,8 +30,6 @@ model_info(x)
 \method{model_info}{data.frame}(x)
 
 Infomation(...)
-
-\method{model_info}{formula}(x)
 
 \method{model_info}{eff}(x)
 
@@ -76,7 +73,7 @@ Liste mit c("class",  "family", "y", "x", "labels", "N")
 Extrahiert die Variablen namen die Labels und die Daten
 }
 \examples{
-model_info(mpg ~ cyl)
+# das geht nicht mehr model_info(mpg ~ cyl)
 model_info(glm(vs ~ mpg, mtcars, family = binomial()))
 model_info(lm(mpg ~ drat + wt + qsec, mtcars))
 model_info(wilcox.test(mpg ~ vs, mtcars))
