@@ -271,7 +271,7 @@ Tbll_item_analysis <-
     if (include.Item.total)
       rslt$Item.total <- render_f(rix, digits = digits)
     if (include.Item.Tot.woi)
-      rslt$Alpha.if.Deleted <- render_f(rix.woi, digits = digits)
+      rslt$Trennschaerfe <- render_f(rix.woi, digits = digits)
 
     if (include.Discrimination)
       rslt$Discrimination <- render_f(discrim, digits = digits)

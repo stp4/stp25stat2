@@ -122,7 +122,7 @@ Tbll_reliability.default <-
           n = rslt$item_statistik$n,
           M = render_f(rslt$item_statistik$m, 2),
           SD = render_f(rslt$item_statistik$sd, 2),
-          Alpha.if.Deleted = render_f(rslt$psych$item.stats$r.drop, 2)
+          Trennschaerfe = render_f(rslt$psych$item.stats$r.drop, 2)
         )
 
       aplha_statistik <-
