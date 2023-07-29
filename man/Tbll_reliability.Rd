@@ -34,6 +34,7 @@ Tbll_reliability(...)
   revcoded = FALSE,
   check.keys = NULL,
   keys = revcoded,
+  na.rm = TRUE,
   digits = 2
 )
 
@@ -49,6 +50,8 @@ Tbll_Alpha(..., type = 1, names = NULL)
 \item{digits}{Digits}
 
 \item{revcoded, check.keys, keys}{numeric oder logikal TRUE entspricht check.keys = TRUE}
+
+\item{na.rm}{an psych::alpha}
 
 \item{caption, note}{an prepare}
 
