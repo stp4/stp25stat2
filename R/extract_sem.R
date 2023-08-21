@@ -68,6 +68,50 @@
 #'
 #' x$varianz # %>% Output()
 #' x  # %>% Output("Hallo")
+#'
+#'
+#' library(piecewiseSEM)
+#' model <- '
+#'   rich ~ cover
+#'   cover ~ firesev
+#'   firesev ~ age
+#' '
+#' fit2  <- cfa(model, data = keeley,
+#'              se = "robust",
+#'              estimator = "MLM",
+#'              missing = "listwise")
+#'
+#' summary(fit2)
+#' mod <- psem(
+#'   lm(rich ~ cover, data = keeley),
+#'   lm(cover ~ firesev, data = keeley),
+#'   lm(firesev ~ age, data = keeley),
+#'   data = keeley
+#' )
+#'
+#' summary(mod)
+#'
+#' #' https://jslefche.github.io/sem_book
+#' #' https://www.seascapemodels.org/structural-causal-models-tutorial/scm-tute.html
+#' #'
+#' #' An Introduction to Structural Equation Modeling in R
+#'
+#' # library(ggplot2)
+#' # #library(patchwork)
+#' # library(ggdag)
+#' #
+#' # library(dagitty)
+#' # theme_set(theme_dag())
+#' #
+#' # keeley_mod <- dagify(  rich ~ cover,
+#' #                     cover ~ firesev,
+#' #                      firesev ~ age
+#' #                     )
+#' #
+#' # g1 <- ggdag(keeley_mod, text_size = 2,
+#' #             node_size = 12)
+#' #
+#' # g1
 tbll_extract.lavaan <- function(x,
                         baseline.model = NULL,
                         include.ci = FALSE,
@@ -184,6 +228,43 @@ tbll_extract.lavaan <- function(x,
 
 rslt
 }
+
+
+# library(piecewiseSEM)
+#
+# > piecewiseSEM:::summary.psem
+# function (object, ..., basis.set = NULL, direction = NULL, interactions = FALSE,
+#           conserve = FALSE, conditioning = FALSE, add.claims = NULL,
+#           standardize = "scale", standardize.type = "latent.linear",
+#           test.statistic = "F", test.type = "II", intercepts = FALSE,
+#           AIC.type = "loglik", .progressBar = TRUE)
+# {
+#   name <- deparse(match.call()$object)
+#   call <- paste(listFormula(object), collapse = "\n  ")
+#   dTable <- dSep(object, basis.set, direction, interactions,
+#                  conserve, conditioning, .progressBar)
+#   Cstat <- fisherC(dTable, add.claims, direction, interactions,
+#                    conserve, conditioning, .progressBar)
+#   ChiSq <- LLchisq(object, basis.set, direction, interactions,
+#                    conserve)
+#   AIC <- AIC_psem(object, AIC.type, add.claims, direction,
+#                   interactions, conserve, conditioning, .progressBar)
+#   coefficients <- coefs(object, standardize, standardize.type,
+#                         test.statistic, test.type, intercepts)
+#   R2 <- rsquared(object)
+#   R2[, which(sapply(R2, is.numeric))] <- round(R2[, which(sapply(R2,
+#                                                                  is.numeric))], 2)
+#   if (length(dTable) > 0)
+#     dTable[, which(sapply(dTable, is.numeric))] <- round(dTable[,
+#                                                                 which(sapply(dTable, is.numeric))], 4)
+#   l <- list(name = name, call = call, dTable = dTable, ChiSq = ChiSq,
+#             Cstat = Cstat, AIC = AIC, coefficients = coefficients,
+#             R2 = R2)
+#   class(l) <- "summary.psem"
+#   l
+# }
+# <bytecode: 0x000001c8d8d38298>
+#   <environment: namespace:piecewiseSEM>
 
 
 #' Goodness-of-Fit-Index (GFI)
