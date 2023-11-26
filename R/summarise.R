@@ -86,6 +86,9 @@ Summarise <- function(...,
                       margins = FALSE,
                       margins_name = "Total",
                       include.label = TRUE) {
+  # fehler abfangen
+  value <- make.names(value)
+  key <- make.names(key)
   values_from <- value
   molten <-
     stp25tools::Long(...,
@@ -148,7 +151,7 @@ Summarise <- function(...,
                                 names_from = !!rhs,
                                 values_from = values_from)
   }
-  rslts
+  tibble::as_tibble(rslts)
 }
 
 
