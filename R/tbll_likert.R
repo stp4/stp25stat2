@@ -217,10 +217,13 @@ Likert <- function(...,
                    include.total = FALSE
                    ) {
   if (!reverse.levels) {
+
     if (is.na(reorder.levels)) {
+
       results <-
         Summarise(...,
           fun = function(x) {
+            if(is.logical(x)) x <- factor(x, c(FALSE, TRUE))
             table(x, useNA = "always")
             },
           key = "Item"
@@ -245,10 +248,14 @@ Likert <- function(...,
       results <-
         Summarise(...,
         fun = function(x) {
+
+          if(is.logical(x)) x <- factor(x, c(FALSE, TRUE))
+
           if (is.numeric(reorder.levels))
             x <- factor(x, levels(x)[reorder.levels])
           else
             x <- factor(x, reorder.levels)
+
           table(x, useNA = "always")
         },
         key = "Item")
@@ -284,6 +291,8 @@ Likert <- function(...,
       Summarise(
         ...,
         fun = function(x) {
+
+          if(is.logical(x)) x <- factor(x, c(FALSE, TRUE))
           x <- factor(x, rev(levels(x)))
           table(x, useNA = "always")
         },
@@ -307,6 +316,11 @@ Likert <- function(...,
 
 
   # - hier kommt  results, item_mean, item_sd
+
+ # print(results)
+ # print(item_mean)
+ # print(item_sd)
+
   nms <-  sapply(results, is.integer)
   ncl <- ncol(results)
   names(results)[ncl] <- "NA"
@@ -377,7 +391,11 @@ cat("\nWorkaraund")
 
 }
 
-
+# table_likert <- function(x, useNA = "always"){
+#   if(is.logical(x)) x<- factor(x, c(FALSE, TRUE))
+#   table(x, useNA = useNA)
+#
+# }
 
 RowSums2 <- function(x)
   if (is.vector(x)) x else rowSums(x, na.rm = TRUE)
