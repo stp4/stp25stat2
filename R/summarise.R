@@ -151,6 +151,9 @@ Summarise <- function(...,
                                 names_from = !!rhs,
                                 values_from = values_from)
   }
+ # print(head(rslts))
+  if(any(is.na(names(rslts))))
+  names(rslts)[is.na(names(rslts))] <- "NA"
   tibble::as_tibble(rslts)
 }
 
