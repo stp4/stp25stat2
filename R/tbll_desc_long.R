@@ -82,22 +82,21 @@ Tbll_desc_long <- function(...,
   type <- if (include.range) "auto_long" else "auto_kurz"
 
   rslt <-
-    analyse_sesc_long(X,
-               type = type,
-               measure.name = get_opt("table", "measure.name.m"),
-               digits = digits,
-               include.label=include.label,
-
-               abbreviate =  abbreviate
-
-               )
+    analyse_sesc_long(
+      X,
+      type = type,
+      measure.name = get_opt("table", "measure.name.m"),
+      digits = digits,
+      include.label = include.label,
+      abbreviate =  abbreviate
+    )
 
   if (include.n) {
     X$measure <- ifelse(X$measure == "header", "header", "custom_fun")
     rslt_n <- analyse_sesc_long(X,
-                         type = "custom_fun",
-                         fun = length2,
-                         measure.name = "n")
+                                type = "custom_fun",
+                                fun = length2,
+                                measure.name = "n")
     rslt <-  if (ncol(rslt) == 2)
       cbind(rslt[1], rslt_n[2], rslt[-1])
     else
@@ -105,7 +104,7 @@ Tbll_desc_long <- function(...,
   }
   names(rslt)[1] <- "Item"
 
-  prepare_output(rslt, note="", N=X$N)
+  prepare_output(rslt, note = "", N = X$N)
 }
 
 
