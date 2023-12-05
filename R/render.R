@@ -215,17 +215,17 @@ length_multiplier <- function(x,
 
 
 #' @noRd
-#' Guess the best format for a given set of numerical data
-#'
-#' Given a vector of data, default to 3 significant digits or all if maximum is greater
-#' than zero
-#'
-#' @param x numeric; basic math and quantile function must work on data passed in
-#' @return numeric; the digits past the decimal recommended for display
-#' @examples
-#'   stp25stat2:::format_guess(rnorm(100))
-#'   stp25stat2:::format_guess(rnorm(100, sd=1e-6))
-#'
+# Guess the best format for a given set of numerical data
+#
+# Given a vector of data, default to 3 significant digits or all if maximum is greater
+# than zero
+#
+# @param x numeric; basic math and quantile function must work on data passed in
+# @return numeric; the digits past the decimal recommended for display
+# @examples
+#   stp25stat2:::format_guess(rnorm(100))
+#   stp25stat2:::format_guess(rnorm(100, sd=1e-6))
+#
 format_guess <- function(x) {
 
   d <- x[!is.na(x)]

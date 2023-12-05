@@ -62,7 +62,15 @@ rndr_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
                          style = get_opt("prozent", "style"),
                          null_percent_sign = get_opt("prozent", "null_percent_sign"),
                          small_values = x < 1 / (10 ^ digits)) {
-  if (is.data.frame(x))  {
+
+  # cat("\nrndr_percent\n x: ")
+  # print(x)
+  # cat("\nn: ")
+  # print(n)
+  # cat("\n")
+
+
+  if (is.data.frame(x)) {
     x <-  as.matrix(x)
     n <-  as.matrix(n)
   }
@@ -193,6 +201,13 @@ rndr_percent1 <- function(x,
                           style,
                           null_percent_sign,
                           small_values) {
+
+  # cat("\rndr_percent1\n x: ")
+  # print(x)
+  # cat("\nn: ")
+  # print(n)
+  # cat("\n")
+
   prc <-
     render_f(
       x,
@@ -201,6 +216,11 @@ rndr_percent1 <- function(x,
       format = "f",
       na.strings = NULL
     )
+  # cat("\nprc: ")
+  # print(prc)
+  # cat("\n")
+
+  if( all(is.na(x)) ) return(prc)
 
   if (any(small_values))
     prc[which(small_values)] <- paste0("<", 1 / (10 ^ digits))
