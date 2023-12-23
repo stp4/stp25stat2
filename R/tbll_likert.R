@@ -47,7 +47,7 @@ Tbll_likert.default <- function(...,
                                 include.mean = TRUE,
                                 include.n = FALSE,
                                 include.na = FALSE,
-                                include.order = TRUE,
+                                include.order = FALSE,
                                 include.percent = TRUE,
                                 include.count = TRUE,
                                 include.total=FALSE,
@@ -80,8 +80,9 @@ Tbll_likert.default <- function(...,
   attr(tbl, "plot") <- list(
     item = levels(rslt$results$Item),
     formula =  rslt$formula,
-    results =  if(is.null(attr(tbl, "plot")$order)) rslt$results
-                  else rslt$results[attr(tbl, "plot")$order,],
+    results =  rslt$results,
+      #if(is.null(attr(tbl, "plot")$order)) rslt$results
+      #            else rslt$results[attr(tbl, "plot")$order,],
     nlevels = rslt$nlevels,
     ReferenceZero = ReferenceZero,
     m = rslt$m
@@ -100,7 +101,7 @@ Tbll_likert.likert <- function(x,
                                include.mean = TRUE,
                                include.n = FALSE,
                                include.na = FALSE,
-                               include.order = TRUE,
+                               include.order = FALSE,
                                #  na.exclude = FALSE,
                                include.percent = TRUE,
                                include.count = TRUE,
@@ -173,6 +174,8 @@ Tbll_likert.likert <- function(x,
       freq
   }
 
+#print(head(cbind(x$results,
+#                 data.frame(m1= x$Mittelwert , m=x$m))))
 
   if (include.na) {x$freq <- x$freq.na}
 
@@ -183,23 +186,30 @@ Tbll_likert.likert <- function(x,
 
   if (include.n) {x$freq <- cbind(n = x$n, x$freq)}
 
-  if (include.mean) { x$freq <- cbind(x$freq, 'M(SD)' = x$Mittelwert)}
+  if (include.mean) {
+    x$freq <- cbind(x$freq, 'M(SD)' = x$Mittelwert)
+
+    }
 
   ans <- cbind(x$names, x$freq)
 
+#  print(head(ans))
 
   attr(ans, "plot") <- list( order= NULL)
+
+
   if (include.order) {
-    if (length(all.vars(x$formula)) > 2) {
-      item.order <- order(x$m + as.numeric(x$results[[1]]) * 100, decreasing=decreasing)
-      ans <- ans[item.order,]
-      attr(ans, "plot")<- list( order= item.order)
-    }
-    else{
-      item.order<- order(x$m, decreasing=decreasing)
-      ans <- ans[item.order,]
-      attr(ans, "plot")<- list( order= item.order)
-    }
+
+  #  if (length(all.vars(x$formula)) > 2) {
+   #   item.order <- order(x$m + as.numeric(x$results[[1]]) * 100, decreasing=decreasing)
+  #    ans <- ans[item.order,]
+ #     attr(ans, "plot")<- list( order= item.order)
+  #  }
+ #   else{
+    #  item.order<- order(x$m, decreasing=decreasing)
+      ans <- ans[order(x$m, decreasing=decreasing),]
+     # attr(ans, "plot")<- list( order= item.order)
+   # }
   }
 
 
