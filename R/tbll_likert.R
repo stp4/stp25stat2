@@ -83,7 +83,8 @@ Tbll_likert.default <- function(...,
     results =  if(is.null(attr(tbl, "plot")$order)) rslt$results
                   else rslt$results[attr(tbl, "plot")$order,],
     nlevels = rslt$nlevels,
-    ReferenceZero = ReferenceZero
+    ReferenceZero = ReferenceZero,
+    m = rslt$m
   )
 
  # print( rslt$results )
