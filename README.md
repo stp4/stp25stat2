@@ -838,13 +838,13 @@ Tbll_reliability( ~ A + B + C + D + E, df,
                  include.item_statistics = TRUE)
 # $item_statistics
 # # A tibble: 5 × 5
-#   Items     n M     SD    Alpha.if.Deleted
-# * <chr> <int> <chr> <chr> <chr>           
-# 1 A        15 2.53  1.77  0.90            
-# 2 B        15 2.67  1.68  0.95            
-# 3 C        15 3.07  1.58  0.95            
-# 4 D        15 3.47  1.77  0.77            
-# 5 E        15 2.67  1.72  0.92            
+#   Items     n M     SD    Trennschaerfe
+# * <chr> <int> <chr> <chr> <chr>        
+# 1 A        15 2.53  1.77  0.90         
+# 2 B        15 2.67  1.68  0.95         
+# 3 C        15 3.07  1.58  0.95         
+# 4 D        15 3.47  1.77  0.77         
+# 5 E        15 2.67  1.72  0.92         
 # 
 # $scale_statistics
 # # A tibble: 1 × 9
@@ -876,12 +876,12 @@ Tbll_item_analysis(  A + B + C + D + E ~ index, df,
                      include.Item.Reliab = TRUE,
                      include.Item.Rel.woi = TRUE
                      )
-#   Items Difficulty Sample.SD Item.total Alpha.if.Deleted
-# 1     A       0.38      0.44       0.94             0.90
-# 2     B       0.42      0.42       0.97             0.95
-# 3     C       0.52      0.39       0.97             0.95
-# 4     D       0.62      0.44       0.85             0.77
-# 5     E       0.42      0.43       0.95             0.92
+#   Items Difficulty Sample.SD Item.total Trennschaerfe
+# 1     A       0.38      0.44       0.94          0.90
+# 2     B       0.42      0.42       0.97          0.95
+# 3     C       0.52      0.39       0.97          0.95
+# 4     D       0.62      0.44       0.85          0.77
+# 5     E       0.42      0.43       0.95          0.92
 #   Discrimination Item.Reliab Item.Rel.woi Item.Criterion
 # 1           0.90        0.40         0.39           0.94
 # 2           0.90        0.39         0.38           0.97

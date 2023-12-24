@@ -331,7 +331,7 @@ Tbll_item_analysis(  A + B + C + D + E ~ index, df,
 
 
 
-### Síg. Test
+### Sig. Test
 
 
 
