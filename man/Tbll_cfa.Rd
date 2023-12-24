@@ -142,6 +142,50 @@ x$latent # \%>\% Output()
 x$varianz # \%>\% Output()
 x  # \%>\% Output("Hallo")
 
+
+library(piecewiseSEM)
+model <- '
+  rich ~ cover
+  cover ~ firesev
+  firesev ~ age
+'
+fit2  <- cfa(model, data = keeley,
+             se = "robust",
+             estimator = "MLM",
+             missing = "listwise")
+
+summary(fit2)
+mod <- psem(
+  lm(rich ~ cover, data = keeley),
+  lm(cover ~ firesev, data = keeley),
+  lm(firesev ~ age, data = keeley),
+  data = keeley
+)
+
+summary(mod)
+
+#' https://jslefche.github.io/sem_book
+#' https://www.seascapemodels.org/structural-causal-models-tutorial/scm-tute.html
+#'
+#' An Introduction to Structural Equation Modeling in R
+
+# library(ggplot2)
+# #library(patchwork)
+# library(ggdag)
+#
+# library(dagitty)
+# theme_set(theme_dag())
+#
+# keeley_mod <- dagify(  rich ~ cover,
+#                     cover ~ firesev,
+#                      firesev ~ age
+#                     )
+#
+# g1 <- ggdag(keeley_mod, text_size = 2,
+#             node_size = 12)
+#
+# g1
+
 require(stp25data)
 head(fkv)
 

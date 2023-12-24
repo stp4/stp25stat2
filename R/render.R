@@ -163,8 +163,6 @@ OutDec <- function() {
 }
 
 #' @noRd
-#' formatC
-#'
 make_format <- function(x,
                         digits = format_guess(x),
                         drop0leading  = FALSE,
@@ -194,9 +192,10 @@ make_format <- function(x,
   x
 }
 
-#' @noRd
+
 #' Laenge der digits anpassen
 #'
+#' @noRd
 length_multiplier <- function(x,
                               n_out = NULL,
                               n  = length(x)) {
@@ -245,9 +244,10 @@ format_guess <- function(x) {
   }
 }
 
-#' @noRd
+
 #' Fuerende Null eliminieren
 #'
+#' @noRd
 drop_0_leading <- function(x,
                            OutDec = OutDec()) {
   sub(glue::glue('^(-)?0[{OutDec}]'),
@@ -343,9 +343,9 @@ rndr_Stars <- function (x,
 
 # mean --------------------------------------------------------------------
 
-#' @noRd
 #' render_mean
 #' Formatiere von Zahlen nach dem APA-Style ( American Psychological Association )
+#' @noRd
 rndr_median_iqr <- function(m,
                         iqr,
                         digits = get_opt("median", "digits"),

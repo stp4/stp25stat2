@@ -12,15 +12,16 @@ Tbll_likert(...)
 
 \method{Tbll_likert}{default}(
   ...,
-  ReferenceZero = NULL,
+  include.reference = NULL,
   include.mean = TRUE,
   include.n = FALSE,
   include.na = FALSE,
-  include.order = TRUE,
+  include.order = FALSE,
   include.percent = TRUE,
   include.count = TRUE,
   include.total = FALSE,
   decreasing = TRUE,
+  ReferenceZero = include.reference,
   labels = c("low", "neutral", "high"),
   reverse.levels = FALSE,
   reorder.levels = NA
@@ -28,13 +29,14 @@ Tbll_likert(...)
 
 \method{Tbll_likert}{likert}(
   x,
-  ReferenceZero = NULL,
+  include.reference = NULL,
   include.mean = TRUE,
   include.n = FALSE,
   include.na = FALSE,
-  include.order = TRUE,
+  include.order = FALSE,
   include.percent = TRUE,
   include.count = TRUE,
+  ReferenceZero = include.reference,
   labels = c("low", "neutral", "high"),
   decreasing = TRUE
 )
@@ -52,22 +54,32 @@ Likert(
 \arguments{
 \item{...}{Likert-Objekt oder data+Formula}
 
-\item{ReferenceZero, labels}{ReferenceZero=2 Neutrales Element in Kombination mit
-labels = c("low", "neutral", "high")}
+\item{include.reference, labels, ReferenceZero}{numeric include.reference = 2 (drei Gruppen)
+include.reference = 2.5 (zwei Gruppen)
+ Neutrales Element in Kombination mit
+ labels = c("low", "neutral", "high")}
 
-\item{include.mean, include.n, include.na, include.order, include.percent, include.count, include.total}{Zusatz}
+\item{include.mean, include.n, include.na}{Zusatz Ergebnisse}
 
-\item{reverse.levels}{an Likert}
+\item{include.order, decreasing}{sortierung nach mittelwert}
 
-\item{reorder.levels}{character ore numbers}
+\item{include.percent, include.count}{Format Prozent/Anzahl}
 
-\item{caption, note}{an prepare Data}
+\item{include.total}{logical oder string zB. include.total ="Alle"}
+
+\item{reverse.levels}{logical  rev(item)}
+
+\item{reorder.levels}{integer factor(item, levels(item)[reorder.levels])}
+
+\item{x}{Likert - Objekt}
 }
 \value{
 data.frame mit attributen fuer plotlikert
+
+liste mit  results = data, sowie m, sd, n
 }
 \description{
-Tbll_likert
+Likert: Auszählen der Häufigkeiten
 }
 \examples{
 
