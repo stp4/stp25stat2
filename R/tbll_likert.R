@@ -1,12 +1,6 @@
 #' Tbll_likert
 #'
 #' @param ...  Likert-Objekt oder data+Formula
-#' @param caption,note an prepare Data
-#' @param ReferenceZero,labels   ReferenceZero=2 Neutrales Element in Kombination mit
-#'  labels = c("low", "neutral", "high")
-#' @param include.mean,include.n,include.na,include.order,include.percent,include.count,include.total Zusatz
-
-#' @param reverse.levels an Likert
 #'
 #' @return data.frame mit attributen fuer plotlikert
 #' @export
@@ -38,12 +32,12 @@ Tbll_likert <- function(...){
 }
 
 
+
 #' @rdname Tbll_likert
-#' @param reorder.levels character ore numbers
 #' @export
 #'
 Tbll_likert.default <- function(...,
-                                ReferenceZero = NULL,
+                                include.reference = NULL,
                                 include.mean = TRUE,
                                 include.n = FALSE,
                                 include.na = FALSE,
@@ -52,63 +46,66 @@ Tbll_likert.default <- function(...,
                                 include.count = TRUE,
                                 include.total=FALSE,
                                 decreasing = TRUE,
+                                ReferenceZero = include.reference,
                                 labels = c("low", "neutral", "high"),
                                 reverse.levels = FALSE,
                                 reorder.levels = NA) {
-  rslt <-   Likert(...,
-                   reverse.levels = reverse.levels,
-                   reorder.levels = reorder.levels,
-                   include.total=include.total)
+  rslt <-   Likert(
+    ...,
+    reverse.levels = reverse.levels,
+    reorder.levels = reorder.levels,
+    include.total = include.total
+  )
 
   tbl <-  Tbll_likert.likert(
-      rslt,
-      ReferenceZero = ReferenceZero,
-      include.mean = include.mean,
-      include.n = include.n,
-      include.na = include.na,
-      include.order = include.order,
-      include.percent = include.percent,
-      include.count = include.count,
-      labels = labels,
-      decreasing=decreasing
-    )
+    rslt,
+    ReferenceZero = ReferenceZero,
+    include.mean = include.mean,
+    include.n = include.n,
+    include.na = include.na,
+    include.order = include.order,
+    include.percent = include.percent,
+    include.count = include.count,
+    labels = labels,
+    decreasing = decreasing
+  )
 
-
-
-# workaround da
-#  HH::likert die sortierung komisch erstellt
   attr(tbl, "plot") <- list(
     item = levels(rslt$results$Item),
     formula =  rslt$formula,
     results =  rslt$results,
-      #if(is.null(attr(tbl, "plot")$order)) rslt$results
-      #            else rslt$results[attr(tbl, "plot")$order,],
     nlevels = rslt$nlevels,
     ReferenceZero = ReferenceZero,
     m = rslt$m
   )
 
- # print( rslt$results )
 tbl
 }
 
 #' @rdname Tbll_likert
+#' @param x Likert - Objekt
+#' @param include.reference,labels,ReferenceZero  numeric include.reference = 2 (drei Gruppen)
+#' include.reference = 2.5 (zwei Gruppen)
+#'  Neutrales Element in Kombination mit
+#'  labels = c("low", "neutral", "high")
+#' @param include.mean,include.n,include.na Zusatz Ergebnisse
+#' @param include.order,decreasing sortierung nach mittelwert
+#' @param include.percent,include.count Format Prozent/Anzahl
+#' @param reverse.levels an Likert
 #' @export
 #'
 Tbll_likert.likert <- function(x,
-                               ReferenceZero = NULL,
-                               # type = "percent",
+                               include.reference =NULL,
                                include.mean = TRUE,
                                include.n = FALSE,
                                include.na = FALSE,
                                include.order = FALSE,
-                               #  na.exclude = FALSE,
                                include.percent = TRUE,
                                include.count = TRUE,
+                               ReferenceZero = include.reference,
                                labels = c("low", "neutral", "high"),
-                               decreasing=TRUE) {
-  note <- NULL
-
+                               decreasing = TRUE) {
+  note <- NULL # für include.reference
   if (!is.null(ReferenceZero)) {
     # x$freq und x$freq.na werden neu zudammengefasst
     if (is.character(ReferenceZero))
@@ -174,9 +171,6 @@ Tbll_likert.likert <- function(x,
       freq
   }
 
-#print(head(cbind(x$results,
-#                 data.frame(m1= x$Mittelwert , m=x$m))))
-
   if (include.na) {x$freq <- x$freq.na}
 
   if (include.percent) {
@@ -184,34 +178,19 @@ Tbll_likert.likert <- function(x,
     else  x$freq <- rndr_percent(x$freq / x$n * 100)
   } else if (!include.count) { x$freq <- "" }
 
-  if (include.n) {x$freq <- cbind(n = x$n, x$freq)}
+  if (include.n) {
+    x$freq <- cbind(n = x$n, x$freq)
+    }
 
   if (include.mean) {
-    x$freq <- cbind(x$freq, 'M(SD)' = x$Mittelwert)
-
+    x$freq <- cbind(x$freq, 'M(SD)' = rndr_mean(x$m, x$sd))
     }
 
   ans <- cbind(x$names, x$freq)
 
-#  print(head(ans))
-
-  attr(ans, "plot") <- list( order= NULL)
-
-
   if (include.order) {
-
-  #  if (length(all.vars(x$formula)) > 2) {
-   #   item.order <- order(x$m + as.numeric(x$results[[1]]) * 100, decreasing=decreasing)
-  #    ans <- ans[item.order,]
- #     attr(ans, "plot")<- list( order= item.order)
-  #  }
- #   else{
-    #  item.order<- order(x$m, decreasing=decreasing)
       ans <- ans[order(x$m, decreasing=decreasing),]
-     # attr(ans, "plot")<- list( order= item.order)
-   # }
   }
-
 
   prepare_output(ans,
                  caption = "Likert",
@@ -220,6 +199,14 @@ Tbll_likert.likert <- function(x,
 
 
 #' @rdname Tbll_likert
+#' @description
+#' Likert: Auszählen der Häufigkeiten
+#'
+#' @param include.total logical oder string zB. include.total ="Alle"
+#' @param reorder.levels integer factor(item, levels(item)[reorder.levels])
+#' @param reverse.levels logical  rev(item)
+#'
+#' @return liste mit  results = data, sowie m, sd, n
 #' @export
 Likert <- function(...,
                    labels = NULL,
@@ -228,9 +215,7 @@ Likert <- function(...,
                    include.total = FALSE
                    ) {
   if (!reverse.levels) {
-
     if (is.na(reorder.levels)) {
-
       results <-
         Summarise(...,
           fun = function(x) {
@@ -297,7 +282,8 @@ Likert <- function(...,
             },
           key = "Item")$value
     }
-  } else  {
+  }
+  else { # reverse.levels
     results <-
       Summarise(
         ...,
@@ -325,58 +311,33 @@ Likert <- function(...,
       key = "Item" )$value
   }
 
-
-  # - hier kommt  results, item_mean, item_sd
-
- # print(results)
- # print(item_mean)
- # print(item_sd)
-
-  nms <-  sapply(results, is.integer)
+  nms <- sapply(results, is.integer)
   ncl <- ncol(results)
   names(results)[ncl] <- "NA"
-
-
   col_names <- names(results[-ncl])
   pos_col_names <- grep("Item", col_names)
+  str_total <- "Total"
 
-
- str_total <- "Total"
- if(is.character(include.total)) {
-  str_total <- include.total
-  include.total <- TRUE
- }
+  if (is.character(include.total)) {
+    str_total <- include.total
+    include.total <- TRUE
+  }
 
   if (include.total) {
     dotts <- stp25tools::prepare_data2(...)
     rslt_total <-
-      Likert(
-        formula(paste("~", paste(dotts$measure.vars, collapse = "+"))),
-        dotts$data)
-cat("\nWorkaraund")
-    print(results)
-    print(rslt_total$results)
-    cat("\n")
+      Likert(formula(paste(
+        "~", paste(dotts$measure.vars, collapse = "+"))),
+      dotts$data)
 
-    rslt_total$results<-  cbind(rslt_total$results[1], rslt_total$freq.na)
-
-    results <- dplyr::bind_rows(results, rslt_total$results )
-    results[[1]] <- factor(results[[1]], c(str_total, levels( results[[1]])))
-    results[[1]][is.na( results[[1]] )] <- str_total
-
-
+    rslt_total$results <- cbind(rslt_total$results[1], rslt_total$freq.na)
+    results <- dplyr::bind_rows(results, rslt_total$results)
+    results[[1]] <- factor(results[[1]], c(str_total, levels(results[[1]])))
+    results[[1]][is.na(results[[1]])] <- str_total
 
     item_mean <- c(item_mean, rslt_total$m)
     item_sd <- c(item_sd, rslt_total$sd)
-
-#print(str_total)
-    print(results[which(nms)])
-    print(rslt_total$freq.na)
-
   }
-
-
-
 
   rslt <- list(
     results = results[-ncl],
@@ -387,26 +348,20 @@ cat("\nWorkaraund")
     n =       as.vector(rowSums(results[which(nms[-ncl])])),
     m =       item_mean,
     sd =      item_sd,
-    Mittelwert = rndr_mean(item_mean, item_sd),
+    # Mittelwert = rndr_mean(item_mean, item_sd),
     # items =  data.frame(),#  grouping = NULL,
     formula =  if (pos_col_names == 1) {Item ~ .}
                else{formula(paste("Item ~ .|",
                                   paste(col_names[1:(pos_col_names - 1)], collapse = "+")))},
-
     nlevels = sum(nms) - 1,
     levels =  names(nms[-ncl])[nms[-ncl]]
   )
   class(rslt) <- c('likert', class(rslt))
+
   rslt
-
-
 }
 
-# table_likert <- function(x, useNA = "always"){
-#   if(is.logical(x)) x<- factor(x, c(FALSE, TRUE))
-#   table(x, useNA = useNA)
-#
-# }
+
 
 RowSums2 <- function(x)
   if (is.vector(x)) x else rowSums(x, na.rm = TRUE)
