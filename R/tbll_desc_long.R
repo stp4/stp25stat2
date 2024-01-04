@@ -135,10 +135,10 @@ analyse_sesc_long <- function(X,
                                      collapse = "/"), ")")
     }
     else if (X$measure[i] %in%  c("mean", "numeric")) {
-      X$row_name[i] <- paste0(X$row_name[i], " (mean)")
+      X$row_name[i] <- paste0(X$row_name[i], get_opt("mean", "include_name"))
     }
     else if (X$measure[i] == "median") {
-      X$row_name[i] <- paste0(X$row_name[i], " (median)")
+      X$row_name[i] <- paste0(X$row_name[i], get_opt("median", "include_name"))
     }
     else if (X$measure[i] == "logical") {
       X$data[[X$measure.vars[i]]] <-
