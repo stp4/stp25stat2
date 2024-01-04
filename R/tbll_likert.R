@@ -376,3 +376,22 @@ print.likert<-function(x, ...){
   cat("\nlevels: ", paste(x$levels, collapse=", "),"\n")
 }
 
+
+# my personal preference, when dealing with likert scales, is to complement the
+# presentation of the detailed responses with the so-called Dominant Opinion Index
+# (don't remember who first came up with the idea) : DOI = (% positive - % negative)
+# x (% positive + % negative) = (% positive - % negative) x (100% - % neutral)
+# # the formula becomes slightly more complicated if the intensity of opinion
+# (e.g., agree vs strongly agree) is taken into account and the percentages are
+# weighted based on that
+#
+# the index ranges from -100 (strongly negative) to +100 (strongly positive),
+# with 0 midpoint as neutral
+#
+# details are there for whoever needs them (usually shown as diverging bars
+# with extra neutrals), but I'm focused on the DOI
+#
+# https://jakec007.github.io/2021-06-23-R-likert/
+# https://blog.datawrapper.de/divergingbars/
+
+
