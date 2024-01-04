@@ -205,9 +205,7 @@ berechne_all <- function(data,
       fm,
       data,
       FUN = function(x) {
-        cat("\n median\n")
 
-        print(type)
         if (type == "auto_long")
           rndr_median_iqr_range(
             median(x, na.rm = TRUE),
