@@ -57,8 +57,8 @@ Tbll_desc_long(
   ...,
   include.range = TRUE,
   include.n = TRUE,
-  include.test = FALSE,
   include.label = TRUE,
+  include.custom = NULL,
   digits = NULL,
   abbreviate = TRUE
 )
@@ -97,10 +97,7 @@ Tbll_desc_item(
 
 \item{include.test, include.normality.tests}{Test}
 
-\item{include.custom}{eigene Funktion mit (x, by, fun) return kann ein Vector oder eine Matrix sein
- function(x , by, ...){
-x <- scale(as.numeric(x))
-diff(sapply(split(x, by), mean, na.rm=TRUE))})}
+\item{include.custom}{eigene Funktion function(x){ mean(x)}}
 
 \item{include.value}{vector oder data.frame in exact der reihenfolge wie die meassure-variablen.}
 
@@ -118,6 +115,8 @@ diff(sapply(split(x, by), mean, na.rm=TRUE))})}
 data.frame
 }
 \description{
+Simple and intuitive formula and pipe-based framework for performing basic statistical Tabels.
+
 Tbll_desc_long
 }
 \examples{
@@ -266,11 +265,10 @@ Tbll_desc_multi(dat,
                  Campingplatz,
                  Couchsurfing)
 
-require(magrittr)
 
-#mtcars \%>\% Tbll_desc(mpg, cyl,  disp,  hp, drat,
+#mtcars |> Tbll_desc(mpg, cyl,  disp,  hp, drat,
 #                    wt,  qsec, vs, am, gear, carb)
-mtcars \%>\% Tbll_desc_long(
+mtcars |> Tbll_desc_long(
   mpg[mean, 1],
   cyl[median],
   "Hallo",
@@ -287,6 +285,21 @@ mtcars \%>\% Tbll_desc_long(
   include.n = TRUE
 )
 
+mtcars |> Tbll_desc_long(
+mpg,
+cyl,
+drat,
+wt,
+gear,
+carb,
+# by=~gear,
+
+include.custom = function(x, by, ...){
+  x <- as.numeric(x)
+  c(mean= mean(x, na.rm=TRUE), sd=sd(x))
+}
+
+)
 mtcars$G <- factor(mtcars$vs, 0:1, c("A", "B"))
 
 mtcars <- stp25tools::Label(
@@ -304,7 +317,7 @@ mtcars <- stp25tools::Label(
   carb =	"Number of carburetors"
 )
 
-mtcars \%>\% Tbll_desc_long(
+mtcars |> Tbll_desc_long(
   mpg[mean, 1],
   cyl[median],
   "Hallo",

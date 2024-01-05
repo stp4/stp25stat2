@@ -1,5 +1,7 @@
 #' Tbll_desc
 #'
+#' Simple and intuitive formula and pipe-based framework for performing basic statistical Tabels.
+#'
 #' @param ...  an prepare_data2
 #' @param caption besser mit Output verwenden
 #' @param include.n,include.nr,include.total,include.multiresponse  weitere param

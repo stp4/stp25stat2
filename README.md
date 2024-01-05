@@ -1,17 +1,16 @@
 stp25stat2
 ================
 
-Bietet ein einfaches und intuitives Formula und Pipe-freundliches
-Framework, um grundlegende statistische Tests durchzuführen, zum
-Beispiel t-Test, Wilcoxon-Test, ANOVA, Kruskal-Wallis und
-Korrelationsanalysen.
+This library provides a simple and intuitive formula and pipe-based
+framework for performing basic statistical tests such as t-test,
+Wilcoxon test, ANOVA, Kruskal-Wallis and correlation analysis.
 
-Die Ausgabe jedes Tests wird automatisch in einen APA-Style conforme
-Tabelle umgewandelt.
+The output of each test is automatically converted into an APA-style
+table.
 
-Zusätzliche Funktionen zum Umformen, Neuordnen, Manipulieren sind in
-*spp25tools* enthalten. Funktionen zur Visualisierung sind in
-*stp25plot* enthalten.
+Additional functions for transforming, rearranging and manipulating are
+included in *spp25tools*. Visualisation functions are included in
+*stp25plot*.
 
 ``` r
 require(stp25stat2)
@@ -21,11 +20,11 @@ require(stp25stat2)
 ## Descriptive statistics
 
 - `Tbll_desc`, `Tbll_desc_long()`, `Tbll_desc_item()` und
-  `Tbll_desc_multi` : Berechnen deskriptive Statistiken für eine oder
-  mehrere numerische Variablen. Kann mit gruppierten Daten umgehen.
-- `Tbll_xtabs()`: Berechnet Kreuztabelle kategorialer Variablen.
-- `Tbll_corr()`: Korrelationstest zwischen zwei oder mehr Variablen mit
-  Pearson-, Spearman- oder Kendall-Methoden.
+  `Tbll_desc_multi`: Calculate descriptive statistics for one or more
+  numerical variables. Can deal with grouped data.
+- `Tbll_xtabs()`: Calculates crosstabs of categorical variables.
+- `Tbll_corr()`: Correlation test between two or more variables using
+  Pearson, Spearman or Kendall methods.
 
 ### Tbll_desc
 
@@ -91,21 +90,19 @@ mtcars %>% Tbll_desc_long(
 ) %>% kable(caption ="summary statistics" )
 ```
 
-median \[1\] “auto_long”
-
-| Item         |   n | m                                   |
-|:-------------|----:|:------------------------------------|
-| mpg (mean)   |  32 | 20.1 (SD 6.0, range 10.4 to 33.9)   |
-| cyl (median) |  32 | 6.00 (IQR 4.00, range 4.00 to 8.00) |
-| disp (mean)  |  32 | 231 (SD 124, range 71 to 472)       |
-| hp (mean)    |  32 | 147 (SD 69, range 52 to 335)        |
-| drat (mean)  |  32 | 3.60 (SD 0.53, range 2.76 to 4.93)  |
-| wt (mean)    |  32 | 3.22 (SD 0.98, range 1.51 to 5.42)  |
-| qsec (mean)  |  32 | 17.8 (SD 1.8, range 14.5 to 22.9)   |
-| vs (0/1)     |  32 | 18/14                               |
-| am (0/1)     |  32 | 19/13                               |
-| gear (mean)  |  32 | 3.69 (SD 0.74, range 3.00 to 5.00)  |
-| carb (mean)  |  32 | 2.81 (SD 1.62, range 1.00 to 8.00)  |
+| Item        |   n | m                                   |
+|:------------|----:|:------------------------------------|
+| mpg(mean)   |  32 | 20.1 (SD 6.0, range 10.4 to 33.9)   |
+| cyl(median) |  32 | 6.00 (IQR 4.00, range 4.00 to 8.00) |
+| disp(mean)  |  32 | 231 (SD 124, range 71 to 472)       |
+| hp(mean)    |  32 | 147 (SD 69, range 52 to 335)        |
+| drat(mean)  |  32 | 3.60 (SD 0.53, range 2.76 to 4.93)  |
+| wt(mean)    |  32 | 3.22 (SD 0.98, range 1.51 to 5.42)  |
+| qsec(mean)  |  32 | 17.8 (SD 1.8, range 14.5 to 22.9)   |
+| vs (0/1)    |  32 | 18/14                               |
+| am (0/1)    |  32 | 19/13                               |
+| gear(mean)  |  32 | 3.69 (SD 0.74, range 3.00 to 5.00)  |
+| carb(mean)  |  32 | 2.81 (SD 1.62, range 1.00 to 8.00)  |
 
 summary statistics
 
@@ -638,11 +635,11 @@ Lik <- Tbll_likert(DF2,
 Lik
 # # A tibble: 4 × 5
 #   Item        `low(1:1)` `neutral(2)` `high(3:5)` `M(SD)`   
-# * <fct>       <chr>      <chr>        <chr>       <chr>     
-# 1 Comic.books 4 (4.0%)   15 (15.0%)   81 (81.0%)  3.34 (1.0…
-# 2 Newspapers  2 (2.0%)   19 (19.0%)   79 (79.0%)  3.21 (0.9…
-# 3 Magazines   8 (8.0%)   22 (22.0%)   70 (70.0%)  3.11 (1.1…
-# 4 Fiction     19 (19.0%) 36 (36.0%)   45 (45.0%)  2.46 (1.0…
+#   <fct>       <chr>      <chr>        <chr>       <chr>     
+# 1 Magazines   8 (8.0%)   22 (22.0%)   70 (70.0%)  3.11 (1.1…
+# 2 Comic.books 4 (4.0%)   15 (15.0%)   81 (81.0%)  3.34 (1.0…
+# 3 Fiction     19 (19.0%) 36 (36.0%)   45 (45.0%)  2.46 (1.0…
+# 4 Newspapers  2 (2.0%)   19 (19.0%)   79 (79.0%)  3.21 (0.9…
 ```
 
     stp25plot::likertplot(
@@ -824,7 +821,7 @@ Gamma
 Tbll_desc_item( ~ A + B + C + D + E, df)
 # # A tibble: 5 × 8
 #   variable n     M     SD    Range        Skew  Kurtosi
-# * <chr>    <chr> <chr> <chr> <chr>        <chr> <chr>  
+#   <chr>    <chr> <chr> <chr> <chr>        <chr> <chr>  
 # 1 A        15    2.53  1.77  [1.00, 5.00] 0.46  -1.69  
 # 2 B        15    2.67  1.68  [1.00, 5.00] 0.41  -1.64  
 # 3 C        15    3.07  1.58  [1.00, 5.00] -0.10 -1.59  
@@ -896,7 +893,7 @@ Tbll_item_analysis(  A + B + C + D + E ~ index, df,
 # 5          0.40
 ```
 
-### Síg. Test
+### Sig. Test
 
 ``` r
 t1 <- wilcox.test(mpg ~ vs, mtcars)

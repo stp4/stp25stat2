@@ -5,15 +5,15 @@
 #'
 #' @param include.range lang oder kurz
 #' @param measure.name "m"
+#' @param include.custom eigene Funktion function(x){ mean(x)}
 #' @export
 #'
 #' @examples
 #'
-#' require(magrittr)
 #'
-#' #mtcars %>% Tbll_desc(mpg, cyl,  disp,  hp, drat,
+#' #mtcars |> Tbll_desc(mpg, cyl,  disp,  hp, drat,
 #' #                    wt,  qsec, vs, am, gear, carb)
-#' mtcars %>% Tbll_desc_long(
+#' mtcars |> Tbll_desc_long(
 #'   mpg[mean, 1],
 #'   cyl[median],
 #'   "Hallo",
@@ -30,6 +30,21 @@
 #'   include.n = TRUE
 #' )
 #'
+#' mtcars |> Tbll_desc_long(
+#' mpg,
+#' cyl,
+#' drat,
+#' wt,
+#' gear,
+#' carb,
+#' # by=~gear,
+#'
+#' include.custom = function(x, by, ...){
+#'   x <- as.numeric(x)
+#'   c(mean= mean(x, na.rm=TRUE), sd=sd(x))
+#' }
+#'
+#' )
 #' mtcars$G <- factor(mtcars$vs, 0:1, c("A", "B"))
 #'
 #' mtcars <- stp25tools::Label(
@@ -47,7 +62,7 @@
 #'   carb =	"Number of carburetors"
 #' )
 #'
-#' mtcars %>% Tbll_desc_long(
+#' mtcars |> Tbll_desc_long(
 #'   mpg[mean, 1],
 #'   cyl[median],
 #'   "Hallo",
@@ -69,8 +84,9 @@
 Tbll_desc_long <- function(...,
                            include.range = TRUE,
                            include.n = TRUE,
-                           include.test = FALSE,
+                          # include.test = FALSE,
                            include.label = TRUE,
+                           include.custom = NULL,
 
                            digits = NULL,
                            abbreviate = TRUE
@@ -81,6 +97,8 @@ Tbll_desc_long <- function(...,
 
   type <- if (include.range) "auto_long" else "auto_kurz"
 
+
+  if(is.null(include.custom))
   rslt <-
     analyse_sesc_long(
       X,
@@ -90,6 +108,25 @@ Tbll_desc_long <- function(...,
       include.label = include.label,
       abbreviate =  abbreviate
     )
+  else{
+    cat("\ncustom_fun\n")
+    include.n <- FALSE
+  #  include.test <- FALSE
+    X$measure <- ifelse(X$measure == "header", "header", "custom_fun")
+    rslt <-
+    analyse_sesc_long(
+      X,
+      type = "custom_fun",
+      fun = include.custom,
+    #  measure.name = "custom_fun",
+    #  measure.name = get_opt("table", "measure.name.m"),
+    #  digits = digits,
+      include.label = include.label,
+      abbreviate =  abbreviate
+    )}
+
+
+
 
   if (include.n) {
     X$measure <- ifelse(X$measure == "header", "header", "custom_fun")
@@ -148,6 +185,7 @@ analyse_sesc_long <- function(X,
                               paste0(levels(X$data[[X$measure.vars[i]]]),
                                      collapse = "/"), ")")
     }
+
 
     rslt[[X$measure.vars[i]]] <-
       berechne_all(
