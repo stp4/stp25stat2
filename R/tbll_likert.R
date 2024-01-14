@@ -91,6 +91,7 @@ tbl
 #' @param include.mean,include.n,include.na Zusatz Ergebnisse
 #' @param include.order,decreasing sortierung nach mittelwert
 #' @param include.percent,include.count Format Prozent/Anzahl
+#
 #' @param reverse.levels an Likert
 #' @export
 #'
@@ -105,6 +106,8 @@ Tbll_likert.likert <- function(x,
                                ReferenceZero = include.reference,
                                labels = c("low", "neutral", "high"),
                                decreasing = TRUE) {
+
+
   note <- NULL # für include.reference
   if (!is.null(ReferenceZero)) {
     # x$freq und x$freq.na werden neu zudammengefasst
@@ -171,6 +174,9 @@ Tbll_likert.likert <- function(x,
       freq
   }
 
+
+
+
   if (include.na) {x$freq <- x$freq.na}
 
   if (include.percent) {
@@ -191,6 +197,7 @@ Tbll_likert.likert <- function(x,
   if (include.order) {
       ans <- ans[order(x$m, decreasing=decreasing),]
   }
+
 
   prepare_output(ans,
                  caption = "Likert",
@@ -338,6 +345,19 @@ Likert <- function(...,
     item_mean <- c(item_mean, rslt_total$m)
     item_sd <- c(item_sd, rslt_total$sd)
   }
+
+
+  cat("\nLikert\n")
+
+  print(results[which(nms)])
+
+  print(as.vector(rowSums(results[which(nms[-ncl])])))
+  print(
+
+    nlevels(results$Item))
+  print(  sum(results[which(nms)]) / nlevels(results$Item) )
+
+  cat("\n\n")
 
   rslt <- list(
     results = results[-ncl],
