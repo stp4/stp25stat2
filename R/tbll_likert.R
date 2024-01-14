@@ -347,17 +347,7 @@ Likert <- function(...,
   }
 
 
-  cat("\nLikert\n")
 
-  print(results[which(nms)])
-
-  print(as.vector(rowSums(results[which(nms[-ncl])])))
-  print(
-
-    nlevels(results$Item))
-  print(  sum(results[which(nms)]) / nlevels(results$Item) )
-
-  cat("\n\n")
 
   rslt <- list(
     results = results[-ncl],
