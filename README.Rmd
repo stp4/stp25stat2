@@ -56,32 +56,32 @@ require(stp25stat2)
 
 Tbll_desc(~ breaks + wool, warpbreaks)
 
-warpbreaks %>% Tbll_desc(~breaks + wool)
+warpbreaks |> Tbll_desc(~breaks + wool)
 
-warpbreaks %>% Tbll_desc(breaks, wool)
+warpbreaks |> Tbll_desc(breaks, wool)
 ```
     
     
 ```{r, Tbll_desc-groups-test}
-warpbreaks %>% Tbll_desc(
+warpbreaks |> Tbll_desc(
   "H1",
   breaks,
   tension,
   by = ~ wool,
   include.total = TRUE,
   include.n = FALSE,
-  include.test = TRUE) %>% kable()
+  include.test = TRUE) |> kable()
 ```
     
     
      
 ```{r, Tbll_desc_long-basic, results='asis'}
-mtcars %>% Tbll_desc_long(
+mtcars |> Tbll_desc_long(
   mpg[mean, 1],  cyl[median],  disp[0],
   hp[0],  drat,  wt,  qsec[1],  vs[freq],
   am[freq],  gear,  carb,
   include.range = TRUE,  include.n = TRUE
-) %>% kable(caption ="summary statistics" )
+) |> kable(caption ="summary statistics" )
 ```
  
  
@@ -101,8 +101,8 @@ DF <- data.frame(
   cardo=  rbinom(n, size=1, prob=.1)==1,
   infect= factor( rbinom(n, size=1, prob=.77), 0:1, c("yes", "no")),
   bili=  rnorm(n, 0.83, 0.40)
-) %>% 
-  na.omit %>% 
+) |> 
+  na.omit |> 
   Label(
   smoker = "Tobacco Smoker",
   group = "Group",
@@ -136,7 +136,7 @@ set_opt(
 ```
  
 ```{r tbll_desc-options, results='asis'}
-DF %>%
+DF |>
   Tbll_desc(
     sex[ratio],
     group[freq],
@@ -160,13 +160,18 @@ DF %>%
     # },
     # 
     # include.value = c(group = "OR = .0256", sex = "swx = 26")
-  ) %>% stp25output2::Output()
+  ) |> stp25output2::Output()
 ```
+ 
+ Hinzufügen von zusätzliche Spalten mit
+ **include.value**.
+ Vector oder data.frame in exact der Reihenfolge wie die meassure-variablen.
  
 ```{r tbll-desc-add-df}
 Info <- data.frame( var_name=c("age", "sex"), y=1:2)
 rownames(Info) <- c("age", "sex" )
-DF %>%
+
+DF |>
   Tbll_desc(
     sex[ratio],
     group[freq],
@@ -176,7 +181,7 @@ DF %>%
     include.total = TRUE,
     include.value = Info,
     include.nr = TRUE
-  ) %>% kable()
+  ) |> kable()
 ```
  
 ### Tbll_likert 
@@ -280,7 +285,7 @@ Tbll_corr(a + b + c ~ d, dat)
 Tbll_corr(a + b + c ~ d, 
           dat, 
           groups = ~ g, 
-          include.n=FALSE) %>%  kable
+          include.n=FALSE) |>  kable
 ```
  
  

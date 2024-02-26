@@ -8,13 +8,14 @@ Description: The purpose of stp25stat2 is to facilitate work and provide functio
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Imports:
   Hmisc, 
   magrittr, 
   car, 
   stp25tools,
-  stp25settings
+  stp25settings,
+ methods, pscl
 Suggests: 
  stats, 
  knitr,
@@ -48,6 +49,7 @@ Suggests:
  coin,
  insight,
  rockchalk,
- performance
+ performance,
+ rms
 VignetteBuilder: knitr  
 Language: de_DE

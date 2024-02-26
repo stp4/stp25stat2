@@ -456,9 +456,13 @@ Serum Bilirubin (mg/dl) (median)
 </tfoot>
 </table>
 
+**include.value** Vector oder data.frame in exact der Reihenfolge wie
+die meassure-variablen.
+
 ``` r
 Info <- data.frame( var_name=c("age", "sex"), y=1:2)
 rownames(Info) <- c("age", "sex" )
+
 DF %>%
   Tbll_desc(
     sex[ratio],
@@ -631,6 +635,18 @@ y
 Lik <- Tbll_likert(DF2,
                    Magazines, Comic.books, Fiction, Newspapers,
                    ReferenceZero=2)
+# 
+# Likert
+# # A tibble: 4 × 6
+#    `--`   `-`     o   `+`  `++`  `NA`
+#   <int> <int> <int> <int> <int> <int>
+# 1     8    22    34    23    13     0
+# 2     4    15    35    35    11     0
+# 3    19    36    28    14     3     0
+# 4     2    19    44    26     9     0
+# [1] 100 100 100 100
+# [1] 4
+# [1] 100
 
 Lik
 # # A tibble: 4 × 5
