@@ -31,10 +31,10 @@
 #'       data = Moore,
 #'       family = poisson())
 #'
-#' Anova(mod1) %>% fix_format()
-#' summary(mod1)$coefficients %>% fix_format()
-#' Anova(mod2) %>% fix_format()
-#' summary(mod2)$coefficients %>% fix_format()
+#' Anova(mod1) |> fix_format()
+#' summary(mod1)$coefficients |> fix_format()
+#' Anova(mod2) |> fix_format()
+#' summary(mod2)$coefficients |> fix_format()
 #'
 fix_format <- function(x,
                        digits = NULL,

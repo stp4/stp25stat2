@@ -7,24 +7,22 @@
 #' @export
 #'
 #' @examples
-#'
-#' #require(stpvers)
 #' require(emmeans)
 #'
-#'  warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-#' x1<-emmeans (warp.lm,  ~ wool | tension)
-#' Tbll(emmeans (warp.lm,  ~ wool | tension))
+#' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+#' x1 <- emmeans(warp.lm, ~ wool | tension)
+#' Tbll(emmeans(warp.lm, ~ wool | tension))
 #'
-#' x2<-emmeans (warp.lm, poly ~ tension | wool)
-#' Tbll(emmeans (warp.lm, poly ~ tension | wool))
+#' x2 <- emmeans(warp.lm, poly ~ tension | wool)
+#' Tbll(emmeans(warp.lm, poly ~ tension | wool))
 #'
-#' x3<-emmeans (warp.lm, pairwise ~ tension | wool)
-#' Tbll(emmeans (warp.lm, pairwise ~ tension | wool))
+#' x3 <- emmeans(warp.lm, pairwise ~ tension | wool)
+#' Tbll(emmeans(warp.lm, pairwise ~ tension | wool))
 #'
 #' Tbll(x3, adjust = "tukey")
 #' Tbll(x3, adjust = "scheffe")
 #'
-#' ?summary.emmGrid
+#' # ?summary.emmGrid
 #'
 tbll_extract.emm_list <- function(x,
                                   include.ci = TRUE,

@@ -1,7 +1,7 @@
 
 .onLoad <- function(libname, pkgname) {
   # oldc <- getOption("contrasts")
-  # contrasts =  c("contr.Treatment", "contr.poly")
+  # contrasts =  c("contr.Treatment contr.poly")
   # options(contrasts = contrasts)
   packageStartupMessage("\nHallo Wolfgang!\n\nIch wünsche dir einen guten und erfolgreichen Arbeitstag.\n\n")
 }
@@ -14,14 +14,34 @@
 
   packageStartupMessage(
     "Die Kontraste habe ich auf von ",
-    paste(oldc, collapse = ", "),
-    "\nauf ", paste(contrasts, collapse = ", "),
+    paste(oldc, collapse =  ),
+    "\nauf ", paste(contrasts, collapse =  ),
     " umgestellt!\n\n")
 
 
 }
 
 
+
+
+# Information ueber die verwendeten Methoden
+#
+# @param methode,library,fun  Text
+#
+# @return data.frame()
+Info_Statistic <-
+  function(methode = "describe",
+           library = "base",
+           fun = "summary",
+           my_methodes = "") {
+    Text("Methodes: ",  my_methodes)
+    data.frame(
+      Methode = methode,
+      Library = library,
+      Function = fun,
+      stringsAsFactors = FALSE
+    )
+  }
 
 
 
@@ -34,6 +54,16 @@
 #' @docType package
 #' @author Wolfgang Peter (w.peter@@statistik-peter.at)
 "_PACKAGE"
+
+#' @importFrom methods is
+
+#' @importFrom stats AIC BIC IQR addmargins aggregate as.formula binomial coef
+#'  confint cor deviance df drop1 family fisher.test fitted formula ftable glm
+#'  lm logLik median model.frame model.matrix na.omit na.pass pairwise.t.test
+#'  pairwise.wilcox.test pchisq pf pnorm qnorm quantile reformulate sd sigma
+#'  summary.aov update var vcov
+
+#' @importFrom utils capture.output data head methods str
 
 
 
@@ -78,9 +108,6 @@ stp25settings::bw_theme
 #' @export
 stp25tools::wrap_string
 
-#' @importFrom magrittr %>%
-#' @export
-magrittr::`%>%`
 
 #' @importFrom Hmisc Cs
 #' @export
@@ -99,26 +126,3 @@ car::contr.Helmert
 
 
 
-
-
-
-
-#' Information ueber die verwendeten Methoden
-#'
-#' @param methode,library,fun  Text
-#'
-#' @return data.frame()
-
-Info_Statistic <-
-  function(methode = "describe",
-           library = "base",
-           fun = "summary",
-           my_methodes = "") {
-    Text("Methodes: ",  my_methodes)
-    data.frame(
-      Methode = methode,
-      Library = library,
-      Function = fun,
-      stringsAsFactors = FALSE
-    )
-  }

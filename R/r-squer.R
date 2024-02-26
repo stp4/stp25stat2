@@ -69,13 +69,7 @@
 #' @return ein data.frame-Objekt.
 #'
 #' @export
-#' @examples
-#'
-#' #  fit1<-lm(chol1~chol0, hyper)
-#' #  summary(fit1)$r.squared
-#' #  R2(fit1)
-#'
-#'
+
 R2 <- function(x, ...) {
   UseMethod("R2")
 

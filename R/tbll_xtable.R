@@ -6,48 +6,45 @@
 #' @examples
 #'
 #'
-#'  data(infert, package = "datasets")
-#' infert$case  <- factor(infert$case , 1:0, c("case", "control"))
-#'
+#' data(infert, package = "datasets")
+#' infert$case  <- factor(infert$case ,1:0, c("case", "control") )
 #' infert$spontaneous <- factor(infert$spontaneous)
-#' infert$induced2    <- factor(infert$induced == 0)
+#' infert$induced2    <- factor(infert$induced==0)
 #'
-#' Tbll_xtabs( ~  case, infert)
-#' Tbll_xtabs( ~ induced2 + case, infert)
-#' Tbll_xtabs( ~ induced + case, infert)
-#' Tbll_xtabs( ~ induced + education, infert)
+#' tab_1 <- xtabs( ~  case, infert)
+#' tab_2x2 <- xtabs( ~ induced2 + case, infert)
+#' tab_3x2 <- xtabs( ~ induced + case, infert)
+#' tab_3x3 <- xtabs( ~ induced + education, infert)
+#' tab_3x3x2 <- xtabs( ~ induced + education + case, infert)
 #'
+#' Tbll_xtabs(summary(tab_3x3x2))
 #'
-#' Tbll_xtabs( ~ induced + education + case,
-#'             infert,
-#'             margin = "case",
-#'             #  add.margins = c("education", "induced"),
-#'             include.count = FALSE)
-#'
-#' Tbll_xtabs(
-#'   ~ induced + education + case,
-#'   infert,
-#'   margin = "case",
-#'   add.margins = c("case"),
-#'   include.count = FALSE
-#' )
+#' Tbll_xtabs(tab_1, include.test=TRUE)
+#' Tbll_xtabs(tab_2x2, include.test=TRUE)
+#' Tbll_xtabs(tab_3x2, include.test=TRUE)
+#' Tbll_xtabs(tab_3x3, include.test=TRUE)
+#' Tbll_xtabs(tab_3x3x2, include.test=TRUE)
 #'
 #'
+#' Klassifikation(tab_2x2)
+#'
+#' tab <- matrix(c(94, 40, 39, 40), ncol = 2, byrow = TRUE)
+#' tbll_extract(caret::confusionMatrix(tab))
+#' tbll_extract(epiR::epi.tests(tab) )
+#'
+#' Klassifikation(as.table(tab))
 #'
 Tbll_xtabs <-   function(x, ...) {
   UseMethod("Tbll_xtabs")
 }
 
 #' @rdname Tbll_xtabs
-#'
 #' @export
-#'
 Tbll_xtabs.default <- function(x, ...) {
   cat("Keine Methode fuer ", class(x), " vorhanden.")
 }
 
 #' @rdname Tbll_xtabs
-#'
 #' @export
 Tbll_xtabs.NULL <- function() {
   Info_Statistic(
@@ -69,7 +66,6 @@ Tbll_xtabs.NULL <- function() {
 }
 
 #' @rdname Tbll_xtabs
-#'
 #' @export
 Tbll_xtabs.glm <- function(x,
                           thresh = 0.5,
@@ -80,27 +76,11 @@ Tbll_xtabs.glm <- function(x,
 }
 
 #' @rdname Tbll_xtabs
-#'
 #' @export
 #' @param x,data formula und data.frame geht an xtabs
 #' @param addNA,exclude,drop.unused.levels an xtabs()
 #' @param margin,add.margins Prozent und total
 #' @param ... include.test usw
-#' @examples
-#'
-#' df<- data.frame(A = c(1,0,0,1,0,1,0,1,1,0,0,0,0,1,1),
-#' B = c(0,0,1,0,1,0,1,1,1,1,1,1,1,0,0)
-#' )
-#'
-#'
-#' Tbll_xtabs(
-#'   ~ A + B,
-#'   df,
-#'   include.percent = FALSE,
-#'   include.test = TRUE,
-#'   include.diagnostic = TRUE
-#' )
-#'
 Tbll_xtabs.formula <-
   function(x,
            data = NULL,
@@ -153,14 +133,8 @@ Tbll_xtabs.formula <-
   }
 
 
-
-
-
-
 #' @rdname Tbll_xtabs
-#'
 #' @export
-#'
 Tbll_xtabs.data.frame <-
   function(data,
            ...,
@@ -208,49 +182,19 @@ if(!is.null( X$group.vars ))
   }
 
 #' @rdname Tbll_xtabs
-#'
 #' @export
-#'
 Tbll_xtabs.table <- function(...) Tbll_xtabs.xtabs(...)
 
 
 #' @rdname Tbll_xtabs
-#'
 #' @export
-#'
 #' @param digits Nachkommastellen
 #' @param include.percent,include.count ausgabe
 #' @param include.test,test,include.prop.chisq,include.chisq,include.fisher die Tests
 #' @param include.correlation Korrelation
 #' @param include.diagnostic,include.sensitivity,prevalence ascostat
 #' @param ... not used
-#'
 #' @return list("xtab","fisher_test","diagnostic.test")
-#'
-#' @examples
-#'
-#'
-#'
-#' data(infert, package = "datasets")
-#' infert$case  <- factor(infert$case ,1:0, c("case", "control") )
-#'
-#' infert$spontaneous <- factor(infert$spontaneous)
-#' infert$induced2    <- factor(infert$induced==0)
-#'
-#' tab_1<- xtabs(~  case, infert)
-#' tab_2x2<- xtabs(~ induced2 + case, infert)
-#' tab_3x2<- xtabs(~ induced + case, infert)
-#' tab_3x3<- xtabs(~ induced + education, infert)
-#' tab_3x3x2<- xtabs(~ induced + education+case, infert)
-#'
-#' #Tbll_xtabs(summary(tab_3x3x2))
-#'
-#' (Tbll_xtabs(tab_1, include.test=TRUE))
-#' (Tbll_xtabs(tab_2x2, include.test=TRUE))
-#' (Tbll_xtabs(tab_3x2, include.test=TRUE))
-#' (Tbll_xtabs(tab_3x3, include.test=TRUE))
-#' (Tbll_xtabs(tab_3x3x2, include.test=TRUE))
-#'
 Tbll_xtabs.xtabs  <- function(x,
                               include.count = TRUE,
                               include.percent = TRUE,
@@ -382,137 +326,9 @@ Tbll_xtabs.xtabs  <- function(x,
   res
 }
 
-
-
-
-
-
-# @rdname Tbll_xtabs
-# @param ... MASS::loglm()
-# @param names Quelle
-# @export
-#
-# @examples
-#
-# 1+1
-
-## example from Venables and Ripley (2002, pp. 190-2.)
-# ldose <- rep(0:5, 2)
-# numdead <- c(1, 4, 9, 13, 18, 20, 0, 2, 6, 10, 12, 16)
-# sex <- factor(rep(c("M", "F"), c(6, 6)))
-# SF <- cbind(numdead, numalive = 20 - numdead)
-# budworm.lg <- glm(SF ~ sex * ldose, family = binomial)
-# summary(budworm.lg)
-#
-#
-# Tbll_reg_long(
-#   budworm.lg,
-#   include.se = TRUE,
-#   include.ci = FALSE,
-#   include.p = TRUE
-# )
-#
-#
-# dat <-
-#   stp25aggregate::GetData(
-#     "alter  baum ohne mit
-# 1 buche 20  2
-# 1 fichte 11 1
-# 1 larch 7 1
-# 2 buche 18 13
-# 2 fichte 3 6
-# 2 larch 4 7
-# 3 buche 8 21
-# 3 fichte 1 1
-# 3 larch 1 5
-# "
-#   )
-#
-# dat <-  stp25aggregate::Long(dat,
-#                              ohne,
-#                              mit,
-#                              by = ~ alter + baum,
-#                              key = "defol",
-#                              value = "Freq")
-# dat <-
-#   dplyr::mutate(dat, alter = factor(alter, 1:3, c("<70", "71-140", "140")))
-#
-# xt <- xtabs(Freq ~ alter + baum + defol, dat)
-#
-#
-#
-#
-# Tbll(summary(xt))
-# fit_xt <- glm(Freq ~ alter + baum + defol, dat, family = poisson())
-# #lmtest::lrtest(fit_xt)
-# MASS::loglm( ~ alter + baum + defol, data = xt)
-# MASS::loglm(fit_xt)
-#
-# Tbll_xtabs(xt, include.percent = FALSE)
-#
-# x <-  MASS::loglm(~ alter * baum * defol  , data = xt)
-# Tbll(x)
-#
-# #Log-Linear Models
-# Log_Linear_Models <- function(..., names) {
-#   rslt <- NULL
-#   models <- list(...)
-#
-#   for (i in seq_along(models)) {
-#     rslt <- rbind(rslt,
-#                   cbind(
-#                     formula = paste(formula(models[[i]]), collapse = " "),
-#                     Model = names[i],
-#                     Tbll(models[[i]])[1, -1]
-#                   ))
-#   }
-#   rslt
-#
-# }
-# Log_Linear_Models(
-#   MASS::loglm(~ alter * baum * defol  , data = xt),
-#   MASS::loglm(~ (alter + defol) * baum  , data = xt),
-#   MASS::loglm(~ alter * baum + baum * defol, data = xt),
-#   MASS::loglm(~ alter * baum + defol, data = xt),
-#   MASS::loglm(~ alter + baum + defol, data = xt),
-#
-#   names = c(
-#     "satturiert [ABC]",
-#     "[AB][BC]",
-#     "[AB][BC]",
-#     "[AB][C]",
-#     "[A][B][C]"
-#   )
-# )
-#
-
-# Tbll_loglm <- function(..., names = NULL ) {
-#   models<- list(...)
-#   if(is.null(names)) paste("M", seq_along(models))
-#   rslt<- NULL
-#
-#   for(i in seq_along(models)){
-#
-#     rsl <- tbll_extract(models[[i]], include.pearson=FALSE)
-#     rsl[1, 1] <- names[i]
-#     rslt <- rbind( rslt, rsl)
-#   }
-#   rslt
-# }
-
-
-
-
-
 # Helpers -----------------------------------------------------------------
 
-
 #' @rdname Tbll_xtabs
-#' @examples
-#'
-#' a <- letters[1:3]
-#' Tbll(summary(table(a, sample(a))))
-#'
 Tbll.summary.table <- function(x, ...) {
   prepare_output(data.frame(
     Chisq =    render_f(x$statistic, 2),
@@ -524,13 +340,13 @@ Tbll.summary.table <- function(x, ...) {
 
 #' main function for xtabs
 #'
-#' @noRd
 #' @param x xtabs Tabelle
 #' @param margin  Prozent geht an prop.table
 #' @param add.margins welche Spalten  add.margins geht am addmargins()
 #' @param include.count,include.percent Include
 #' @param digits Komastellen
 #' @param dim_x was fuer eine Tabelle kommt
+#' @noRd
 format_xtab <- function(x,
                         margin = NULL,
                         add.margins = NULL,
@@ -592,14 +408,10 @@ dimension <- function(x) {
 }
 
 
-
-
-
 # Klassifikation ----------------------------------------------------------
 
 
 #' @rdname Tbll_xtabs
-#'
 #' @description Classification Table  classification_table
 #'  Richtige und falsche Klassifikationen
 #'  Bei  2x2 Tabellen der Kappa Test
@@ -635,30 +447,14 @@ dimension <- function(x) {
 #' @param ... weitere Objekte nicht benutzt
 #' @return A data.frame Objekt.
 #' @export
-#' @examples
-#'
-#'  require(stp25data)
-#'
-#' x<-xtabs(~gruppe+lai, hkarz)
-#'
-#' Klassifikation(x)
 Klassifikation <- function(x, ...) {
   UseMethod("Klassifikation")
 }
 
 
-
-
 #' @rdname Tbll_xtabs
 #' @description Klassifikation.glm
 #' @export
-#' @examples
-#'
-#' # require(stp25data)
-#' # fit1<- glm(gruppe~lai, hkarz, family = binomial)
-#' # thkarz <- as.data.frame(xtabs(~gruppe+lai, hkarz))
-#' # fit2<- glm(Freq ~ gruppe*lai, thkarz, family = poisson())
-#'
 Klassifikation.glm <-
   function(x,
            thresh = 0.5,
@@ -704,57 +500,6 @@ Klassifikation.table <- function(...) Klassifikation.xtabs(...)
 #' @rdname Tbll_xtabs
 #' @description xtabs-Objekt
 #' @export
-#' @examples
-#'
-#'  # require(stp25data)
-#'  # hkarz$LAI<- factor(hkarz$lai, 0:1, c("pos", "neg"))
-#'  # Klassifikation(xtabs(~gruppe+LAI, hkarz), test=TRUE, type="fischer")
-#'
-#'  tab <- matrix(c(94, 40, 39, 40), ncol = 2, byrow = TRUE)
-#'  tbll_extract(caret::confusionMatrix(tab))
-#'  tbll_extract(epiR::epi.tests(tab) )
-#'
-#'  Klassifikation(as.table(tab))
-#'
-#'
-#' # dat <-
-#' #   get_data("
-#' # outcome    A B
-#' # a   94 40
-#' # b   39  40",
-#' #            tabel_expand = TRUE,
-#' #            value = "test")
-#' #
-#' #
-#' # dat$outcome <- ifelse(dat$outcome =="a",1,0)
-#' # dat$test <- ifelse(dat$test =="A",1,0)
-#' # xtabs( ~ outcome + test, dat)
-#' #
-#' # fit<- glm(outcome~ test, dat, family = binomial())
-#' #
-#' #
-#' # summary(fit)
-#' # dat$residuals <- residuals(fit)
-#' # dat$predict <- predict(fit)
-#' #
-#' # (dat)
-#' #
-#' # require(glue)
-#' # require(pROC)
-#' # fit_roc <- pROC::roc( dat$outcome, dat$test )
-#' # Tbll( fit_roc )
-#' # ?coords(fit_roc)
-#' #
-#' #
-#' # roc.liver <- roc( outcome ~ predict, dat)
-#' #
-#' # auc<- roc.liver$auc
-#' # glue( 'Area under the curve: {sprintf("%.3f", auc)} it means there is a {sprintf("%.0f", auc*100)} % chance that the model
-#' #  will be able to distinguish between positive class and negative class.')
-#' #
-#' #
-#' # plot(roc.liver)
-#'
 Klassifikation.xtabs <-
   function(x,
            lvs = c("positiv", "negativ"),
@@ -782,111 +527,7 @@ Klassifikation.xtabs <-
                                                Positive_Class = Positive_Class)
     )
 
-
-    # out <- as.character(
-    #   c(
-    #     render_f(x$overall["Accuracy"], digits),
-    #     rndr_CI(x$overall[c("AccuracyLower", "AccuracyUpper")]),
-    #     render_f(x$overall["AccuracyNull"], digits),
-    #     rndr_P(x$overall["AccuracyPValue"]),
-    #     render_f(x$overall["Kappa"], digits),
-    #     rndr_P(x$overall["McnemarPValue"]),
-    #     render_f(x$byClass, digits),
-    #     Positive_Class
-    #   )
-    # )
-    #
-    #
-    # list(
-    #   xtab = xtab,
-    #   statistic =
-    #     data.frame(
-    #       Statistic =
-    #         c(
-    #           "Accuracy",
-    #           "95% CI",
-    #           "No Information Rate",
-    #           "P-Value [Acc > NIR]",
-    #           "Kappa",
-    #           "Mcnemar's Test P-Value",
-    #           "Sensitivity",
-    #           "Specificity",
-    #           "Pos Pred Value" ,
-    #           "Neg Pred Value",
-    #           "Precision",
-    #           "Recall",
-    #           "F1",
-    #           "Prevalence",
-    #           "Detection Rate",
-    #           "Detection Prevalence" ,
-    #           "Balanced Accuracy",
-    #           "Positive Class"
-    #         )
-    #       ,
-    #       Value = out,
-    #       stringsAsFactors = FALSE
-    #     ),
-    #   Positive_Class =Positive_Class
-    #   #,
-    # #  stat = x,
-    # #  response = NULL,
-    # #  predictor = NULL
-    # )
-  }
-
-
-# beispiel ----------------------------------------------------------------
-# require(stp25tools)
-# prepare_output <- stp25stat2::prepare_output
-# rndr_percent <- stp25stat2:::rndr_percent
-# render_f <- stp25stat2:::render_f
-# rndr_P <- stp25stat2:::rndr_P
-# rndr_CI <- stp25stat2:::rndr_CI
-#
-# # #detach("package:stp25stat2", unload = TRUE)
-# #
-# data(infert, package = "datasets")
-#
-# infert2  <- infert
-# infert2$case  <- factor(infert2$case ,1:0, c("case", "control") )
-# infert2<- Label(infert2,
-#                 education = "Education",
-#                 induced = "Number of prior Induced abortions",
-#                 case = "Case Status")
-#
-#
-# x <- xtabs( ~ education + induced + case, infert2)
-#
-# Tbll_xtabs(
-#   x,
-#   margin = "case",
-#   add.margins = c("induced"))
-#
-# Tbll_xtabs(~ education + induced + case, infert2,
-#            include.test = TRUE,
-#            include.correlation = FALSE,
-#            include.diagnostic = TRUE,
-#
-#   margin = "case",
-#   add.margins = c("induced"))
+}
 
 
 
- # summary(infert2)
- # levels(infert2$education) <- c("0-11yrs", "0-11yrs", "12+ yrs")
- # Klassifikation(xtabs(~ case + education, infert2), test=TRUE, type="fischer")
- #
- #
- # xtabs(~ induced + case, infert2)
- #
- # contrasts =  c("contr.treatment", "contr.poly")
- # options(contrasts = contrasts)
- #  fit1<- glm(case ~  education, infert2, family = binomial)
- #
- #  summary(fit1)
- #
- #  Klassifikation(fit1)
-
-
- #' # thkarz <- as.data.frame(xtabs(~gruppe+lai, hkarz))
- #' # fit2<- glm(Freq ~ gruppe*lai, thkarz, family = poisson())

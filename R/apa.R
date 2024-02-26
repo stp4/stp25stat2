@@ -7,15 +7,58 @@
 #' @param x Objekt fit, formula usw
 #' @param ...  digits, data, usw
 #' @return   Character Vector mit einem oder meheren Eintraegen
+#' @export
 #' @examples
 #'
 #' APA(mpg ~ cyl, mtcars)
 #' APA(glm(vs ~ mpg, mtcars, family = binomial()))
 #' APA(lm(mpg ~ drat + wt + qsec, mtcars))
 #' APA(aov(mpg ~ drat + wt + qsec, mtcars))
+#' APA(wilcox.test(mpg ~ vs, mtcars))
+#' APA(t.test(mpg ~ vs, mtcars))
+#'
+#' a <- letters[1:3]
+#' APA(summary(table(a, sample(a))))
+#'
+#' TeaTasting <-
+#'   matrix(c(3, 1, 1, 3),
+#'          nrow = 2,
+#'          dimnames = list(
+#'            Guess = c("Milk", "Tea"),
+#'            Truth = c("Milk", "Tea")
+#'          ))
+#' APA(fisher.test(TeaTasting, alternative = "greater"))
+#'
+#' # Test Survival Curve Differences
+#' require(survival)
+#' APA(survdiff(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
 #'
 #'
-#' @export
+#'
+#' require(coin)
+#' davis <- matrix(c(3, 6, 2, 19),
+#'                 nrow = 2, byrow = TRUE)
+#' davis <- as.table(davis)
+#' ## Asymptotic Pearson chi-squared test
+#' diffusion <- data.frame(
+#'   pd = c(
+#'     0.80,    0.83,    1.89,    1.04,    1.45,
+#'     1.38,    1.91,    1.64,    0.73,    1.46,
+#'     1.15,    0.88,    0.90,    0.74,    1.21),
+#'   age = factor(rep(c( "At term", "12-26 Weeks"), c(10, 5)))
+#' )
+#'
+#' ## Exact Wilcoxon-Mann-Whitney test
+#' ## Hollander and Wolfe (1999, p. 111)
+#' ## (At term - 12-26 Weeks)
+#' wt <- wilcox_test(pd ~ age,
+#'                   data = diffusion,
+#'                   distribution = "exact",
+#'                   conf.int = TRUE)
+#'
+#' APA(xt <- chisq_test(davis))
+#' APA(wt)
+#'
 APA <-   function(x,
                   ...) {
   UseMethod("APA")
@@ -45,11 +88,6 @@ APA.coxph <-
 
 #' @rdname APA
 #' @export
-#' @examples
-#'
-#' a <- letters[1:3]
-#' APA(summary(table(a, sample(a))))
-#'
 APA.summary.table <- function(x,
                               ...) {
   paste0(
@@ -62,16 +100,8 @@ APA.summary.table <- function(x,
   )
 }
 
-
 #' @rdname APA
 #' @export
-#'
-#' @examples
-#'
-#' # Test Survival Curve Differences
-#' require(survival)
-#' APA(survdiff(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
-#'
 APA.survdiff <- function(x,
                          ...) {
   df <- length(x$n) - 1
@@ -82,12 +112,9 @@ APA.survdiff <- function(x,
          rndr_P(p.val))
 }
 
-
-
 #' @rdname APA
 #' @export
-APA.NULL <- function(x,
-                     ...) {
+APA.NULL <- function(x, ...) {
     # res<- Info_Statistic(
     #   c("catTest", "conTest", "Wilkox", "Kruskal",
     #     "ANOVA",
@@ -116,38 +143,8 @@ APA.default <- function(x,
   class(x)[1]
 }
 
-
 #' @rdname APA
 #' @export
-#' @examples
-#'
-#'
-#' require(coin)
-#'
-#'
-#' davis <- matrix(
-#' c(3,  6,
-#'   2, 19),
-#' nrow = 2, byrow = TRUE
-#' )
-#' davis <- as.table(davis)
-#' ## Asymptotic Pearson chi-squared test
-#' diffusion <- data.frame(
-#'   pd = c(0.80, 0.83, 1.89, 1.04, 1.45, 1.38, 1.91, 1.64, 0.73, 1.46,
-#'          1.15, 0.88, 0.90, 0.74, 1.21),
-#'   age = factor(rep(c("At term", "12-26 Weeks"), c(10, 5)))
-#' )
-#'
-#' ## Exact Wilcoxon-Mann-Whitney test
-#' ## Hollander and Wolfe (1999, p. 111)
-#' ## (At term - 12-26 Weeks)
-#' wt <- wilcox_test(pd ~ age, data = diffusion,
-#'                   distribution = "exact", conf.int = TRUE)
-#'
-#' APA(xt<-chisq_test(davis))
-#'
-#'
-#' APA(wt)
 APA.QuadTypeIndependenceTest <- function(x,
                                          ...) {
   # capture.output(x)[5]
@@ -165,30 +162,15 @@ APA.ScalarIndependenceTest <- function(x,
 
 #' @rdname APA
 #' @export
-APA.numeric <- function(x,
-                        ...)
-  calc_mean(x, ...)
+APA.numeric <- function(x, ...)calc_mean(x, ...)
+
+# @rdname APA
+# @export
+#APA.factor <- function(x,...) Prozent(...)
 
 #' @rdname APA
-#' @export
-APA.factor <- function(x,
-                       ...)
-  Prozent(...)
-
-
-
-#' @rdname APA
-#'
 #' @param data,exclude,max_factor_length bei der Verwendung von Formeln
-#'
 #' @export
-#' @examples
-#'
-#'  # require(stp25data)
-#'
-#'  # APA( ~ rrs0 + rrs1 + g, hyper)
-#'  # APA(chol0+chol1 ~ g, hyper) das geht nicht
-
 APA.formula <- function(x,
                        data,
                        exclude = NA,
@@ -274,50 +256,9 @@ APA.formula <- function(x,
 }
 
 
-# APA.formula <- function(x,
-#                         data,
-#                         exclude = NA,
-#                         max_factor_length = 25,
-#                         ...) {
-#   X <- stp25tools::prepare_data2(x, data)
-#   res <- NULL
-#   for (i in 1:length(X$measure)) {
-#     x <- X$data[[X$measure.vars[i]]]
-#     x    <- na.omit(x)
-#     n    <- length(x)
-#
-#     if (all(is.na(x)))
-#       X$measure[i] <- "all_NA"
-#
-#     res1 <- switch(
-#       X$measure[i],
-#       numeric = mean_tbll(x, X$digits[i], n),
-#       integer = mean_tbll(x, X$digits[i], n),
-#       factor =  prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
-#       logical = prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
-#       freq =    prct_tbll(x, X$digits[i], n, exclude, max_factor_length),
-#       mean =    mean_tbll(x, X$digits[i], n),
-#       median =   median_tbll(x, X$digits[i], n),
-#       multi =    multi_tbll(x, X$digits[i], n),
-#
-#       c(lev = "NA", n = "NA", m = "NA")
-#     )
-#     m <- as.character(res1$m)
-#     if (length(m) == 1)
-#       names(m) <- X$measure.vars[i]
-#     else
-#       names(m) <- paste(X$measure.vars[i], res1$lev, sep = "_")
-#     res <- c(res, m)
-#
-#   }
-#   res
-# }
-#
-
 #' @rdname APA
 #' @param include.r APA.lm: R-Squar
 #' @export
-#'
 APA.lm <- function(x,
                    include.r = TRUE,
                    ...) {
@@ -345,35 +286,7 @@ APA.lm <- function(x,
 
 
 #' @rdname APA
-#'
 #' @export
-#' @examples
-#'
-#'  # Likelihood Ratio Test
-#'  # require(stp25stat2)
-#'
-#' # require(stp25data)
-#' # data("hkarz")
-#'
-#' # fit0 <- glm(gruppe ~ 1, hkarz, family = binomial)
-#' # fit1 <- glm(gruppe ~ tzell + lai, hkarz, family = binomial)
-#' # fit0 <- update(fit1, . ~ -tzell- lai)
-#'
-#'
-#' # logLik(fit0)
-#' # logLik(fit1)
-#'
-#' # - 2 * (logLik(fit0) -  logLik(fit1))
-#'
-#' # lmtest::lrtest(fit1)
-#' # APA(fit1)
-#' # hkarz$Lai <- factor(hkarz$lai)
-#' # Tbll_desc(hkarz,gruppe[binomial],
-#'  #         by = ~ Lai,
-#'  #         include.test = TRUE)
-#'
-#'
-#'
 APA.glm <- function(x,
                     ...) {
   # Hier gibt es Probleme wen die Funktion in
@@ -418,24 +331,8 @@ APA.glm <- function(x,
 }
 
 
-
-
 #' @rdname APA
 #' @export
-#'
-#' @examples
-#'  # T-Test
-#' #require(coin)
-#' #APA(coin::wilcox_test(mpg ~ factor(vs), mtcars))
-#' APA(wilcox.test(mpg ~ vs, mtcars))
-#' APA(t.test(mpg ~ vs, mtcars))
-#'
-#'  TeaTasting <-
-#' matrix(c(3, 1, 1, 3),
-#'        nrow = 2,
-#'        dimnames = list(Guess = c("Milk", "Tea"),
-#'                        Truth = c("Milk", "Tea")))
-#' APA(fisher.test(TeaTasting, alternative = "greater"))
 APA.htest <- function(x,
                       ...) {
   if (any(names(x) == "statistic")) {
@@ -469,12 +366,8 @@ APA.htest <- function(x,
 }
 
 
-# APA.xtabs: Chi-Quadrat aus Kreuztabellen
-
-#'
 #' @rdname APA
 #' @export
-#'
 APA.xtabs <- function(x,
                       ...) {
   x <- summary(x)
@@ -490,11 +383,6 @@ APA.table <- function(x,
 
 #' @rdname APA
 #' @export
-#' @examples
-#'
-#' a <- letters[1:3]
-#' APA(summary(table(a, sample(a))))
-#'
 APA.summary.table <- function(x,
                               ...) {
   paste0(
@@ -505,9 +393,9 @@ APA.summary.table <- function(x,
 }
 
 
-  
+
 #' @rdname APA
-#' @export 
+#' @export
 APA.meta <- function(x) {
   # sprintf("Heterogeneity: Cochran’s Q = %.1f, I^2 = %.0f %%",   x$Q, x$I2 *100)
   c (100 * c(x$I2, x$lower.I2, x$upper.I2)) # I-squared
@@ -519,7 +407,7 @@ APA.meta <- function(x) {
     " %",
     sep = ""
   )
-  
+
 }
 
 
@@ -564,6 +452,5 @@ rndr_test  <-
       paste(symbol, " = ", formatC(x, format = "f", digits = digits),
             sep =
               "")
-    
+
   }
-  

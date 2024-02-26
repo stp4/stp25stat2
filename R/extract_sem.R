@@ -64,10 +64,10 @@
 #'   include.ci = TRUE
 #' )
 #' summary(fit2)
-#' x$latent # %>% Output()
+#' x$latent # |> Output()
 #'
-#' x$varianz # %>% Output()
-#' x  # %>% Output("Hallo")
+#' x$varianz # |> Output()
+#' x  # |> Output("Hallo")
 #'
 #'
 #' library(piecewiseSEM)

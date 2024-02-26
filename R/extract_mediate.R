@@ -61,7 +61,7 @@
 #'   Motivation = Motivation
 #' )
 #'
-#' dat %>% Tbll_desc_item(Note, Motivation , Lerndauer)
+#' dat |> Tbll_desc_item(Note, Motivation , Lerndauer)
 #'
 #'
 #'
@@ -118,7 +118,7 @@
 #' #
 #' # summary(mod4,plot=FALSE)
 #'
-#' Tbll(mod4) # %>% Output()
+#' Tbll(mod4) # |> Output()
 #' Tbll(rslt)
 #'
 #'
@@ -780,7 +780,7 @@ print_psych_mediate <-  function(x, digits=2 ) {
 #   Motivation = Motivation
 # )
 #
-# dat %>% Tbll_desc_item(Note, Motivation , Lerndauer)
+# dat |> Tbll_desc_item(Note, Motivation , Lerndauer)
 #
 #
 #
@@ -829,7 +829,7 @@ print_psych_mediate <-  function(x, digits=2 ) {
 # #
 # # summary(mod4,plot=FALSE)
 #
-# Tbll(mod4) # %>% Output()
+# Tbll(mod4) # |> Output()
 # Tbll(rslt)
 
 

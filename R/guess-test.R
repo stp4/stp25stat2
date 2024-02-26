@@ -56,7 +56,7 @@ Tbll_test <- function(...) {
 #'  dat$m2 <- cut(dat$m1, 2)
 #'
 #'
-#'  dat %>% Tbll_desc(
+#'  dat |> Tbll_desc(
 #'   m1[median, 1],
 #'   m2,
 #'   by = ~ geschl,

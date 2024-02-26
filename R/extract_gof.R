@@ -8,6 +8,7 @@
 #' GOF for lm and glm
 #'
 #' @export
+#' @importFrom pscl pR2
 #'
 extract_gof <- function(x,
                             include.ftest=TRUE, include.loglik=FALSE, include.minus.LL=include.loglik,

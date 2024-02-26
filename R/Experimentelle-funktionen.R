@@ -21,7 +21,7 @@
 #' Post_Hoc(airquality, Ozone, Month)
 #' Post_Hoc(airquality, Ozone, Month, test= "t.test")
 #' res_aov<-aov( Ozone ~ Month, airquality)
-#' TukeyHSD( res_aov ) %>% Tbll()
+#' TukeyHSD( res_aov ) |> Tbll()
 #' DescTools::PostHocTest( res_aov, method = "hsd")
 #' # Dunnett's test:
 #' library(multcomp)
@@ -77,7 +77,7 @@ Post_Hoc <- function(...,
 #  Post_Hoc(airquality, Ozone, Month)
 #  Post_Hoc(airquality, Ozone, Month, test= "t.test")
 #  res_aov<-aov( Ozone ~ Month, airquality)
-#  TukeyHSD( res_aov ) %>% Tbll()
+#  TukeyHSD( res_aov ) |> Tbll()
 #  DescTools::PostHocTest( res_aov, method = "hsd")
 #   # Dunnett's test:
 #  library(multcomp)

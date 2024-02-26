@@ -33,9 +33,9 @@
 #'
 #' rslt <- psych::principal(fkv, 5)
 #'
-#' rslt  %>%  Tbll_pca_loadings()
-#' rslt  %>%  Tbll_pca_eigen()
-#' rslt  %>%  Tbll_pca_test()
+#' rslt  |>  Tbll_pca_loadings()
+#' rslt  |>  Tbll_pca_eigen()
+#' rslt  |>  Tbll_pca_test()
 #'
 #'
 Tbll_pca <- function(x,

@@ -11,14 +11,10 @@
 #'  function(x , by, ...){
 #' x <- scale(as.numeric(x))
 #' diff(sapply(split(x, by), mean, na.rm=TRUE))})
-#' @param include.value vector oder data.frame in exact der reihenfolge wie die meassure-variablen.
+#' @param include.value vector oder data.frame in exact der Reihenfolge wie die meassure-variablen.
 #' @return data.frame
 #' @export
 #' @examples
-#'
-#' require(magrittr)
-#' #require(stp25tools)
-#'
 #'
 #' n<- 100
 #' set.seed(1)
@@ -29,7 +25,7 @@
 #'
 #' )
 #'
-#' DF<- na.omit(DF )
+#' DF<- na.omit(DF)
 #'
 #' set_opt(
 #'   median = list(digits = 0, style=2),
@@ -37,8 +33,7 @@
 #' )
 #'
 #'
-#'
-#' DF %>%
+#' DF |>
 #'   Tbll_desc( sex[ratio],
 #'              group[freq],
 #'              age[median],
@@ -64,9 +59,9 @@
 #'                      tension	=	"The level of tension")
 #' warpbreaks2$tension2 <- as.numeric(warpbreaks2$tension)
 #'
-#' warpbreaks2 %>%
+#' warpbreaks2 |>
 #'   Tbll_desc(breaks + tension ~ wool)
-#' warpbreaks2 %>%
+#' warpbreaks2 |>
 #'   Tbll_desc_long(breaks + tension ~ wool)
 #'
 #'

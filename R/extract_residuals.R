@@ -2,7 +2,9 @@
 #'
 #' effects:   Extract partial effects obtained with allEffects()
 #'
-
+#'
+#' Irgendas ist hier faul!!!
+#'
 #' @rdname extract
 #' @param term  effects: x-var
 #' @param response effects: y-var
@@ -12,11 +14,13 @@
 #'
 #' @examples
 #'
-#'  data(Prestige, package = "carData")
-#' mod <- lm(log(prestige) ~ income:type + education, data=Prestige)
-#' eff = effect("education", mod, partial.residuals=T)
+#'  require(effects)
 #'
-#' dat<- extract_partial_residuals(eff)
+#' # data(Prestige, package = "carData")
+#' # mod <- lm(log(prestige) ~ income:type + education, data=Prestige)
+#' # eff = effect("education", mod, partial.residuals=TRUE)
+#'
+#' # dat<- extract_partial_residuals(eff)
 #'
 #'
 #' # library(ggplot2)

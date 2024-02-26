@@ -33,9 +33,9 @@
 #' Tbll(fit1, include.survival = TRUE)
 #'
 #' "Survival Curve Differences"
-#' survdiff(Surv(futime, fustat) ~ rx, data = ovarian) %>% Tbll()
+#' survdiff(Surv(futime, fustat) ~ rx, data = ovarian) |> Tbll()
 #'
-#' coxph(Surv(futime, fustat) ~ rx, data = ovarian) %>% Tbll()
+#' coxph(Surv(futime, fustat) ~ rx, data = ovarian) |> Tbll()
 #'
 #' Tbll_surv(
 #'   fit1,
@@ -235,14 +235,14 @@ Tbll_surv.formula <-
 #'   include.z.test = TRUE,
 #'   include.wald.test = FALSE
 #' )
-#' coxph(Surv(time, status) ~ age, data = lung) %>%  summary() %>% Tbll()
+#' coxph(Surv(time, status) ~ age, data = lung) |>  summary() |> Tbll()
 #'
 #' Tbll_coxph_uni(lung, age, sex,
 #'                ph.karno, ph.ecog, wt.loss,
 #'                by = ~ time + status)
 #'
 #' coxph(Surv(time, status) ~ age + sex + ph.karno + ph.ecog + wt.loss,
-#'       data = lung) %>%  summary() %>% Tbll()
+#'       data = lung) |>  summary() |> Tbll()
 #'
 #'
 #' # The variables sex, age and ph.ecog have highly statistically significant

@@ -320,7 +320,7 @@ discrim <- function (x,
 # data(TestScores, package = "psychometric")
 # # Look at the data
 # head(TestScores)
-# DF <- as.data.frame(TestScores) %>% Label(i1 = "Hallo")
+# DF <- as.data.frame(TestScores) |> Label(i1 = "Hallo")
 # DF$i1 <- 1:5
 # DF$i2 <- 1:5
 # Tbll_item_analysis(DF,  i1, i2, i3, i4, i5, i6, i7, i8, i9, i10, by = ~ y)
