@@ -7,6 +7,8 @@
 #' @export
 #'
 #' @examples
+#'
+#'  \donttest{
 #' require(emmeans)
 #'
 #' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
@@ -24,6 +26,8 @@
 #'
 #' # ?summary.emmGrid
 #'
+#'
+#' }
 tbll_extract.emm_list <- function(x,
                                   include.ci = TRUE,
                                   ...) {

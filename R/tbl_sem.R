@@ -62,6 +62,7 @@
 #'
 #' @examples
 #'
+#'  \donttest{
 #' require(stp25data)
 #' head(fkv)
 #'
@@ -95,12 +96,7 @@
 #'
 #' #semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
 #' #title("Std", line = 3)
-#'
-#'
-#'
-#'
-#'
-#'
+#' }
 #'
 NULL
 

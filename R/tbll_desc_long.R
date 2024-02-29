@@ -45,6 +45,10 @@
 #' }
 #'
 #' )
+#'
+#'
+#' \donttest{
+#'
 #' mtcars$G <- factor(mtcars$vs, 0:1, c("A", "B"))
 #'
 #' mtcars <- stp25tools::Label(
@@ -80,6 +84,8 @@
 #'   include.n = TRUE,
 #'   include.label=FALSE
 #' )
+#'
+#' }
 #'
 Tbll_desc_long <- function(...,
                            include.range = TRUE,
@@ -218,7 +224,6 @@ analyse_sesc_long <- function(X,
 #'
 #' Interne Funktion um Mittelwerte/Freq zu berechnen.
 #'
-#' @noRd
 #' @param x  measure.vars
 #' @param type "auto_long"
 #' @param fm formel
@@ -226,6 +231,7 @@ analyse_sesc_long <- function(X,
 #' @param by,measure,measure.name aus prepare Formula
 #' @param fun Function an plyr::ddply
 #'
+#' @noRd
 berechne_all <- function(data,
                          x,
                          by = "1",

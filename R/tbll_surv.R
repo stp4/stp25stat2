@@ -17,8 +17,8 @@
 #'
 #' @examples
 #'
-#' require(magrittr)
-#' # require(stp25stat2)
+#' \donttest{
+#'  require(stp25stat2)
 #' require(survival)
 #'
 #' fit0 <- survfit(Surv(futime, fustat) ~ 1, data = ovarian)
@@ -44,6 +44,8 @@
 #'   include.param = TRUE,
 #'   include.test = TRUE
 #' )
+#'
+#'}
 #'
 Tbll_surv <- function(x, ...) {
   UseMethod("Tbll_surv")
@@ -173,9 +175,9 @@ Tbll_surv.coxph <- function(...,
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' Tbll_surv(Surv(futime, fustat) ~ rx, data = ovarian)
-#'
+#' }
 Tbll_surv.formula <-
   function(formula,
            data,
@@ -227,7 +229,7 @@ Tbll_surv.formula <-
 #'
 #' @examples
 #'
-#' #'
+#'  \donttest{
 #' Tbll_coxph_uni(
 #'   lung,
 #'   age,
@@ -252,6 +254,7 @@ Tbll_surv.formula <-
 #' # coefficient. Thus, older age and higher ph.ecog are associated with poorer
 #' # survival, whereas being female (sex=2) is associated with better survival.
 #'
+#' }
 #'
 Tbll_coxph_uni <-
   function(x, ...,

@@ -7,10 +7,6 @@
 #' @export
 #' @examples
 #'
-#' require(stp25stat2)
-#' require(stp25tools)
-#'
-#'
 #' df <- data.frame(
 #'   A = c(1,2,3,4,5, 1,1,1,2, 1,1,1,5,5,5),
 #'   B = c(1,2,3,4,5, 2,2,2,1, 1,1,1,5,5,5),
@@ -19,14 +15,14 @@
 #'   E = c(1,2,3,4,5, 3,2,1,1, 1,1,1,5,5,5)
 #' )
 #'
-#' df$index <-scale( rowSums(df) )
-#'
-#'
-#' Tbll_desc_item(  ~ A + B + C + D + E, df)
+#' # Tbll_desc_item(  ~ A + B + C + D + E, df)
 #'
 #' Tbll_reliability(~ A + B + C + D + E, df,
 #'                  include.item_statistics = TRUE)
-#' Tbll_item_analysis(  A + B + C + D + E ~ index, df)
+#'
+#' #  df$index <-scale( rowSums(df) )
+#' #  Tbll_item_analysis(  A + B + C + D + E ~ index, df)
+#'
 Tbll_desc_item <- function(...,
                            include.label = FALSE,
                            include.n = TRUE,

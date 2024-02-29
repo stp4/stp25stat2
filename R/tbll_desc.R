@@ -3,7 +3,6 @@
 #' Simple and intuitive formula and pipe-based framework for performing basic statistical Tabels.
 #'
 #' @param ...  an prepare_data2
-#' @param caption besser mit Output verwenden
 #' @param include.n,include.nr,include.total,include.multiresponse  weitere param
 #' @param include.test,include.normality.tests Test
 #' @param include.label Labels ja-nein
@@ -52,7 +51,7 @@
 #'   include.test = TRUE
 #' )
 #'
-#'
+#' \donttest{
 #' warpbreaks2 <- stp25tools::Label(warpbreaks,
 #'                      breaks	=	"The number of breaks",
 #'                      wool	=	"The type of wool",
@@ -104,12 +103,14 @@
 #'   lm2,
 #'   include.p = FALSE,
 #'   include.ci = TRUE,
-#'   include.se = FALSE,
-#'   caption = "Regression Table"
+#'   include.se = FALSE
 #' )
 #'
 #'
 #' Tbll_reg(lm1, lm2)
+#'
+#'  }
+#'
 Tbll_desc <-
   function (...,
             include.label = TRUE,
@@ -127,7 +128,7 @@ Tbll_desc <-
                        ) {
   rslt_all <- NULL
   tbl_rstl <- NULL
-  #
+  caption <- "Summary"
   # Einstellungen
   #
   X <- stp25tools::prepare_data2(...)
@@ -146,7 +147,7 @@ Tbll_desc <-
     }
   }
 
-  caption <- "Summary"
+
   n <- length(X$measure.vars)
   note <-  "" # measure_info(X$measure)
 
@@ -599,15 +600,14 @@ names_option <- function(rslt_all) {
 #'
 #' @examples
 #'
-#'  dat <- data.frame(
-#' Hotel =  c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-#' Pension = c(1, 1, 0, 0, 0, 1, 1, 1, 1, 1),
-#' Hostel = c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1),
-#' Ferienwohnung = c(1, 1, 1, 1, 0, 0, 0, 1, 0, 0),
-#' Airbnb = c(0, 0, 0, 0, 0, 1, 0, 1, 1, 1),
-#' Campingplatz = c(0, 0, 0, 1, 0, 1, 1, 0, 0, 0),
-#' Couchsurfing =c(0,0,0,0,0, 0, 1, 0, 0, 0)
-#'
+#' dat <- data.frame(
+#'   Hotel =  c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+#'   Pension = c(1, 1, 0, 0, 0, 1, 1, 1, 1, 1),
+#'   Hostel = c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1),
+#'   Ferienwohnung = c(1, 1, 1, 1, 0, 0, 0, 1, 0, 0),
+#'   Airbnb = c(0, 0, 0, 0, 0, 1, 0, 1, 1, 1),
+#'   Campingplatz = c(0, 0, 0, 1, 0, 1, 1, 0, 0, 0),
+#'   Couchsurfing =c(0,0,0,0,0, 0, 1, 0, 0, 0)
 #' )
 #'
 #' Tbll_desc_multi(dat,
@@ -618,6 +618,7 @@ names_option <- function(rslt_all) {
 #'                  Airbnb,
 #'                  Campingplatz,
 #'                  Couchsurfing)
+#'
 Tbll_desc_multi <-
   function(...,
                             by = NULL,
@@ -686,8 +687,6 @@ Tbll_desc_multi <-
 
 
 
-#' @noRd
-#'
 #' @description Kopie von  interaction
 #'  die Labels werden anderst sortiert.
 #'
@@ -697,13 +696,14 @@ Tbll_desc_multi <-
 #' @param sep	string to construct the new level labels by joining the constituent ones.
 #'
 #' @examples
-#'
+#'  \donttest{
 #' interaction2(
 #' gl(2, 8, labels = c("Z", "X")),
 #' gl(2, 8, labels = c( "A","B")),
 #' gl(2, 8, labels = c( "a","b"))
 #' )
-#'
+#' }
+#' @noRd
 interaction2 <-
   function (...,
             sep = "_") {
@@ -984,17 +984,18 @@ list_rbind <- function(l)
 #' @param measure.test, test  intern c("cattest", "contest", "notest", "ttest", ...)
 #'
 #' @examples
-#'
-#'  # effect_size(c(2, 3, 4, 2, 3, 4, 3, 6,
-#'  # 7, 6, 8, 9, 4, 5, 6, 7) ,
-#'  # gl(2, 8, labels = c("Control", "Treat")))
-#'  # x<- c(2, 3, 4, 2, 3, 4, 3, 6,7, 6, 8, 9, 4, 5, 6, 7)
-#'  # y<- factor(c(2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2))
-#' #  z<- gl(2, 8, labels = c("Control", "Treat"))
-#'  #  rbind(
-#'  # effect_size(x, z),
-#'  # effect_size(y, z)
-#'  # )
+#'  \donttest{
+#'   effect_size(c(2, 3, 4, 2, 3, 4, 3, 6,
+#'   7, 6, 8, 9, 4, 5, 6, 7) ,
+#'   gl(2, 8, labels = c("Control", "Treat")))
+#'   x<- c(2, 3, 4, 2, 3, 4, 3, 6,7, 6, 8, 9, 4, 5, 6, 7)
+#'   y<- factor(c(2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2))
+#'    z<- gl(2, 8, labels = c("Control", "Treat"))
+#'    rbind(
+#'   effect_size(x, z),
+#'   effect_size(y, z)
+#'   )
+#' }
 #'
 effect_size <- function(x,
                          by,

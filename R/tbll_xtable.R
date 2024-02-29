@@ -5,6 +5,7 @@
 #'
 #' @examples
 #'
+#' \donttest{
 #'
 #' data(infert, package = "datasets")
 #' infert$case  <- factor(infert$case ,1:0, c("case", "control") )
@@ -33,6 +34,8 @@
 #' tbll_extract(epiR::epi.tests(tab) )
 #'
 #' Klassifikation(as.table(tab))
+#'
+#' }
 #'
 Tbll_xtabs <-   function(x, ...) {
   UseMethod("Tbll_xtabs")

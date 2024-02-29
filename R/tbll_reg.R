@@ -1,8 +1,29 @@
 
-#'  Regression Table
+#' Regression Table
 #'
-#'  Bei glm  kann mit dem Parameter conf.method Wald oder z-test für
-#'  die Test statistik gewaelt werden.
+#' Bei glm  kann mit dem Parameter conf.method Wald oder z-test für
+#' die Test statistik gewaelt werden.
+#'
+#'
+#' @param ... ein oder mehrer Modelle
+#' @param include.label  Namen oder Labels FALSE
+#' @param names Spaltenname
+#' @param digits  Nachkomastellen
+#' @param include.b,include.ci  estimate
+#' @param include.se SE
+#' @param include.beta st. Beta
+#' @param include.odds,include.odds.ci Odds
+#' @param include.statistic Test Statistik
+#' @param conf.method für glm zb "Wald"
+#' @param include.p,include.stars P-Werte,Sternchen
+#' @param include.param Ausgabe der Parameter
+#' @param include.gof  ModellGüte ausgeben
+#' @param include.r,include.pseudo R-Quadrat
+#' @param include.aic,include.bic Gütemasse
+#' @param include.loglik,include.minus.LL  für glm
+#' @param include.test Anova Test für das gesamt Modell
+#' @param include.rmse RMSE
+#' @param include.custom Eigene Spalte
 #' @export
 #'
 #' @examples
@@ -10,20 +31,15 @@
 #'  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
 #'  lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
 #'
-#'
 #'  Tbll_reg(
-#'   lm1,
-#'   lm2,
+#'   lm1, lm2,
 #'   include.p = FALSE,
 #'   include.ci = TRUE,
-#'   include.se=FALSE,
-#'   caption = "Regression Table"
+#'   include.se=FALSE
 #' )
 #'
-#' Tbll(lm1, lm2)
 #'
 Tbll_reg  <- function(...,
-                      caption = "",
                       include.label = FALSE,
                       # geht nicht
                       names = NULL,
@@ -68,7 +84,6 @@ Tbll_reg  <- function(...,
 
  regression_table(
       fit,
-      caption = caption, note = "",
       custom.model.names = names,
       include.param=include.param,
       include.gof=include.gof,
@@ -105,7 +120,6 @@ Tbll_reg  <- function(...,
 #' @rdname Tbll_reg
 #' @export
 Tbll_reg_long  <- function(...,
-                           caption = "",
                            include.label = FALSE,
                            # geht nicht
                            #names = NULL,
@@ -153,8 +167,6 @@ Tbll_reg_long  <- function(...,
 
   regression_table(
     fit,
-    caption = caption,
-    note = "",
     # custom.model.names = names,
     include.param = include.param,
     include.gof = include.gof,
@@ -207,13 +219,6 @@ Tbll_reg_long  <- function(...,
 #' Formatiert Listen mit Modellen zu Dataframs.
 #'
 #' @param x Regressionsobjekt
-#' @param caption,note,output,custom.model.names,rgroup An Output
-#' @param include.param,include.gof,include.custom Was soll ausgegeben werden
-#' @param include.b,include.beta,include.ci,include.odds,include.se,include.statistic,include.odds.ci,include.p,include.stars an extract_coef
-#' @param include.effects,conf.level,conf.method an extract_coef
-#' @param digits.param,digits.odds,digits.test,digits.beta,formatan extract_coef
-#' @param include.df,include.r,include.pseudo,include.rmse,include.sigma,include.variance,include.devianze,include.loglik,include.aic,include.bic,include.nobs,include.test An extract_goff()
-#' @param ...  nicht benutzt
 #'
 #' @return data.frame
 #'
@@ -221,9 +226,6 @@ Tbll_reg_long  <- function(...,
 #'
 regression_table <-
   function (x,
-            caption = "" ,
-            note = "",
-
             custom.model.names = NULL,
             include.param = TRUE,
             include.gof = TRUE,
@@ -271,6 +273,8 @@ regression_table <-
     gofs <- list()
     result <- NULL
     first_nam <- ""
+    caption <- "Regression"
+    note <- ""
 
     if (is.null(custom.model.names) |
         length(custom.model.names) != n)

@@ -11,6 +11,7 @@
 #'
 #' @examples
 #'
+#' \donttest{
 #' require(effects)
 #'
 #' mod <- lm(prestige ~ type * (education + income) + women, Prestige)
@@ -72,6 +73,7 @@
 #'                                include.ci=FALSE)[[2]]
 #' )
 #'
+#' }
 #'
 Tbll_effect <-
   function(x,
@@ -142,6 +144,7 @@ Tbll_effect <-
 #' Ausgabe der Effekte als dataframe zum erstellen von Grafiken
 #'
 #' @examples
+#'
 #' set.seed(1)
 #'
 #' g<- gl(2, 8, labels = c("Control", "Treat"))
@@ -152,6 +155,7 @@ Tbll_effect <-
 #'
 #' extract_effect(fit1, xlevels=list(x=c(-3,0,1)))
 #' extract_effect(fit1, fit2, xlevels=list(x=c(-1,0,1)))
+#'
 extract_effect <-
   function(...,
            names = NULL,
@@ -223,56 +227,11 @@ extract_effect2 <- function(x,
 }
 
 
-# Tbll_effect <-
-#   function(x,
-#            formula = NULL,
-#            ...,
-#            include.se = FALSE,
-#            include.ci = TRUE,
-#            include.n = FALSE,
-#            digits = 2) {
-#
-#     if (is.null(formula))
-#       tbll_extract_eff(
-#         effects::allEffects(x, ...),
-#         include.se = include.se,
-#         include.ci = include.ci,
-#         include.n = include.n,
-#         digits = digits
-#       )
-#     else {
-#
-#       formula <- gsub(" ", "", strsplit(as.character(formula), "\\+")[[2L]])
-#
-#       if (length(formula) == 1) {
-#         tbll_extract_eff(
-#           effects::effect(formula, x, ...),
-#           include.se = include.se,
-#           include.ci = include.ci,
-#           include.n = include.n,
-#           digits = digits
-#         )
-#       } else{
-#         rslt <- list()
-#         for (i in  formula)
-#           rslt[[i]] <- tbll_extract_eff(
-#             effects::effect(i, x, ...),
-#             include.se = include.se,
-#             include.ci = include.ci,
-#             include.n = include.n,
-#             digits = digits
-#           )
-#         rslt
-#       }
-#     }
-#   }
-
-
-
 #' @rdname Tbll_effect
 #' @export
 #' @examples
 #'
+#' \donttest{
 #' require(effects)
 #' fit1 <-
 #'   lm (Sepal.Length ~ Sepal.Width * Species + Petal.Width, data = iris)
@@ -290,6 +249,8 @@ extract_effect2 <- function(x,
 #' Tbll(x2)
 #' Tbll(x4)
 #'
+#' }
+#'
 tbll_extract.eff <- function(x,  ...) {
   tbll_extract_eff(x, ...)
 }
@@ -302,8 +263,6 @@ tbll_extract.efflist <-
   function(x, ...) {
     tbll_extract_eff(x, ...)
   }
-
-
 
 
 #' @param x,i Werte ueber die for schleife
@@ -406,11 +365,9 @@ effects_as.data.frame.eff <-
   }
 
 
-
 #' @param x objekt
 #' @param caption ueberschrift
 #' @param include.fit,include.se,include.ci,include.n include
-#'
 #' @param digits Nachkomastellen
 #' @param type fuer transform "response", "link"
 #' @param ... nicht benutzt abfangen von zn note

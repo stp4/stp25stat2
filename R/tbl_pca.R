@@ -26,8 +26,8 @@
 #' @export
 #'
 #' @examples
-#' #'
-#' require(magrittr)
+#'
+#'   \donttest{
 #' library(stp25data)
 #'
 #'
@@ -37,6 +37,7 @@
 #' rslt  |>  Tbll_pca_eigen()
 #' rslt  |>  Tbll_pca_test()
 #'
+#'}
 #'
 Tbll_pca <- function(x,
                     cut = .30,

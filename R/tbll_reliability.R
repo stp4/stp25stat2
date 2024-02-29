@@ -63,6 +63,7 @@
 #'
 #' Tbll_Alpha(m1, m2)
 #'
+#' \donttest{
 #' require(psych)
 #'
 #' keys <-
@@ -76,6 +77,9 @@
 #' scores$alpha
 #' summary(scores)
 #' head(scores$scores)
+#'
+#'  }
+#'
 Tbll_reliability <- function(...) {
   UseMethod("Tbll_reliability")
 }

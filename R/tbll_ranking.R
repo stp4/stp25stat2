@@ -185,6 +185,7 @@ Rangreihe_default <- function (items,
 #' e = c(NA, "e", "a", NA,   "d",   NA, NA, "e")
 #' )
 #' cleanup_Rank(dat)
+#'
 cleanup_Rank <- function(x, col.names =  names(x)) {
   lvl <-  unique(unlist(sapply(x, levels)))
 
@@ -314,8 +315,6 @@ table_apply <- function(x, rankings) {
 #'
 #' @return list("freq",     "rel.freq", "z.value",  "mean",     "labels"  )
 #' @noRd
-
-
 Calc_Rank <-
   function(x,
            rankings,
@@ -401,9 +400,10 @@ Calc_Rank <-
 #' @rname Tbll_ranking
 #' @examples
 #'
-#' #' require(stp25tools)
-#' #'
-#' #'
+#'  \donttest{
+#'  require(stp25tools)
+#'
+#'
 #' nlv <- 5
 #' n <- 2 * 3 * nlv * 1
 #' set.seed(n)
@@ -520,6 +520,8 @@ Calc_Rank <-
 #' #   round(coef(mod, log = FALSE) ,2)
 #' # x$log.pc <- round(coef(mod, log = TRUE) ,2)
 #' # x[order(x$pc,  decreasing=TRUE),]
-#' #
+#'
+#' }
+#'
 
 
