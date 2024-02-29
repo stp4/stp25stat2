@@ -10,11 +10,13 @@
 #' @return Liste mit c("class",  "family", "y", "x", "labels", "N")
 #' @export
 #' @examples
+#'  \donttest{
 #' # das geht nicht mehr model_info(mpg ~ cyl)
 #' model_info(glm(vs ~ mpg, mtcars, family = binomial()))
 #' model_info(lm(mpg ~ drat + wt + qsec, mtcars))
 #' model_info(wilcox.test(mpg ~ vs, mtcars))
 #' model_info(t.test(mpg ~ vs, mtcars))
+#' }
 #'
 model_info <- function(x) {
 
@@ -116,8 +118,10 @@ model_info.eff <- function(x) {
 #' @rdname model_info
 #' @export
 #' @examples
-#' # model_info(Hmisc::spearman2(mpg ~ factor(vs), mtcars))
 #'
+#' \donttest{
+#' # model_info(Hmisc::spearman2(mpg ~ factor(vs), mtcars))
+#' }
 model_info.htest <- function(x) {
 
   if (names(x$statistic) == "t") {
@@ -257,8 +261,9 @@ model_info.lme <- function(x) {
 #' @rdname model_info
 #' @export
 #' @examples
+#' \donttest{
 #' # model_info(coin::wilcox_test(mpg ~ factor(vs), mtcars))
-#'
+#' }
 model_info.ScalarIndependenceTest <- function(x) {
   list(
     class = "coin" ,
@@ -274,8 +279,9 @@ model_info.ScalarIndependenceTest <- function(x) {
 #' @rdname model_info
 #' @export
 #' @examples
+#' \donttest{
 #' # model_info(Hmisc::spearman2(mpg ~ factor(vs), mtcars))
-#'
+#' }
 model_info.biVar <- function(x) {
   list(
     class = "biVar" ,
@@ -330,19 +336,6 @@ model_info.survdiff <- function(x) {
   )
 }
 
-
-
-# model_info.ICC <- function(x) {
-#   ### # geht irgendwie noch nicht
-#   list(
-#     class =  class(x)[1] ,
-#     family = NULL,
-#     y = NULL,
-#     x = NULL,
-#     labels = NULL,
-#     N = paste0("obs=", x$n.obs, ", judge=", x$n.judge)
-#   )
-# }
 
 
 #' @rdname model_info

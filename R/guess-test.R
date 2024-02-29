@@ -46,12 +46,11 @@ Tbll_test <- function(...) {
 #' @return formatierter String, matrix with one row
 #'
 #' @examples
-#' require(magrittr)
 #'
 #'  dat <- data.frame(
-#'  m1 = c(1, 2, 1, 3, 1, 4, 1, 1,
+#'    m1 = c(1, 2, 1, 3, 1, 4, 1, 1,
 #'        3, 5, 3, 1, 3, 6, 3, 1),
-#'  geschl = gl(2, 8, labels = c("m", "f"))
+#'    geschl = gl(2, 8, labels = c("m", "f"))
 #'  )
 #'  dat$m2 <- cut(dat$m1, 2)
 #'
@@ -128,6 +127,8 @@ size_data_tabel <- function(x, data) {
 #' KruskalTest2,TTest2, Aov2
 #' @examples
 #'
+#' \donttest{
+#'
 #' dat <- data.frame(
 #' m1 = c(1, 2, 1, 3, 1, 4, 1, 1,
 #'        3, 5, 3, 1, 3, 6, 3, 1),
@@ -161,6 +162,8 @@ size_data_tabel <- function(x, data) {
 #' # Pearson.Chi.squared "X2(5)=7.09, p=.214"
 #' # V11                 "wrong dim for fisher-test"
 #' # Fisher.Exact.Test   "OR=2.21, p=1.000"
+#'
+#' }
 conTest = function(x,
                    data,
                    test_name = TRUE) {

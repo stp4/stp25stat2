@@ -66,17 +66,15 @@ R2 <- function(x, ...) {
 }
 
 
-
-
 #' @rdname R2
 #' @description APA_R2: R2-Tabelle (noch nicht fretig)
 #' @export
 #' @examples
-#'
-#' # fit1<-lm(score ~ grade + treatment, schools)
-#' # fit2<-lm(score ~ grade + treatment + stdTest, schools)
-#' # R2.list(fit1, fit2)
-#'
+#'  \donttest{
+#'  fit1<-lm(score ~ grade + treatment, schools)
+#'  fit2<-lm(score ~ grade + treatment + stdTest, schools)
+#'  R2.list(fit1, fit2)
+#' }
 R2.list <- function(...) {
   res <- list()
   fits <- list(...)
@@ -96,11 +94,11 @@ R2.list <- function(...) {
 #' @rdname R2
 #' @export
 #' @examples
-#'
+#'  \donttest{
 #'  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
 #' R2(lm1)
 #' broom::glance(lm1)[c( "r.squared", "adj.r.squared")]
-#'
+#' }
 R2.lm <- function(x, ...) {
   rsq <- broom::glance(x)[1:2]
   attr(rsq, "methode") =  "r2"
@@ -128,12 +126,11 @@ R2.coxph <- function(x, ...){
 #'
 #'  r2CU: Nagelkerke Cragg and Uhler's pseudo r-squared
 #' @examples
-#'
+#'  \donttest{
 #' lm2 <- glm(wool~ breaks + tension, warpbreaks, family= binomial())
 #' R2(lm2)
 #' #DescTools::PseudoR2(lm2,c("McFadden", "CoxSnell", "Nagelkerke"))
-#'
-
+#' }
 R2.glm <- function(x, ...) {
   # Daniel Wollschläger Grundlagen der Datenanalyse mit R
   # glmFit<- x
@@ -158,11 +155,13 @@ R2.glm <- function(x, ...) {
 #' @rdname R2
 #' @export
 #' @examples
-#'
+#'  \donttest{
 #'  require(MASS)
 #' options(contrasts = c("contr.treatment", "contr.poly"))
 #' house.plr <- polr(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
 #' R2(house.plr)
+#' }
+#'
 R2.polr <- function(x, ...) {
   R2.glm(x,...)
 }

@@ -2,7 +2,7 @@
 #' @description  tbll_extract.meta: Ausgabe von print.meta als tabelle
 #' @examples
 #'
-#'
+#' \donttest{
 #'  library(meta)
 #' data(Olkin1995)
 #' head(Olkin1995)
@@ -12,6 +12,8 @@
 #'               method = "Inverse")
 #' print(m1, digits = 1, digits.Q = 1)
 #' Tbll(m1)
+#'
+#' }
 tbll_extract.meta <-
   function(x,
            digits = 2,
@@ -114,12 +116,3 @@ tbll_extract.meta <-
     model
 
   }
-# library(meta)
-# data(Olkin1995)
-# head(Olkin1995)
-# m1 <- metabin(ev.exp, n.exp, ev.cont, n.cont,
-#               data = Olkin1995, subset = c(41, 47, 51, 59),
-#               studlab = paste(author, year),
-#               method = "Inverse")
-# print(m1, digits = 1, digits.Q = 1)
-# Tbll(m1)

@@ -1,12 +1,5 @@
-
-
-
 # @importFrom stp25tools dapply1
 #stp25tools:::dapply1
-
-
-
-
 
 # dapply1 <-
 #   function (.data,
@@ -22,18 +15,20 @@
 #   }
 
 
-#' @noRd
+#'
 #'
 #' @param x data.frame
 #' @examples
-#'
+#' \donttest{
 #'   DF2 <-   data.frame(
 #'   R1 = factor(c("A", "A", "A", "C", "C", "A"),   c("A", "B", "C", "D")),
 #'   R2 = factor(c("B", "B", "B", "A", "B", "D"),   c("A", "B", "C", "D")),
 #'   R3 = factor(c("C", "C", "C", "B", "A", "B"),   c("A", "B", "C", "D"))
 #'   )
 #'   transpose3(DF2)
+#'   }
 #'
+#' @noRd
 transpose3 <- function(x) {
   lvl = levels(x[[1]])
   transposed <- t(apply(x, 1, function(z) {
@@ -54,8 +49,11 @@ transpose3 <- function(x) {
 
 
 
-#' @noRd
+#'
 #' @examples
+#'
+#' \donttest{
+#'
 #' htest, xtable, anova
 #' fix_data_frame_2(
 #'   Source = c("A", "B"),
@@ -63,7 +61,9 @@ transpose3 <- function(x) {
 #'   df= c(3.36589, 5.2254) ,
 #'   p = c(.036589, .002254)
 #' )
+#' }
 #'
+#' @noRd
 fix_data_frame_2 <- function(...,
                              digits = 2) {
   rslt <- data.frame(...)

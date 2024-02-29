@@ -10,6 +10,7 @@
 #' @export
 #' @examples
 #'
+#'   \donttest{
 #' APA(mpg ~ cyl, mtcars)
 #' APA(glm(vs ~ mpg, mtcars, family = binomial()))
 #' APA(lm(mpg ~ drat + wt + qsec, mtcars))
@@ -58,7 +59,7 @@
 #'
 #' APA(xt <- chisq_test(davis))
 #' APA(wt)
-#'
+#' }
 APA <-   function(x,
                   ...) {
   UseMethod("APA")

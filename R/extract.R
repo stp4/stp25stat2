@@ -4,7 +4,6 @@
 #'
 #' @name extract
 #' @param x  Objekte
-#' @param caption,note Ueberschrift
 #' @param digits Nachkomastellen
 #' @param ...  weitere Argumente
 #'
@@ -142,20 +141,22 @@ tbll_extract.summary.aov <- function(x,
 #'
 #' @examples
 #'
+#' \donttest{
 #' summary(lm1 <- lm(Fertility ~ ., data = swiss))
 #' slm1 <- stats::step(lm1)
 #' tbll_extract(slm1)
-#' # require(lmerTest)
-#'  #m <- lmerTest::lmer(
-#'  # Informed.liking ~ Product * Information * Gender +
-#' #  (1 | Consumer) + (1 | Product:Consumer),
-#' #  data = ham
-#' # )
+#'  require(lmerTest)
+#'  m <- lmerTest::lmer(
+#'   Informed.liking ~ Product * Information * Gender +
+#'   (1 | Consumer) + (1 | Product:Consumer),
+#'   data = ham
+#'  )
 #' # elimination of non-significant effects
-#' # s <- lmerTest::step(m)
+#'  s <- lmerTest::step(m)
 #'
-#' # tbll_extract(s)
+#'  tbll_extract(s)
 #'
+#' }
 tbll_extract.step <- function(x,
                               include.se = FALSE,
                               include.df = FALSE,
@@ -273,11 +274,14 @@ tbll_extract.htest <- function(x,
 #'
 #' @examples
 #'
+#' \donttest{
 #' attach(airquality)
 #' Month <- factor(Month, labels = month.abb[5:9])
 #'
 #' ## These give warnings because of ties :
 #' tbll_extract(pairwise.wilcox.test(Ozone, Month))
+#'
+#'}
 #'
 tbll_extract.pairwise.htest <- function(x,
                                         caption = paste(x$data.name, x$method),
@@ -396,11 +400,14 @@ tbll_extract.confusionMatrix <-
 #'
 #' @examples
 #'
+#' \donttest{
 #' # Sensitivität: richtig positive Rate eines Tests
-#' #Spezifität: richtig-negative Rate eines Tests
+#' # Spezifität: richtig-negative Rate eines Tests
 #'
-#'   tab<-matrix(c(94,40,39,40), ncol=2, byrow = TRUE)
-#'     tbll_extract( epiR::epi.tests(tab) )
+#' tab<-matrix(c(94,40,39,40), ncol=2, byrow = TRUE)
+#' tbll_extract( epiR::epi.tests(tab) )
+#'
+#' }
 #'
 tbll_extract.epi.tests <-
   function (x,
@@ -490,11 +497,13 @@ tbll_extract.roc <- function(x,
 #' @export
 #'
 #' @examples
+#'
+#' \donttest{
 #' require(vcd)
 #' data("Arthritis")
 #' tab <- xtabs(~Improved + Treatment, data = Arthritis)
 #' tbll_extract(assocstats(tab))
-#'
+#' }
 tbll_extract.assocstats <- function(x,
                                     ...) {
 
@@ -575,13 +584,14 @@ tbll_extract.list <- function(x,
 #' @export
 #' @examples
 #'
+#' \donttest{
 #' require(MASS)
 #' minn38a <- xtabs(f ~ ., minn38)
 #' fm <- loglm(~ 1 + 2 + 3 + 4, minn38a)  # numerals as names.
-#' #deviance(fm)
-#' #fm
+#' # deviance(fm)
 #' tbll_extract(fm)
 #'
+#' }
 tbll_extract.loglm <-  function( x,
                                  include.ll.ratio = TRUE,
                                  include.pearson = TRUE,

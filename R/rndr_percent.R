@@ -7,7 +7,7 @@
 
 #' @rdname render_f
 #' @examples
-#' #'
+#'  \donttest{
 #' stp25stat2:::rndr_percent(c(47.458, .154, 0, NA))
 #' # stp25stat2:::rndr_percent(47.458, 154)
 #' stp25stat2:::rndr_percent(c(12.148, 0.0266, 2, 0, 36.478, NA),
@@ -54,6 +54,9 @@
 #' prop_table <- prop.table(x)
 #'
 #' stp25stat2:::rndr_percent(prop_table, x)
+#'
+#' }
+#'
 rndr_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
                          n = NULL,
                          digits = get_opt("prozent", "digits") ,

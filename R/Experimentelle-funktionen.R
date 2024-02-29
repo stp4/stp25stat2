@@ -17,6 +17,8 @@
 #' @return data.frame
 #'
 #' @examples
+#'
+#'  \donttest{
 #' #' require(stp25stat2)
 #' airquality$Month <- factor(airquality$Month)
 #' Post_Hoc(airquality, Ozone, Month)
@@ -32,6 +34,8 @@
 #'
 #' summary(post_test)
 #' summary(lm(res_aov))
+#'
+#' }
 Post_Hoc <- function(...,
                      p.adjust.method = "bonf",
                      # not used

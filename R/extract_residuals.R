@@ -14,14 +14,13 @@
 #'
 #' @examples
 #'
+#' \donttest{
 #'  require(effects)
 #'
-#' # data(Prestige, package = "carData")
-#' # mod <- lm(log(prestige) ~ income:type + education, data=Prestige)
-#' # eff = effect("education", mod, partial.residuals=TRUE)
-#'
-#' # dat<- extract_partial_residuals(eff)
-#'
+#'  data(Prestige, package = "carData")
+#'  mod <- lm(log(prestige) ~ income:type + education, data=Prestige)
+#'  eff = effect("education", mod, partial.residuals=TRUE)
+#'  dat<- extract_partial_residuals(eff)
 #'
 #' # library(ggplot2)
 #' # library(gridExtra)
@@ -33,8 +32,8 @@
 #'  # geom_line(size = 1) +
 #'  # geom_point(data = dat$residuals, aes(x = education , y =  partial.residuals), shape = 1, col = "blue", size = 2) +
 #'  # geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5) +
-#' #  geom_smooth(data =  dat$residuals, aes(x = education, y =  partial.residuals),   method = "loess", span = 2/3, linetype = "dashed", se = FALSE)
-#'
+#'  #  geom_smooth(data =  dat$residuals, aes(x = education, y =  partial.residuals),   method = "loess", span = 2/3, linetype = "dashed", se = FALSE)
+#' }
 extract_partial_residuals <- function(x, ...) {
   UseMethod("extract_partial_residuals")
 }

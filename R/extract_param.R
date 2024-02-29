@@ -6,13 +6,14 @@
 #' @export
 #'
 #' @examples
-#'
+#' \donttest{
 #' fit <- lm(Sepal.Width ~ Petal.Length + Petal.Width, iris)
-#' #broom::tidy(fit)
-#' #broom::glance(fit)
-#' #summary(fit)
+#' # broom::tidy(fit)
+#' # broom::glance(fit)
+#' # summary(fit)
 #' extract_param(fit)
 #'
+#' }
 #'
 extract_param  <- function(x,
                           include.b = TRUE,
@@ -468,19 +469,17 @@ extract_param_aov <- function(x,
 
 #' eta Sqr: Effsize Measures of association
 #'
+#' Pearson's r correlation Small 0.2,  Medium 0.5, Large 0.8
+#'r2 coefficient of determination Small 0.04, Medium 0.25, Large 0.64
+#'
+#'  Quelle: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/pdf/i1949-8357-4-3-279.pdf
+#'
+#'  Gestolen von https://cran.r-project.org/web/packages/effsize/effsize.pdf
+#'
 #' @rdname extract
 #' @export
 #' @param x Objekt oder Formel
 #' @param ... weitere Optionen
-#'
-#' @examples
-#'
-#' # Pearson's r correlation Small 0.2,  Medium 0.5, Large 0.8
-#' # r2 coefficient of determination Small 0.04, Medium 0.25, Large 0.64
-#' #
-#' #  Quelle: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/pdf/i1949-8357-4-3-279.pdf
-#' #
-#' # Gestolen von https://cran.r-project.org/web/packages/effsize/effsize.pdf
 #'
 extract_effsize<- function(x, ...){
   if(inherits(x, "formula") | is.numeric(x)) cohens_d(x, ...)
@@ -492,6 +491,7 @@ extract_effsize<- function(x, ...){
 #' @export
 #' @examples
 #'
+#' \donttest{
 #' # etaSquared
 #'
 #' fit1<-lm(y1~x1, anscombe)
@@ -499,7 +499,7 @@ extract_effsize<- function(x, ...){
 #' # extract_etaSqr(aov (y1~x1, anscombe), anova=TRUE)
 #' # extract_etaSqr(fit1, anova=TRUE)
 #' extract_etaSqr(fit1)
-#'
+#' }
 extract_etaSqr <-
   function (x, type = 2, anova = FALSE, ...)
     ##   <environment: namespace:lsr
@@ -620,15 +620,15 @@ extract_etaSqr <-
 #' @rdname extract
 #' @noRd
 #' @examples
-#'
+#' \donttest{
 #'  x <- rnorm(10, 10, 1)
 #'  y <- rnorm(10, 5, 5)
 #'
 #' cohens_d(x, y)
 #'
-#' # varanax<-Melt2(m1+m2~nr,varana , key="time", value="m")
+#' # varanax <-Melt2(m1+m2~nr, varana, key="time", value="m")
 #' # cohens_d(m~time, varanax )
-#'
+#' }
 cohens_d <- function(x, ...) {
   UseMethod("cohens_d")
 }

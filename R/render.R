@@ -14,6 +14,7 @@
 #' @export
 #' @examples
 #'
+#'  \donttest{
 #'  # Vector
 #' x <- c(1, 0, 2.45896, 2548.256)
 #' y <- c(0.1, 0.01 , 0.001, NA)
@@ -46,7 +47,7 @@
 #' render_f(mx, digits = 2)
 #' render_f(mx, digits = list(2, 0, 1))
 #'
-#'
+#'}
 render_f <- function(x, digits = NULL, ...) {
   UseMethod("render_f")
 }
@@ -213,7 +214,7 @@ length_multiplier <- function(x,
 
 
 
-#' @noRd
+
 # Guess the best format for a given set of numerical data
 #
 # Given a vector of data, default to 3 significant digits or all if maximum is greater
@@ -224,7 +225,7 @@ length_multiplier <- function(x,
 # @examples
 #   stp25stat2:::format_guess(rnorm(100))
 #   stp25stat2:::format_guess(rnorm(100, sd=1e-6))
-#
+#' @noRd
 format_guess <- function(x) {
 
   d <- x[!is.na(x)]

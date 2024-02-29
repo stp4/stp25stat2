@@ -12,6 +12,8 @@
 #'
 #' @examples
 #'
+#' \donttest{
+#'
 #' # require(psych)
 #' require(lavaan)
 #' # require(stp25stat2)
@@ -113,6 +115,9 @@
 #' #             node_size = 12)
 #' #
 #' # g1
+#'
+#'  }
+#'
 tbll_extract.lavaan <- function(x,
                         baseline.model = NULL,
                         include.ci = FALSE,
@@ -231,43 +236,6 @@ rslt
 }
 
 
-# library(piecewiseSEM)
-#
-# > piecewiseSEM:::summary.psem
-# function (object, ..., basis.set = NULL, direction = NULL, interactions = FALSE,
-#           conserve = FALSE, conditioning = FALSE, add.claims = NULL,
-#           standardize = "scale", standardize.type = "latent.linear",
-#           test.statistic = "F", test.type = "II", intercepts = FALSE,
-#           AIC.type = "loglik", .progressBar = TRUE)
-# {
-#   name <- deparse(match.call()$object)
-#   call <- paste(listFormula(object), collapse = "\n  ")
-#   dTable <- dSep(object, basis.set, direction, interactions,
-#                  conserve, conditioning, .progressBar)
-#   Cstat <- fisherC(dTable, add.claims, direction, interactions,
-#                    conserve, conditioning, .progressBar)
-#   ChiSq <- LLchisq(object, basis.set, direction, interactions,
-#                    conserve)
-#   AIC <- AIC_psem(object, AIC.type, add.claims, direction,
-#                   interactions, conserve, conditioning, .progressBar)
-#   coefficients <- coefs(object, standardize, standardize.type,
-#                         test.statistic, test.type, intercepts)
-#   R2 <- rsquared(object)
-#   R2[, which(sapply(R2, is.numeric))] <- round(R2[, which(sapply(R2,
-#                                                                  is.numeric))], 2)
-#   if (length(dTable) > 0)
-#     dTable[, which(sapply(dTable, is.numeric))] <- round(dTable[,
-#                                                                 which(sapply(dTable, is.numeric))], 4)
-#   l <- list(name = name, call = call, dTable = dTable, ChiSq = ChiSq,
-#             Cstat = Cstat, AIC = AIC, coefficients = coefficients,
-#             R2 = R2)
-#   class(l) <- "summary.psem"
-#   l
-# }
-# <bytecode: 0x000001c8d8d38298>
-#   <environment: namespace:piecewiseSEM>
-
-
 #' Goodness-of-Fit-Index (GFI)
 #'
 #' Ist vergleichbar mit dem Bestimmtheitsmass in der Regressionsanalyse, also ein Mass fuer die erklaerende Varianz
@@ -278,6 +246,8 @@ rndr_gfi_cfa <- function(x)
   as.character(cut(x,
                    c(-Inf, 0.89, Inf),
                    c("nicht akzeptabel", "gut")))
+
+
 #' Adjusted-Goodness-of-Fit-Index (AGFI)
 #'
 #' Analog wie GFI nur korrigiert durch df und Anzahl an Variablen
@@ -288,6 +258,8 @@ rndr_agfi_cfa <- function(x)
   as.character(cut(x,
                    c(-Inf, 0.89, Inf),
                    c("nicht akzeptabel", "gut")))
+
+
 #' Root-Mean-Square-Error of Approximation (RMSEA)
 #'
 #' RMSEA<0.05
@@ -299,6 +271,8 @@ rndr_rmsea_cfa <- function(x)
     c(-Inf, 0.050, 0.08, Inf),#                    c(-Inf,  0.079, Inf),
     c("gut", "akzeptabel", "nicht akzeptabel")#    c("gut", "nicht akzeptabel")))
   ))
+
+
 #' Chi-Quadrat
 #'
 #'
@@ -309,6 +283,8 @@ rndr_Chisq_cfa <- function(x, df = 1)
     c(-Inf, 2, 3, Inf),
     c("gut", "akzeptabel", "nicht akzeptabel")
   ))
+
+
 #' Comparative-Fit-Index (CFI)
 #'
 #' Wie NFI nur korrigiert durch df und Anzahl an Variablen
@@ -322,11 +298,12 @@ rndr_cfi_cfa <- function(x)
     c("nicht akzeptabel", "akzeptabel", "gut"),
     right = FALSE
   ))
+
+
 #' Normed-Fit-Index NFI
 #'
 #' Vergleicht das Modell mit einem Model bei dem alle Manifesten Variablen un-korreliert angenommen werden
 #' NFI>0.90
-#'
 #'
 #' @noRd
 rndr_nfi_cfa <- function(x)

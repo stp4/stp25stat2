@@ -707,7 +707,7 @@ APA(t1)
 # [1] "W=22.50, p<.001"
 ```
 
-### Regression
+## Regression
 
 ``` r
 

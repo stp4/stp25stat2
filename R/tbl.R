@@ -1,7 +1,7 @@
 #' Turn an object into a table
 #'
-#' @param x Objekt
-#' @param digits  Nachkommastellen
+#' @param x object
+#' @param digits  decimal places
 #' @param caption,note an Output
 #' @param ... alles an Tbll
 #'

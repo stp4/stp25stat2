@@ -14,12 +14,6 @@
 #' @export
 #' @examples
 #'
-#' data(hyper, package = "stp25data")
-#' #data(hyper, package = "stp25data", lib.loc = "C:/Users/wpete/AppData/Local/R/win-library/4.3")
-#' mean3 <- function(x)
-#'   round(mean(x, na.rm = TRUE), 2)
-#'
-#'
 #' df <- data.frame(
 #'   month = rep(1:3, 2),
 #'   student = rep(c("Amy", "Bob"), each = 3),
@@ -28,6 +22,12 @@
 #' )
 #'
 #' Summarise(A + B ~ student, df)
+#'
+#' \donttest{
+#' data(hyper, package = "stp25data")
+#' #data(hyper, package = "stp25data", lib.loc = "C:/Users/wpete/AppData/Local/R/win-library/4.3")
+#' mean3 <- function(x)
+#'   round(mean(x, na.rm = TRUE), 2)
 #'
 #' Summarise(
 #'   df,
@@ -71,8 +71,9 @@
 #'       c(m = mean(x), sd = sd(x)),
 #'     formula = ~ g + med
 #'   )
-
-
+#'
+#'   }
+#'
 Summarise <- function(...,
                       fun = function(x)
                         length(na.omit(x)),
