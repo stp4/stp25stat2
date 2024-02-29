@@ -40,7 +40,7 @@ Tbll_desc(~ breaks + wool, warpbreaks)
 # 4 "    A"         "50% (27)"     
 # 5 "    B"         "50% (27)"
 
-warpbreaks %>% Tbll_desc(~breaks + wool)
+warpbreaks |> Tbll_desc(~breaks + wool)
 # # A tibble: 5 × 2
 #   Item            m              
 # * <chr>           <chr>          
@@ -50,7 +50,7 @@ warpbreaks %>% Tbll_desc(~breaks + wool)
 # 4 "    A"         "50% (27)"     
 # 5 "    B"         "50% (27)"
 
-warpbreaks %>% Tbll_desc(breaks, wool)
+warpbreaks |> Tbll_desc(breaks, wool)
 # # A tibble: 5 × 2
 #   Item            m              
 # * <chr>           <chr>          
@@ -62,14 +62,14 @@ warpbreaks %>% Tbll_desc(breaks, wool)
 ```
 
 ``` r
-warpbreaks %>% Tbll_desc(
+warpbreaks |> Tbll_desc(
   "H1",
   breaks,
   tension,
   by = ~ wool,
   include.total = TRUE,
   include.n = FALSE,
-  include.test = TRUE) %>% kable()
+  include.test = TRUE) |> kable()
 ```
 
 | Item          | Total         | A             | B            | Statistics            |
@@ -82,12 +82,12 @@ warpbreaks %>% Tbll_desc(
 | H             | 33% (18)      | 33% (9)       | 33% (9)      |                       |
 
 ``` r
-mtcars %>% Tbll_desc_long(
+mtcars |> Tbll_desc_long(
   mpg[mean, 1],  cyl[median],  disp[0],
   hp[0],  drat,  wt,  qsec[1],  vs[freq],
   am[freq],  gear,  carb,
   include.range = TRUE,  include.n = TRUE
-) %>% kable(caption ="summary statistics" )
+) |> kable(caption ="summary statistics" )
 ```
 
 | Item        |   n | m                                   |
@@ -121,7 +121,7 @@ set_opt(
 ```
 
 ``` r
-DF %>%
+DF |>
   Tbll_desc(
     sex[ratio],
     group[freq],
@@ -145,7 +145,7 @@ DF %>%
     # },
     # 
     # include.value = c(group = "OR = .0256", sex = "swx = 26")
-  ) %>% stp25output2::Output()
+  ) |> stp25output2::Output()
 ```
 
 <table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
@@ -456,14 +456,14 @@ Serum Bilirubin (mg/dl) (median)
 </tfoot>
 </table>
 
-**include.value** Vector oder data.frame in exact der Reihenfolge wie
-die meassure-variablen.
+Hinzufügen von zusätzliche Spalten mit **include.value**. Vector oder
+data.frame in exact der Reihenfolge wie die meassure-variablen.
 
 ``` r
 Info <- data.frame( var_name=c("age", "sex"), y=1:2)
 rownames(Info) <- c("age", "sex" )
 
-DF %>%
+DF |>
   Tbll_desc(
     sex[ratio],
     group[freq],
@@ -473,159 +473,18 @@ DF %>%
     include.total = TRUE,
     include.value = Info,
     include.nr = TRUE
-  ) %>% kable()
+  ) |> kable()
 ```
 
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-Item
-</th>
-<th style="text-align:left;">
-Total
-</th>
-<th style="text-align:left;">
-Control
-</th>
-<th style="text-align:left;">
-Treat
-</th>
-<th style="text-align:left;">
-var_name
-</th>
-<th style="text-align:right;">
-y
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-
-14) </td>
-    <td style="text-align:left;">
-    47
-    </td>
-    <td style="text-align:left;">
-    22
-    </td>
-    <td style="text-align:left;">
-    25
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:right;">
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    Sex (male:female)
-    </td>
-    <td style="text-align:left;">
-    25:22
-    </td>
-    <td style="text-align:left;">
-    10:12
-    </td>
-    <td style="text-align:left;">
-    15:10
-    </td>
-    <td style="text-align:left;">
-    sex
-    </td>
-    <td style="text-align:right;">
-    2
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    Group
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:right;">
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    Control
-    </td>
-    <td style="text-align:left;">
-    22 (46.8%)
-    </td>
-    <td style="text-align:left;">
-    22 (100.0%)
-    </td>
-    <td style="text-align:left;">
-    0 ( . )
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:right;">
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    Treat
-    </td>
-    <td style="text-align:left;">
-    25 (53.2%)
-    </td>
-    <td style="text-align:left;">
-    0 ( . )
-    </td>
-    <td style="text-align:left;">
-    25 (100.0%)
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:right;">
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    Zwichen Ueberschrift
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:left;">
-    </td>
-    <td style="text-align:right;">
-    </td>
-    </tr>
-    <tr>
-    <td style="text-align:left;">
-    Age (median)
-    </td>
-    <td style="text-align:left;">
-    43 (35, 59)
-    </td>
-    <td style="text-align:left;">
-    51 (29, 62)
-    </td>
-    <td style="text-align:left;">
-    41 (36, 55)
-    </td>
-    <td style="text-align:left;">
-    age
-    </td>
-    <td style="text-align:right;">
-    1
-    </td>
-    </tr>
-    </tbody>
-    </table>
+| Item                 | Total       | Control     | Treat       | var_name |   y |
+|:---------------------|:------------|:------------|:------------|:---------|----:|
+| \(N\)                | 47          | 22          | 25          |          |     |
+| Sex (male:female)    | 25:22       | 10:12       | 15:10       | sex      |   2 |
+| Group                |             |             |             |          |     |
+| Control              | 22 (46.8%)  | 22 (100.0%) | 0 ( . )     |          |     |
+| Treat                | 25 (53.2%)  | 0 ( . )     | 25 (100.0%) |          |     |
+| Zwichen Ueberschrift |             |             |             |          |     |
+| Age (median)         | 43 (35, 59) | 51 (29, 62) | 41 (36, 55) | age      |   1 |
 
 ### Tbll_likert
 
@@ -635,18 +494,6 @@ y
 Lik <- Tbll_likert(DF2,
                    Magazines, Comic.books, Fiction, Newspapers,
                    ReferenceZero=2)
-# 
-# Likert
-# # A tibble: 4 × 6
-#    `--`   `-`     o   `+`  `++`  `NA`
-#   <int> <int> <int> <int> <int> <int>
-# 1     8    22    34    23    13     0
-# 2     4    15    35    35    11     0
-# 3    19    36    28    14     3     0
-# 4     2    19    44    26     9     0
-# [1] 100 100 100 100
-# [1] 4
-# [1] 100
 
 Lik
 # # A tibble: 4 × 5
@@ -746,83 +593,14 @@ Tbll_corr(a + b + c ~ d, dat)
 Tbll_corr(a + b + c ~ d, 
           dat, 
           groups = ~ g, 
-          include.n=FALSE) %>%  kable
+          include.n=FALSE) |>  kable()
 ```
 
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-Characteristics
-</th>
-<th style="text-align:left;">
-Control_r
-</th>
-<th style="text-align:left;">
-Control_p.value
-</th>
-<th style="text-align:left;">
-Treat_r
-</th>
-<th style="text-align:left;">
-Treat_p.value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Alpha
-</td>
-<td style="text-align:left;">
-.50
-</td>
-<td style="text-align:left;">
-.025
-</td>
-<td style="text-align:left;">
-.13
-</td>
-<td style="text-align:left;">
-.587
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Beta
-</td>
-<td style="text-align:left;">
-.69
-</td>
-<td style="text-align:left;">
-.001
-</td>
-<td style="text-align:left;">
-.88
-</td>
-<td style="text-align:left;">
-\<.001
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Gamma
-</td>
-<td style="text-align:left;">
--.11
-</td>
-<td style="text-align:left;">
-.651
-</td>
-<td style="text-align:left;">
--.36
-</td>
-<td style="text-align:left;">
-.114
-</td>
-</tr>
-</tbody>
-</table>
+| Characteristics | Control_r | Control_p.value | Treat_r | Treat_p.value |
+|:----------------|:----------|:----------------|:--------|:--------------|
+| Alpha           | .50       | .025            | .13     | .587          |
+| Beta            | .69       | .001            | .88     | \<.001        |
+| Gamma           | -.11      | .651            | -.36    | .114          |
 
     stp25plot::corr_plot( ~ a + b + c + d, 
                            dat,

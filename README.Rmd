@@ -102,7 +102,7 @@ DF <- data.frame(
   infect= factor( rbinom(n, size=1, prob=.77), 0:1, c("yes", "no")),
   bili=  rnorm(n, 0.83, 0.40)
 ) |> 
-  na.omit |> 
+  na.omit() |> 
   Label(
   smoker = "Tobacco Smoker",
   group = "Group",
@@ -285,7 +285,7 @@ Tbll_corr(a + b + c ~ d, dat)
 Tbll_corr(a + b + c ~ d, 
           dat, 
           groups = ~ g, 
-          include.n=FALSE) |>  kable
+          include.n=FALSE) |>  kable()
 ```
  
  
@@ -357,7 +357,7 @@ APA(t1)
 
 
 
-### Regression
+## Regression
 
 
 ```{r}
