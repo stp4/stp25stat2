@@ -1,7 +1,3 @@
-# tbl_cfa
-# tbl_sem
-
-
 #' CFA und SEM
 #' mehr unter http://www.understandingdata.net/2017/03/22/cfa-in-lavaan/
 #'

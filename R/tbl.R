@@ -1,6 +1,8 @@
 #' Turn an object into a table
 #'
-#'
+#' @param x Objekt
+#' @param digits  Nachkommastellen
+#' @param caption,note an Output
 #' @param ... alles an Tbll
 #'
 #' @return data.frame oder liste mit data.frames
