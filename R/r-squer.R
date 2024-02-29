@@ -56,16 +56,6 @@
 #'
 #' @param x fit-Objekt lm glm
 #' @param ... weitere Objekte nicht benutzt
-#' @param varF  fot glmm Variance of fixed effects
-#' @param varRand  fot glmm Variance of random effects
-#' @param varResid  fot glmm Residual variance. Only necessary for "gaussian" family
-#' @param family  fot glmm family of the glmm (currently works with gaussian, binomial and poisson)
-#' @param link  fot glmm model link function. Working links are: gaussian: "identity" (default);
-#'        binomial: "logit" (default), "probit"; poisson: "log" (default), "sqrt"
-#' @param mdl.aic  fot glmm The model's AIC
-#' @param mdl.class  fot glmm The name of the model's class
-#' @param null.fixef  fot glmm Numeric vector containing the fixed effects of the null model.
-#'        Only necessary for "poisson" family
 #' @return ein data.frame-Objekt.
 #'
 #' @export
@@ -87,7 +77,7 @@ R2 <- function(x, ...) {
 #' # fit2<-lm(score ~ grade + treatment + stdTest, schools)
 #' # R2.list(fit1, fit2)
 #'
-R2.list <- function(..., caption, note) {
+R2.list <- function(...) {
   res <- list()
   fits <- list(...)
   j <- 0
@@ -341,10 +331,19 @@ r.squared.lme <- function(mdl) {
     mdl.class = class(mdl)
   )
 }
-
-
+#' Marginal and conditional r-squared for glmm given fixed and random variances
+#' @param varF  fot glmm Variance of fixed effects
+#' @param varRand  fot glmm Variance of random effects
+#' @param varResid  fot glmm Residual variance. Only necessary for "gaussian" family
+#' @param family  fot glmm family of the glmm (currently works with gaussian, binomial and poisson)
+#' @param link  fot glmm model link function. Working links are: gaussian: "identity" (default);
+#'        binomial: "logit" (default), "probit"; poisson: "log" (default), "sqrt"
+#' @param mdl.aic  fot glmm The model's AIC
+#' @param mdl.class  fot glmm The name of the model's class
+#' @param null.fixef  fot glmm Numeric vector containing the fixed effects of the null model.
+#'        Only necessary for "poisson" family
 #' @noRd
-# Marginal and conditional r-squared for glmm given fixed and random variances
+
 rsquared.glmm <-
   function(varF,
            varRand,

@@ -9,6 +9,7 @@
 #'   Bonferroni-Korrektur, wenn eine Reihe von geplanten Vergleichen durchgeführt werden soll.
 #'
 #' @param ...  data, formula, names
+#' @param test default test = "wilcox.test"
 #' @param p.adjust.method method for adjusting p value c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY",
 #   "fdr", "none")
 #' @param alternative,mu,paired,exact,correct,conf.int,conf.level,tol.root,digits.rank not used

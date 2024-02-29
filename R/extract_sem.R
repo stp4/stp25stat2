@@ -2,6 +2,7 @@
 #'
 #' lavaan: Struckturgleichungs Modelle mit lavaan.
 #'
+#' @param x Objekt
 #' @param baseline.model an lavaan
 #' @param include.ci,include.model,include.varianz,include.latent Lavan: was soll ausgegeben werden
 #' @param ...  Fehler abfangen

@@ -3,6 +3,9 @@
 #' Lagemasse Berechnen
 #'
 #' @name Mittelwert
+#' @param ...  platzhalter
+#' @param na.rm,exclude fehlende werte
+#' @param max_factor_length,is_true_false Argumente an calc_percent
 #' @export
 #' @examples
 #'

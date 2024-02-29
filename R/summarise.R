@@ -5,7 +5,7 @@
 #' @export
 #' @param ... An Long() daten Formeln,Variablen-Namen
 #' @param fun  function(x) length(na.omit(x)) an aggregate
-#' @param key,value,use.label  an Long
+#' @param key,value,include.label  an Long
 #' @param na.action  an aggregate
 #' @param formula Zeilen/Spalten Lang/Weit
 #' @param margins,margins_name  Gesamt
@@ -15,6 +15,7 @@
 #' @examples
 #'
 #' data(hyper, package = "stp25data")
+#' #data(hyper, package = "stp25data", lib.loc = "C:/Users/wpete/AppData/Local/R/win-library/4.3")
 #' mean3 <- function(x)
 #'   round(mean(x, na.rm = TRUE), 2)
 #'
