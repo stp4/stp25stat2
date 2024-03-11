@@ -713,7 +713,13 @@ APA(t1)
 
  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
  lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
-
+ 
+ Infomation(lm1, lm2)
+#                 Info      lm1      lm2
+# 1 Dependent Variable   breaks   breaks
+# 2       Observations       54       54
+# 3            Missing        0        0
+# 4               Type gaussian gaussian
 
  Tbll_reg(
   lm1,
