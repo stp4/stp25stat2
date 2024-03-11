@@ -48,7 +48,7 @@ extract_param  <- function(x,
                           conf.style.1 = FALSE,
                           ...) {
 #cat("\n in extract_param \n ")
-  if (inherits(x, "aov"))  #  parameters::model_parameters()
+  if (inherits(x, "aov"))
     return(
       extract_param_aov(
         x,
@@ -296,7 +296,18 @@ tidy_lmer <- function(x,
 #'
 #' @export
 #'
+#' @examples
 #'
+#' op <- options(contrasts = c("contr.helmert", "contr.poly"))
+#' ## as a test, not particularly sensible statistically
+#' npk.aovE <- aov(yield ~  N * P * K + Error(block), npk)
+#' require(stp25stat2)
+#' Tbll( npk.aovE, include.eta = TRUE )
+#'
+#' ## Intern wird model_parameters angewendet
+#' parameters::model_parameters(npk.aovE, effectsize_type = "eta")
+#'
+#' options(op)
 extract_param_aov <- function(x,
                                include.eta = FALSE,
                                include.sumsq = TRUE,
@@ -350,17 +361,18 @@ extract_param_aov <- function(x,
       include.power,
       TRUE
     )]
-  #rslt <- broom::tidy(x)
+
+  effectsize_type <- NULL
+  if (eta_squared)
+    effectsize_type <- c(effectsize_type, "eta")
+  if (omega_squared)
+    effectsize_type <- c(effectsize_type, "omega")
+
+
   rslt <-
-    parameters::model_parameters(
-      x,
-      eta_squared = include.eta,
-      power = include.power,
-      omega_squared  = include.omega
-     # epsilon_squared
-     # type	car::Anova()
-     # ci	for  omega_squared, eta_squared
-    )
+    parameters::model_parameters(x,
+                                 effectsize_type = effectsize_type,
+                                 power = include.power)
 
   rslt <- plyr::rename(
     rslt,
@@ -372,10 +384,9 @@ extract_param_aov <- function(x,
   if (fix_format) {
     rslt <- transform(
       rslt,
-      statistic   = render_f(statistic , digits = 2),
-      df  = render_f(df, digits = 0),
-      p.value = rndr_P(p.value,
-                                    include.symbol = FALSE)
+      statistic = render_f(statistic, digits = 2),
+      df = render_f(df, digits = 0),
+      p.value = rndr_P(p.value, include.symbol = FALSE)
     )
 
     if (include.meansq)
