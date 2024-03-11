@@ -68,11 +68,12 @@
 extract.manova <-
   function(x,
            test = "Wilks",
-           caption = "MANOVA",
-           note = "",
            include.eta = FALSE,
            ...
      ) {
+
+caption <- "MANOVA"
+note <- ""
     aov_result <- NULL
     res <- summary.aov(x)
 
@@ -127,7 +128,7 @@ extract.manova <-
     # names(aov_result)[length(names(aov_result))] <-   "p.value"
     aov_result <- prepare_output(
       # aov_result,
-    stp25stat2:::fix_data_frame_2(aov_result),
+    fix_data_frame_2(aov_result),
       caption = caption,
       note = note,
       rgroup = names(res),
@@ -152,7 +153,7 @@ extract.manova <-
 
         names(maov_result)[length(names(maov_result))] <-   "p.value"
     maov_result <- prepare_output(
-        stp25stat2:::fix_data_frame_2(maov_result),
+        fix_data_frame_2(maov_result),
                                   caption = paste(test, "Test"))
 
 

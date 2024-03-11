@@ -105,7 +105,7 @@ Tbll_likert.likert <- function(x,
                                include.count = TRUE,
                                ReferenceZero = include.reference,
                                labels = c("low", "neutral", "high"),
-                               decreasing = TRUE) {
+                               decreasing = TRUE, ...) {
 
 
   note <- NULL # für include.reference

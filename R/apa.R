@@ -1,4 +1,4 @@
-#' APA Style Text-Ausgabe
+#' Text-Ausgabe von Tests
 #'
 #' Ausgabe von APA-Style formatiertem Text.
 #'
@@ -6,7 +6,7 @@
 #' @name APA
 #' @param x Objekt fit, formula usw
 #' @param ...  digits, data, usw
-#' @return   Character Vector mit einem oder meheren Eintraegen
+#' @return Character Vector mit einem oder meheren Eintraegen
 #' @export
 #' @examples
 #'
@@ -67,8 +67,21 @@ APA <-   function(x,
 
 #' @rdname APA
 #' @export
-#'
-#'
+APA.psych  <- function(x, ...) {
+  paste("Alpha =", render_f(x$total$raw_alpha, digits = 2))
+}
+
+
+#' @rdname APA
+#' @export
+APA.psych_alpha <- function(x, ...) {
+  paste("Alpha =", x$scale_statistics$Alpha)
+}
+
+
+
+#' @rdname APA
+#' @export
 APA.coxph <-
   function (x,
             ...) {
@@ -91,14 +104,12 @@ APA.coxph <-
 #' @export
 APA.summary.table <- function(x,
                               ...) {
-  paste0(
-    "Chisq(df=",
-    x$parameter,
-    ")=",
-    render_f(x$statistic, 2),
-    ", ",
-    rndr_P(x$p.value)
-  )
+  paste0("Chisq(df=",
+         x$parameter,
+         ")=",
+         render_f(x$statistic, 2),
+         ", ",
+         rndr_P(x$p.value))
 }
 
 #' @rdname APA
@@ -116,24 +127,24 @@ APA.survdiff <- function(x,
 #' @rdname APA
 #' @export
 APA.NULL <- function(x, ...) {
-    # res<- Info_Statistic(
-    #   c("catTest", "conTest", "Wilkox", "Kruskal",
-    #     "ANOVA",
-    #     "T Test"),
-    #   c("stats", "Hmisc", "stats", "stats",
-    #     "car",
-    #     "stats"),
-    #   c(
-    #     "chisq.test",
-    #     "spearman2",
-    #     "wilcox.test",
-    #     "kruskal.test",
-    #     "Anova, type = 3",
-    #     "t.test"
-    #   ), paste(methods("APA"), collapse=", ")
-    # )
+  # res<- Info_Statistic(
+  #   c("catTest", "conTest", "Wilkox", "Kruskal",
+  #     "ANOVA",
+  #     "T Test"),
+  #   c("stats", "Hmisc", "stats", "stats",
+  #     "car",
+  #     "stats"),
+  #   c(
+  #     "chisq.test",
+  #     "spearman2",
+  #     "wilcox.test",
+  #     "kruskal.test",
+  #     "Anova, type = 3",
+  #     "t.test"
+  #   ), paste(methods("APA"), collapse=", ")
+  # )
 
-"Tests siehe APA"
+  "Tests siehe APA"
 }
 
 #' @rdname APA
@@ -150,8 +161,8 @@ APA.QuadTypeIndependenceTest <- function(x,
                                          ...) {
   # capture.output(x)[5]
   rndr_Chisq(coin::statistic(x),
-                        x@statistic@df,
-                        coin::pvalue(x))
+             x@statistic@df,
+             coin::pvalue(x))
 }
 
 #' @rdname APA
@@ -163,7 +174,8 @@ APA.ScalarIndependenceTest <- function(x,
 
 #' @rdname APA
 #' @export
-APA.numeric <- function(x, ...)calc_mean(x, ...)
+APA.numeric <- function(x, ...)
+  calc_mean(x, ...)
 
 # @rdname APA
 # @export
@@ -173,10 +185,10 @@ APA.numeric <- function(x, ...)calc_mean(x, ...)
 #' @param data,exclude,max_factor_length bei der Verwendung von Formeln
 #' @export
 APA.formula <- function(x,
-                       data,
-                       exclude = NA,
-                       max_factor_length = 25,
-                       ...) {
+                        data,
+                        exclude = NA,
+                        max_factor_length = 25,
+                        ...) {
   X <- stp25tools::prepare_data2(x, data)
   res <- NULL
   if (is.null(X$group.vars)) {
@@ -272,16 +284,16 @@ APA.lm <- function(x,
                        fstats[['dendf']], lower.tail = FALSE)
   if (include.r)
     rndr_lm(fstats[['value']] ,
-                       fstats[['numdf']],
-                       fstats[['dendf']],
-                       pValue,
-                       fitSummary$r.squared,
-                       fitSummary$adj.r.squared)
+            fstats[['numdf']],
+            fstats[['dendf']],
+            pValue,
+            fitSummary$r.squared,
+            fitSummary$adj.r.squared)
   else
     rndr_F(fstats[['value']] ,
-                      fstats[['numdf']],
-                      fstats[['dendf']],
-                      pValue)
+           fstats[['numdf']],
+           fstats[['dendf']],
+           pValue)
 
 }
 
@@ -319,16 +331,14 @@ APA.glm <- function(x,
   chi2 <- -2 * (as.numeric(ll_0) -  as.numeric(ll_fit))
   df_fit <-  df <- attr(ll_fit, "df") - 1
 
-  paste0(
-    "LogLik=",
-    render_f(as.numeric(ll_fit), 2),
-    ", ",
-    rndr_X(
-      chi2,
-      df1 = df_fit,
-      p = pchisq(chi2, df = df_fit, lower.tail = FALSE)
-    )
-  )
+  paste0("LogLik=",
+         render_f(as.numeric(ll_fit), 2),
+         ", ",
+         rndr_X(
+           chi2,
+           df1 = df_fit,
+           p = pchisq(chi2, df = df_fit, lower.tail = FALSE)
+         ))
 }
 
 
@@ -379,29 +389,31 @@ APA.xtabs <- function(x,
 #' @rdname APA
 #' @export
 APA.table <- function(x,
-                      ...) APA.xtabs(x, ...)
+                      ...)
+  APA.xtabs(x, ...)
 
 
 #' @rdname APA
 #' @export
 APA.summary.table <- function(x,
                               ...) {
-  paste0(
-    "Chisq(df=", x$parameter,
-    ")=", render_f(x$statistic, 2),
-    ", ", rndr_P(x$p.value)
-  )
+  paste0("Chisq(df=",
+         x$parameter,
+         ")=",
+         render_f(x$statistic, 2),
+         ", ",
+         rndr_P(x$p.value))
 }
 
 
 
 #' @rdname APA
 #' @export
-APA.meta <- function(x) {
-  # sprintf("Heterogeneity: Cochran’s Q = %.1f, I^2 = %.0f %%",   x$Q, x$I2 *100)
+APA.meta <- function(x, ...) {
+  # sprintf("Heterogeneity: Cochran Q = %.1f, I^2 = %.0f %%",   x$Q, x$I2 *100)
   c (100 * c(x$I2, x$lower.I2, x$upper.I2)) # I-squared
   paste(
-    "Heterogeneity: Cochran’s ",
+    "Heterogeneity: Cochran ",
     rndr_test(x$Q, x$df.Q,  x$pval.Q,  symbol = "Q"),
     ", I^2 = ",
     formatC(x$I2 * 100, format = "f", digits = 1),
@@ -421,7 +433,7 @@ rndr_test  <-
             symbol = "F",
             digits = get_opt("Fstat", "digits") ,
             drop0leading = !get_opt("Fstat", "lead.zero")) {
-    input <- c(!is.null(df1) ,!is.null(df2),!is.null(p))
+    input <- c(!is.null(df1) , !is.null(df2), !is.null(p))
     if (all(input))
       paste(
         symbol,
@@ -432,7 +444,7 @@ rndr_test  <-
         ") = ",
         formatC(x, format = "f", digits = digits),
         ", ",
-        stp25stat2:::rndr_P(p, symbol.leading = c("p = ", "p < "), ),
+        rndr_P(p, symbol.leading = c("p = ", "p < "),),
         sep = ""
       )
     else  if (sum(input) == 2)
@@ -443,10 +455,10 @@ rndr_test  <-
         ") = ",
         formatC(x, format = "f", digits = digits),
         ", ",
-        stp25stat2:::rndr_P(if (is.null(p))
+        rndr_P(if (is.null(p))
           df2
           else
-            p,  symbol.leading = c("p = ", "p < "), ),
+            p,  symbol.leading = c("p = ", "p < "),),
         sep = ""
       )
     else

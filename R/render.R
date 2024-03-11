@@ -9,7 +9,9 @@
 #' @param digits the decimal
 #' @param drop0leading leading zero
 #' @param na.strings,na.symbol NA replace
-#' @param drop0leading,format,decimal.mark,... an formatC default format="f"
+#' @param decimal.mark an formatC default format="f"
+#' @param ... weitere Argumente an formatC  drop0leading,format,decimal.mark
+#'
 #' @return character; formatted values as character strings
 #' @export
 #' @examples
@@ -140,10 +142,12 @@ render_f.numeric <- function(x, digits = NULL, ...) {
 #' @rdname render_f
 #' @export
 render_f.default <- function(x,
+                             digits= NULL,
                              drop0leading = FALSE,
                              na.strings = "NA",
                              na.symbol = "",
                              decimal.mark = OutDec(),
+
                              ...) {
   x <- as.character(x)
   if (!is.null(na.strings))
@@ -377,7 +381,7 @@ rndr_median_quant <- function(x,
   )
 }
 
-
+rndr_median<-
 rndr_median_iqr_range <- function (m,
                                iqr,
                                mn,

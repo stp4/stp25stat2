@@ -139,6 +139,9 @@ NULL
 
 
 
+
+
+
 #' @rdname extract
 #' @description
 #' Causal Mediation Analysis:
@@ -156,10 +159,10 @@ tbll_extract.mediate  <- function(x, ...) {
 #' @description tbll_extract.summary.mediate: extract Output from mediate:::summary.mediate
 tbll_extract.summary.mediate <-
   function (x,
-            caption = "",
-            note = "",
             digits = 2,
             ...)  {
+caption <- ""
+note <-  ""
     clp <- 100 * x$conf.level
     caption <-
      sprintf(
@@ -250,7 +253,7 @@ tbll_extract.summary.mediate <-
       cbind(
         Effect = row.names(smat),
         render_f(smat[, 1:3], digits),
-        'p Value ' = stp25stat2:::rndr_P(smat[, 4], FALSE)
+        'p Value ' = rndr_P(smat[, 4], FALSE)
       ),
       caption = caption,
       note = note
@@ -327,7 +330,7 @@ summary_psych_mediate <- function(x, digits = 2, short = FALSE) {
       Parameter = row.names(dfdp),
       render_f(dfdp[, 1:3], digits),
       df =  render_f(dfdp[, 4], 0),
-      'p' = stp25stat2:::rndr_P(dfdp[, 5], FALSE)
+      'p' = rndr_P(dfdp[, 5], FALSE)
     ),
     caption=caption,
     note = note
@@ -363,7 +366,7 @@ summary_psych_mediate <- function(x, digits = 2, short = FALSE) {
           Parameter = row.names(dftp),
           render_f(dftp[, 1:3], digits),
           df =  render_f(dftp[, 4], 0),
-          'p' = stp25stat2:::rndr_P(dftp[, 5], FALSE)
+          'p' = rndr_P(dftp[, 5], FALSE)
         ),
         caption=caption,
         note = ""
@@ -401,7 +404,7 @@ summary_psych_mediate <- function(x, digits = 2, short = FALSE) {
               Parameter = row.names(dfa),
               render_f(dfa[, 1:3], digits),
               df =  render_f(dfa[, 4], 0),
-              'p' = stp25stat2:::rndr_P(dfa[, 5], FALSE)
+              'p' = rndr_P(dfa[, 5], FALSE)
             ),
             caption=caption,
             note = ""
@@ -430,7 +433,7 @@ summary_psych_mediate <- function(x, digits = 2, short = FALSE) {
                 Parameter = row.names(dfa),
                 render_f(dfa[, 1:3], digits),
                 df =  render_f(dfa[, 4], 0),
-                'p' = stp25stat2:::rndr_P(dfa[, 5], FALSE)
+                'p' = rndr_P(dfa[, 5], FALSE)
               ),
               caption=caption,
               note = ""
@@ -482,7 +485,7 @@ summary_psych_mediate <- function(x, digits = 2, short = FALSE) {
             Parameter = row.names(dfb),
             render_f(dfb[, 1:3], digits),
             df =  render_f(dfb[, 4], 0),
-            'p' = stp25stat2:::rndr_P(dfb[, 5], FALSE)
+            'p' = rndr_P(dfb[, 5], FALSE)
           ),
           caption=caption,
           note = ""
@@ -542,7 +545,7 @@ summary_psych_mediate <- function(x, digits = 2, short = FALSE) {
             Parameter = row.names(dfab),
             render_f(dfab[, 1:3], digits),
             df =  render_f(dfab[, 4], 0),
-            'p' = stp25stat2:::rndr_P(dfab[, 5], FALSE)
+            'p' = rndr_P(dfab[, 5], FALSE)
           ),
           caption=caption,
           note = ""
@@ -582,7 +585,7 @@ summary_psych_mediate <- function(x, digits = 2, short = FALSE) {
               Parameter = row.names(dfab),
               render_f(dfab[, 1:5], digits)#,
             #  df =  render_f(dfab[, 4], 0),
-           #   'p' = stp25stat2:::rndr_P(dfab[, 5], FALSE)
+           #   'p' = rndr_P(dfab[, 5], FALSE)
             ),
             caption=caption,
             note = ""
@@ -648,7 +651,7 @@ print_psych_mediate <-  function(x, digits=2 ) {
             SE = render_f(x$total.reg$se[i + 1, j], digits),
             T =  render_f(x$total.reg$t[i + 1, j], digits),
             df =  render_f(x$total.reg$df, 0),
-            p = stp25stat2:::rndr_P(x$total.reg$prob[i + 1, j], FALSE))
+            p = rndr_P(x$total.reg$prob[i + 1, j], FALSE))
 
 
 
@@ -661,7 +664,7 @@ print_psych_mediate <-  function(x, digits=2 ) {
                   SE = render_f(x$cprime.reg$se[i + 1, j] , digits),
                   T =  render_f(x$cprime.reg$t[i + 1, j], digits),
                   df =  render_f(x$cprime.reg$df, 0),
-                  p = stp25stat2:::rndr_P(x$cprime.reg$prob[i + 1, j] , FALSE)
+                  p = rndr_P(x$cprime.reg$prob[i + 1, j] , FALSE)
 
                 ))
 
@@ -700,7 +703,7 @@ print_psych_mediate <-  function(x, digits=2 ) {
             ", R2 = ",round(x$cprime.reg$R2[j], 2),
 
             ", F(",nrow(x$cprime.reg$beta) - 1, ", ",x$cprime.reg$df, ") = ",round(Fx, 2),
-            ", ",  stp25stat2:::rndr_P(pF, digits + 1)  )
+            ", ",  rndr_P(pF, digits + 1)  )
         }
       }
     }
@@ -799,12 +802,14 @@ print_psych_mediate <-  function(x, digits=2 ) {
 #' @param y_x,y_xm,m_x lm -Objekte
 #' @param treat Treatment
 #' @param mediator  Mediator
+#' @param digits Nachkomastellen
 #'
 #' @return data.frame
 #' @export
 Sobel_Test <- function(y_x, y_xm, m_x,
                        treat, mediator,
-                       digits = 2) {
+                       digits = 2,
+                       ...) {
 
   if( (length(mediator)>1) | (length(treat)>1) ){
     stop()
@@ -831,7 +836,7 @@ Sobel_Test <- function(y_x, y_xm, m_x,
     B = render_f(indir, digits = digits),
     SE = render_f(serr, digits = digits),
     Z = render_f(zvalue, 1),
-    p.value = stp25stat2:::rndr_P(2 * pnorm(-abs(zvalue)), FALSE),
+    p.value = rndr_P(2 * pnorm(-abs(zvalue)), FALSE),
     row.names = "Sobel",
     stringsAsFactors = FALSE
   )

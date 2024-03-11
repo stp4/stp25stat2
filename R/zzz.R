@@ -3,7 +3,7 @@
   # oldc <- getOption("contrasts")
   # contrasts =  c("contr.Treatment contr.poly")
   # options(contrasts = contrasts)
-  packageStartupMessage("\nHallo Wolfgang!\n\nIch wünsche dir einen guten und erfolgreichen Arbeitstag.\n\n")
+  packageStartupMessage("\nHi Wolfgang!\n\nI wish you a good and successful working day.\n\n")
 }
 
 .onAttach <- function(...) {
@@ -13,10 +13,10 @@
   options(contrasts = contrasts)
 
   packageStartupMessage(
-    "Die Kontraste habe ich auf von ",
+    "I changed the contrasts from",
     paste(oldc, collapse =  ),
-    "\nauf ", paste(contrasts, collapse =  ),
-    " umgestellt!\n\n")
+    "\nto ", paste(contrasts, collapse =  ),
+    "!\n\n")
 
 
 }
@@ -34,7 +34,7 @@ Info_Statistic <-
            library = "base",
            fun = "summary",
            my_methodes = "") {
-    Text("Methodes: ",  my_methodes)
+    cat("Methodes: ",  my_methodes)
     data.frame(
       Methode = methode,
       Library = library,
@@ -63,10 +63,9 @@ Info_Statistic <-
 #'  pairwise.wilcox.test pchisq pf pnorm qnorm quantile reformulate sd sigma
 #'  summary.aov update var vcov
 
+
+
 #' @importFrom utils capture.output data head methods str
-
-
-
 
 #' @importFrom stp25settings get_opt
 #' @export
@@ -75,14 +74,6 @@ stp25settings::get_opt
 #' @importFrom stp25settings set_opt
 #' @export
 stp25settings::set_opt
-
-# @importFrom stp25settings get_lang
-# @export
-#stp25settings::get_lang
-
-# @importFrom stp25settings set_lang
-# @export
-#stp25settings::set_lang
 
 #' @importFrom stp25settings which_output
 #' @export
@@ -108,7 +99,6 @@ stp25settings::bw_theme
 #' @export
 stp25tools::wrap_string
 
-
 #' @importFrom Hmisc Cs
 #' @export
 Hmisc::Cs
@@ -118,11 +108,8 @@ Hmisc::Cs
 car::contr.Treatment
 #' @importFrom car contr.Sum
 #' @export
+#'
 car::contr.Sum
 #' @importFrom car contr.Helmert
 #' @export
 car::contr.Helmert
-
-
-
-

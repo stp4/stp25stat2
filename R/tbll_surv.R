@@ -11,6 +11,7 @@
 #'   HR > 1: Increase in Hazard (bad prognostic factor)
 #'
 #' @param ... survfit, survdiff, coxph
+#' @param names,formula,digits,include.z.test,include.wald.test description folgt
 #'
 #' @return data.frame or list with data.frames
 #' @export
@@ -18,21 +19,21 @@
 #' @examples
 #'
 #' \donttest{
-#'  require(stp25stat2)
+#'
 #' require(survival)
 #'
 #' fit0 <- survfit(Surv(futime, fustat) ~ 1, data = ovarian)
 #' fit1 <- survfit(Surv(futime, fustat) ~ rx, data = ovarian)
 #' fit2 <-
 #'   survfit(Surv(futime, fustat) ~ rx + resid.ds, data = ovarian)
-#' #summary(fit1)
+#' # summary(fit1)
 #' Tbll(fit0)
 #' Tbll(fit1)
 #' Tbll(fit2)
 #'
 #' Tbll(fit1, include.survival = TRUE)
 #'
-#' "Survival Curve Differences"
+#' # Survival Curve Differences
 #' survdiff(Surv(futime, fustat) ~ rx, data = ovarian) |> Tbll()
 #'
 #' coxph(Surv(futime, fustat) ~ rx, data = ovarian) |> Tbll()
@@ -54,10 +55,10 @@ Tbll_surv <- function(x, ...) {
 #' @rdname Tbll_surv
 #' @export
 Tbll_surv.survfit <- function(...,
-                      data = NULL,
-                      names = NULL,
-                      include.param = FALSE,
-                      include.test = TRUE) {
+                              data = NULL,
+                              names = NULL,
+                              include.param = FALSE,
+                              include.test = TRUE) {
   surv_fits <- list(...)
   if (is.null(names)) {
     names <- abbreviate(gsub("[~??+\\:=]", "",
@@ -74,8 +75,8 @@ Tbll_surv.survfit <- function(...,
     i <- 1 + i
     if (inherits(m, "survfit")) {
       if (is.null(data))
-        stop("In Tbll_surv(..., data) muessen noch die Daten nit übergeben werden!")
-      m <- coxph(formula(m$call), data)
+        stop("In Tbll_surv(..., data) muessen noch die Daten mit uebergeben werden!")
+      m <- survival::coxph(formula(m$call), data)
     }
 
     if (include.test) {
@@ -170,8 +171,11 @@ Tbll_surv.coxph <- function(...,
 }
 
 #' @rdname Tbll_surv
-#' @param x a formula object, with the response on the left of a ~ operator, and the terms on the right. The response must be a survival object as returned by the Surv function.
-#' @param data a data.frame in which to interpret the variables named in the formula, or in the subset and the weights argument.
+#' @param x a formula object, with the response on the left of a ~ operator,
+#' and the terms on the right. The response must be a survival object as returned
+#' by the Surv function.
+#' @param data a data.frame in which to interpret the variables named in the
+#' formula, or in the subset and the weights argument.
 #' @export
 #'
 #' @examples
@@ -185,12 +189,12 @@ Tbll_surv.formula <-
            digits = 2,
            include.test = TRUE,
            ...) {
-    cox <- coxph(formula, data)
+    cox <- survival::coxph(formula, data)
 
     list(
-      survdiff =  tbll_extract.survdiff(survdiff(formula, data)),
+      survdiff =  tbll_extract.survdiff(survival::survdiff(formula, data)),
       survfit =   tbll_extract.survfit(
-        survfit(formula, data),
+        survival::survfit(formula, data),
         include.survival = FALSE,
         include.se = FALSE,
         include.ci = include.ci,
@@ -222,7 +226,7 @@ Tbll_surv.formula <-
 #'
 #'
 #' @param ... an prepare_data2
-#' @param note  an Output
+
 #'
 #' @return data.frame
 #' @export
@@ -284,7 +288,7 @@ Tbll_coxph_uni <-
 
     univ_models <-
       lapply(univ_formulas, function(x) {
-        coxph(x, data = X$data)
+        survival::coxph(x, data = X$data)
       })
 
     univ_results <- lapply(univ_models,
@@ -336,8 +340,8 @@ tbll_extract.survfit <- function(x,
 
   if( !include.se ) rslt$table <-
     rslt$table[-(ncol(rslt$table)-2)]
-   if( !include.ci )
-  rslt$table <-
+  if( !include.ci )
+    rslt$table <-
     rslt$table[-c((ncol(rslt$table)-1), ncol(rslt$table) )]
 
   if(include.survival) rslt
@@ -372,7 +376,7 @@ tbll_extract.survdiff <- function(x) {
 
 
 #' @param include.param Regrssionstabelle
-#' @param include.test  z-Test
+#' @param include.test z-Test
 #'
 #' @rdname Tbll_surv
 tbll_extract.coxph <- function(x,
@@ -397,8 +401,7 @@ tbll_extract.summary.coxph <-
            include.se = FALSE,
            include.ci = TRUE,
            include.test = TRUE,
-           digits = 2)
-  {
+           digits = 2)  {
     rslt <- data.frame(
       Source = row.names(x$coefficients),
       beta = render_f(x$coefficients[, 1], digits = digits)
@@ -430,11 +433,10 @@ tbll_extract.summary.coxph <-
 #' extract_survfit
 #'
 #' @param x surv
-#' @param ...  an summary.surfit times, censored = FALSE, scale = 1, extend=FALSE
+#' @param ... an summary.surfit times, censored = FALSE, scale = 1, extend=FALSE
 #'
 #'
 #' @noRd
-#'
 extract_survfit <- function(x,
                             digits = 2,
                             percent = FALSE,
@@ -454,7 +456,7 @@ extract_survfit <- function(x,
   if (is.null(names(mdn))) {
     mdn <- as.matrix(mdn)
     mdn  <-   data.frame(
-      Source =  rownames(mdn), #   sapply(strsplit(rownames(mdn), "="), "[", 2),
+      Source =  rownames(mdn),
       median = render_f(mdn[, "median"], digits),
       low.ci = render_f(mdn[, "0.95LCL"], digits),
       up.ci = render_f(mdn[, "0.95UCL"], digits),
@@ -466,10 +468,6 @@ extract_survfit <- function(x,
   }
   else
   {
-
-  #  print(mdn[["0.95LCL"]])
-  #  print(render_f(mdn[["0.95LCL"]], digits))
-
 
     mdn  <-   data.frame(
       Source = "Null",
@@ -516,7 +514,7 @@ extract_summary_survfit <- function(x,
   colnames(rslt) <- vars_names
   rslt <-
     fix_format(rslt,
-              # exclude = 1:3,
+               # exclude = 1:3,
                digits = digits)
   if ("strata" %in% names(x))
     rslt <- cbind(Source = x$strata, rslt)
@@ -530,9 +528,8 @@ extract_survdiff <- function(x) {
     Source = c(names(x$n), "Overall"),
     N = as.integer(c(x$n, sum(x$n))),
     Observed = as.integer(c(x$obs, sum(x$obs))),
-    Expected = c(round(x$exp, 1), NA)
-  )
-}
+    Expected = c(round(x$exp, 1), NA) )
+  }
 
 
 extract_coxph_test <- function(x) {
@@ -565,10 +562,10 @@ extract_coxph_test <- function(x) {
       c(BIC(x), NA, NA)
     ))
 
-tst[[2]] <- render_f(tst[[2]], 2)
-tst[[4]] <- rndr_P(tst[[4]], FALSE)
+  tst[[2]] <- render_f(tst[[2]], 2)
+  tst[[4]] <- rndr_P(tst[[4]], FALSE)
 
- tst<- rbind( tst, c("Concordance", Concordance, NA, NA))
+  tst<- rbind( tst, c("Concordance", Concordance, NA, NA))
 
   prepare_output(tst, caption = "Log rank test")
 }

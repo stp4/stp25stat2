@@ -1,7 +1,16 @@
-#' @rdname render_f
+#' Fix Format
 #'
-#' @param auto.format,pattern_pval,pattern_est,pattern_df,pattern_N  fix_format: pattern Sonderzeichen mit \\ schreiben!
+#'
+#'
+#' @param x data.frame
+#'
+#' @param digits Nachkomastellen
+#' @param names_repair P-value and SE
+#' @param include.rownames include.rownames = TRUE
+#' @param p.value,se,df pattern
+#'
 #' @export
+#' @return data.frame
 #'
 #' @examples
 #'
@@ -47,9 +56,7 @@ fix_format <- function(x,
                          "p.value",
                          "pvalue"),
                        se = c("Std\\. Error", "est.std"),
-                       df = c("N", "Df")
-) {
-
+                       df = c("N", "Df")) {
   x <-
     stp25tools::fix_to_tibble(x, include.rownames = include.rownames)
   data_names <- names(x)
@@ -85,9 +92,5 @@ fix_format <- function(x,
                       render_f(x, 0)
                   })
 }
-
-
-
- #
 
 

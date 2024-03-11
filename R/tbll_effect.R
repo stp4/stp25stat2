@@ -2,9 +2,9 @@
 #'
 #' Workaraund fuer effect {effects}. Dei Funktion erlaubt formulas und kann  ~a*b
 #'  sowie ~b*a evaluieren.
-#' @param x,term    fit  und effecte x = mod	(a regression model objec)  term	(the quoted name of a term)
+#' @param x    fit  und effecte x = mod	(a regression model objec)  term	(the quoted name of a term)
 #' @param ... param an effect transformation = list(link = log, inverse = exp)
-#' @param caption,include.se,include.ci,include.n,digits an Output
+#' @param include.se,include.ci,include.n,digits an Output
 #'
 #' @return data.frame ore  list with data.frame
 #' @export
@@ -131,9 +131,11 @@ Tbll_effect <-
   }
 
 
-#' @rdname Tbll_effect
+#' @rdname extract
+#'
 #' @param transformation an effects::allEffect
 #' @param names erste Spalte
+#' @param xlevels an effects::allEffects()
 #' @export
 #' @description
 #' Extrahiert die Effectte (magrinal-means) mit effects::allEffects
@@ -171,11 +173,8 @@ extract_effect <-
                         minlength = 7)
   }
   rslt <- NULL
- # print( seq_along(fit) )
+
   for (i in seq_along(fit)) {
-
-#print(fit[i])
-
     rslt[names[i]] <-
       purrr::pmap(list(mod = fit[i]),
                   extraxt_all_effects,
@@ -183,35 +182,26 @@ extract_effect <-
                   xlevels = xlevels)
   }
 
- # cat("\n  purrr::pmap ??\n")
   stp25tools::Rbind2(rslt)
 }
 
 #-
 extraxt_all_effects <- function(mod, ...){
-#  cat("\n   in extraxt_all_effects\n")
- # print(mod)
   extract_effect2(effects::allEffects(mod, ...))
-
   }
 
 extract_effect2 <- function(x,
                             ...,
                             .id = "term") {
- # cat("\n   in extract_effect2\n")
   rslt <-
     tbll_extract_eff(x, ..., return.data.frame = TRUE)
   data <- dplyr::bind_rows(rslt, .id = .id)
- # print(length(data))
-#  print(data)
+
 
   if (length(data) == 8) {
-    #print(names(data)[2])
     data[.id] <- names(data)[2]
     data[[2]] <- as.character( data[[2]] )
     names(data)[2] <- "level"
-
-
   }
   else {
     data <-
@@ -220,14 +210,11 @@ extract_effect2 <- function(x,
             data[3:8])
 
   }
-
-  # print(data)
-#  cat("\n   raus aus  extract_effect2\n")
   data
 }
 
 
-#' @rdname Tbll_effect
+#' @rdname extract
 #' @export
 #' @examples
 #'
@@ -251,7 +238,8 @@ extract_effect2 <- function(x,
 #'
 #' }
 #'
-tbll_extract.eff <- function(x,  ...) {
+tbll_extract.eff <- function(x,
+                             ...) {
   tbll_extract_eff(x, ...)
 }
 
@@ -259,8 +247,7 @@ tbll_extract.eff <- function(x,  ...) {
 #' @rdname Tbll_effect
 #' @export
 #'
-tbll_extract.efflist <-
-  function(x, ...) {
+tbll_extract.efflist <- function(x, ...) {
     tbll_extract_eff(x, ...)
   }
 
@@ -268,38 +255,31 @@ tbll_extract.efflist <-
 #' @param x,i Werte ueber die for schleife
 #'
 #' @noRd
-#'
 extract_n <- function (x, i) {
-#  cat(" \n in  extract_n\n ")
   if (inherits(x, "eff"))
     x <- list(i = x)
-
   y <- names(x[[i]]$data)[1L]
 
   fm <-
     formula(paste0(y, "~", paste0(names(x[[i]]$variables), collapse = "+")))
 
-
   var_is_factor <-
-    lapply(x[[i]]$variables, function(z) z$is.factor)
-
+    lapply(x[[i]]$variables, function(z)
+      z$is.factor)
 
   var_source <- lapply(x[[i]]$variables, function(z)
     z$levels)
 
   for (j in names(var_source)) {
-
-    if (!var_is_factor[[1]]){
-       breaks <- var_source[[j]]
-    breaks <- rowMeans (cbind(dplyr::lag(breaks)[-1],
-                              dplyr::lead(breaks)[-length(breaks)]))
+    if (!var_is_factor[[1]]) {
+      breaks <- var_source[[j]]
+      breaks <- rowMeans(cbind(dplyr::lag(breaks)[-1],
+                               dplyr::lead(breaks)[-length(breaks)]))
 
       x[[i]]$data[[j]] <-
-        cut(x[[i]]$data[[j]], c( -Inf, breaks, Inf))
-      }
-
+        cut(x[[i]]$data[[j]], c(-Inf, breaks, Inf))
+    }
   }
-
 
   rslt_n <- aggregate(
     fm,
@@ -309,21 +289,20 @@ extract_n <- function (x, i) {
     drop = FALSE
   )
 
-#  print(rslt_n )
   rslt_n[[ncol(rslt_n)]]
 }
 
 #' @param x objekt
 #' @param type fuer transform "response", "link"
 #'
+#' orginal geht nicht  "Tue Apr 20 11:53:58 2021"
+#' primär habe ich x$transformation$inverse ergaenzt
+#'
 #' @noRd
 effects_as.data.frame.eff <-
   function (x,
-            #  row.names = NULL,
-            # optional = TRUE,
             type = c("response", "link")) {
-    # orginal geht nicht  "Tue Apr 20 11:53:58 2021" primär habe ich
-    # x$transformation$inverse ergaenzt
+
     type <- match.arg(type)
     linkinv <- if (is.null(x$link$linkinv))
       I
@@ -366,27 +345,27 @@ effects_as.data.frame.eff <-
 
 
 #' @param x objekt
-#' @param caption ueberschrift
 #' @param include.fit,include.se,include.ci,include.n include
 #' @param digits Nachkomastellen
 #' @param type fuer transform "response", "link"
 #' @param ... nicht benutzt abfangen von zn note
 #'
+#'    das ist die eigendliche Funktion die sowol efflist als auch eff  aufloest.
+#'
 #' @noRd
 #'
 tbll_extract_eff <-
   function(x,
-           caption = "",
            include.fit = TRUE,
            include.se = FALSE,
            include.ci = TRUE,
            include.n = FALSE,
-           # include.format = TRUE,@param include.format Zahl oder Text
            digits = 2,
            type = c("response", "link"),
-           return.data.frame=FALSE,
+           return.data.frame = FALSE,
            ...)  {
-    # das ist die eigendliche Funktion die sowol efflist als auch eff  aufloest.
+    caption <- "Regression Models: Effect"
+    note <- ""
     type <- match.arg(type)
     rslt <- NULL
     if (inherits(x, "eff")) {
@@ -399,7 +378,9 @@ tbll_extract_eff <-
     for (i in seq_along(rslt)) {
       if (include.fit & include.ci) {
         rslt[[i]]$value <-
-          rndr_mean_CI(rslt[[i]]$fit, cbind(rslt[[i]]$lower, rslt[[i]]$upper), digits = digits)
+          rndr_mean_CI(rslt[[i]]$fit,
+                       cbind(rslt[[i]]$lower, rslt[[i]]$upper),
+                       digits = digits)
         note <- "mean [95%-CI]"
       }
       else if (include.fit & include.se) {
@@ -416,46 +397,37 @@ tbll_extract_eff <-
         return(rslt[[i]])
       }
 
-
       if (include.n) {
-
         rslt[[i]]$value <-
           paste0("(", extract_n(x, i), ") ", rslt[[i]]$value)
       }
 
-      if(!return.data.frame){
-      rslt[[i]] <-  rslt[[i]][-(1:4 + (ncol(rslt[[i]]) - 1 - 4))]
+      if (!return.data.frame) {
+        rslt[[i]] <-  rslt[[i]][-(1:4 + (ncol(rslt[[i]]) - 1 - 4))]
 
-      if (ncol(rslt[[i]]) == 2){
-        rslt[[i]] <-
-        prepare_output(rslt[[i]],
-                       caption = caption,
-                       note = note)}
-      else {
-        rslt[[i]] <- prepare_output(
-          tidyr::pivot_wider(rslt[[i]],
-                             names_from = 2,
-                             values_from = "value"),
-          caption = caption,
-          note = note)}
+        if (ncol(rslt[[i]]) == 2) {
+          rslt[[i]] <-
+            prepare_output(rslt[[i]],
+                           caption = caption,
+                           note = note)
+        }
+        else {
+          rslt[[i]] <- prepare_output(
+            tidyr::pivot_wider(rslt[[i]],
+                               names_from = 2,
+                               values_from = "value"),
+            caption = caption,
+            note = note
+          )
+        }
       }
       else{
-#cat("\nist hier der Fehler??\n")
-
-     #   print(x)
-     #   print(i)
         rslt[[i]]$n <- extract_n(x, i)
-        nn<- length(rslt[[i]])
-        rslt[[i]] <- rslt[[i]][c(1:(nn-2), nn, nn-1)]
+        nn <- length(rslt[[i]])
+        rslt[[i]] <- rslt[[i]][c(1:(nn - 2), nn, nn - 1)]
       }
+    }
 
-
-    } # end for-loop
-
-#print(rslt)
-
-    if (length(rslt) == 1)
-      rslt[[1]]
-    else
-      rslt
+    if (length(rslt) == 1)  rslt[[1]]
+    else  rslt
   }

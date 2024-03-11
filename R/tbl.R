@@ -2,7 +2,6 @@
 #'
 #' @param x object
 #' @param digits  decimal places
-#' @param caption,note an Output
 #' @param ... alles an Tbll
 #'
 #' @return data.frame oder liste mit data.frames

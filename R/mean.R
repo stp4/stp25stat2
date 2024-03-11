@@ -96,7 +96,7 @@ calc_percent <- function(x,
 
    if (length(tbl) > max_factor_length) {
       naLev <- levels(x)[-(1:max_factor_length)]
-      Text("NA = ", paste(naLev, collapse = ", "))
+     # stp25output2::Text("NA = ", paste(naLev, collapse = ", "))
       x <-
         factor(x, levels(x)[1:max_factor_length], exclude = NULL)
       x <-
@@ -305,10 +305,12 @@ ci_binom <- function(x,
     method = method
   )
 
-  r <- rndr_prct_ci(rslt[, 2] * 100, rslt[, 3] * 100)
+  r <- rndr_CI(c( rslt[, 2] * 100, rslt[, 3] * 100))
 
   ifelse(rslt[, 1] <= 0, ".", r)
 }
+
+
 
 #' @noRd
 #

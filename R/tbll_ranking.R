@@ -21,6 +21,7 @@
 #'  Evaluation fuer Human-und Sozialwissenschaftler (4. Auflage). Berlin: Springer. Seite 155
 #'
 #' @name Tbll_ranking
+#' @param na.action,include.order sortieren und Fehlende Werte
 #' @param ... Weitere Argumente
 #' @return Vector
 #' @export
@@ -35,15 +36,10 @@ Tbll_ranking <- function(...,
                       include.order = TRUE,
                       decreasing = TRUE,
                       digits.mean = 2) {
-
-caption <- "Rangreihe"
-note <-"Law of Categorical Judgement"
 X <- stp25tools::prepare_data2(..., na.action = na.action)
 
   Rangreihe_default(
     items = X$data[X$measure.vars],
-    caption = caption,
-    note = note,
     include.percent = include.percent,
     include.freq = include.freq,
     include.mean = include.mean,
@@ -66,14 +62,11 @@ X <- stp25tools::prepare_data2(..., na.action = na.action)
 #' @param items data.frame
 #' @param groups gruppen
 #' @param input  Format der Items c("ranking", "ordering"),
-#' @param caption,note,output an stp25output
 #' @param include.percent,include.freq,include.mean,include.z,include.na was soll ausgewertet werden
 #' @param digits.mean,order,decreasing sortierung
 #' @param pattern intern gruppen
 #'
 Rangreihe_default <- function (items,
-                               caption = "",
-                               note = "",
                                include.percent = TRUE,
                                include.freq = TRUE,
                                include.mean = TRUE,
@@ -84,12 +77,12 @@ Rangreihe_default <- function (items,
                                decreasing = TRUE,
                                digits.mean = 2,
                                input = NULL, #c("ranking", "ordering"),
-                               pattern = "____")
-{
+                               pattern = "____"){
+  caption <- "Rangreihe"
+  note <-"Law of Categorical Judgement"
   N <- nrow(items)
   rankings <-  NULL #  Rang <- 1. 2. 3. usw
   inpt <-  guess_input(items)
-
 
   if (!is.null(groups)) {
     nms <- names(groups)
@@ -123,9 +116,7 @@ Rangreihe_default <- function (items,
 
         res <- rbind(res, cbind(Group, res_1))
         rslt$mean <- rbind(cbind(rslt[[i]]$mean, Group),rslt$mean)
-
       }
-
     }
   }
   else{
@@ -142,9 +133,6 @@ Rangreihe_default <- function (items,
     )
   }
 
-
-
-
   tbl <- prepare_output(
     res,
     caption = paste0(caption, " (N = ", N , ")"),
@@ -156,36 +144,14 @@ Rangreihe_default <- function (items,
   rslt$input <- inpt$input
   rslt$items <- inpt$items
   rslt$groups <- groups
-
   attr(tbl, "plot") <- rslt
 
   return(tbl)
-
-
 }
 
 
 
-#' cleanup_Rank
-#'
-#' Doppelte Einträge bereinigen
-#'
-#' @param x data.frame
-#'
-#' @return data.frame
-#' @export
-#'
-#' @examples
-#'
-#'  dat <-  data.frame(
-#' a = c(NA, "c", "a", NA,   "a", "a", "b", "a"),
-#' b = c("c", NA, "b", NA,  "a", "a", "b", "b"),
-#' c = c("a", "a", "b", NA,   NA, "a", "b", "c"),
-#' d = c(NA, NA, NA, NA,     "a", "a", NA, "d"),
-#' e = c(NA, "e", "a", NA,   "d",   NA, NA, "e")
-#' )
-#' cleanup_Rank(dat)
-#'
+#' @noRd
 cleanup_Rank <- function(x, col.names =  names(x)) {
   lvl <-  unique(unlist(sapply(x, levels)))
 
@@ -206,6 +172,16 @@ cleanup_Rank <- function(x, col.names =  names(x)) {
   data
 }
 
+
+
+# dat <-  data.frame(
+#   a = c(NA, "c", "a", NA,   "a", "a", "b", "a"),
+#   b = c("c", NA, "b", NA,  "a", "a", "b", "b"),
+#   c = c("a", "a", "b", NA,   NA, "a", "b", "c"),
+#   d = c(NA, NA, NA, NA,     "a", "a", NA, "d"),
+#   e = c(NA, "e", "a", NA,   "d",   NA, NA, "e")
+# )
+# cleanup_Rank(dat)
 
 
 

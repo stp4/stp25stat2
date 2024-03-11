@@ -1,6 +1,10 @@
 #' Kreuztabellen
 #'
 #'
+#'
+#' @param x Objekt  glm, xtab, formula
+#' @param ...  alles weitere
+#'
 #' @export
 #'
 #' @examples
@@ -18,7 +22,7 @@
 #' tab_3x3 <- xtabs( ~ induced + education, infert)
 #' tab_3x3x2 <- xtabs( ~ induced + education + case, infert)
 #'
-#' Tbll_xtabs(summary(tab_3x3x2))
+#' Tbll(summary(tab_3x3x2))
 #'
 #' Tbll_xtabs(tab_1, include.test=TRUE)
 #' Tbll_xtabs(tab_2x2, include.test=TRUE)
@@ -74,15 +78,13 @@ Tbll_xtabs.glm <- function(x,
                           thresh = 0.5,
                           ...) {
 
- Klassifikation(x, thresh, caption)$xtab
+ Klassifikation(x, thresh)$xtab
 
 }
 
 #' @rdname Tbll_xtabs
 #' @export
-#' @param x,data formula und data.frame geht an xtabs
-#' @param addNA,exclude,drop.unused.levels an xtabs()
-#' @param margin,add.margins Prozent und total
+#' @param data formula und data.frame geht an xtabs
 #' @param ... include.test usw
 Tbll_xtabs.formula <-
   function(x,
@@ -113,21 +115,6 @@ Tbll_xtabs.formula <-
     if (is.character(add.margins))
       add.margins <- which(all.vars(x) %in% add.margins)
 
-    #  if (is.logical(labels)) {
-    #    if (labels) {
-    # dnn <- dimnames(x_tab)
-    # names(dnn) <-
-    #   stp25tools::get_label(data[all.vars(x)], include.units = FALSE)
-    # dimnames(x_tab) <- dnn
-    #  }
-    #  } else if (is.character(labels)) {
-    #   dnn <- dimnames(x_tab)
-    #   names(dnn)[1:length(labels)] <- labels
-    #   dimnames(x_tab) <- dnn
-    # } else if (is.list(labels)) {
-    #   dimnames(x_tab) <- labels
-    # }
-
     Tbll_xtabs.xtabs(x_tab,
                      margin = margin,
                      add.margins = add.margins,
@@ -139,7 +126,7 @@ Tbll_xtabs.formula <-
 #' @rdname Tbll_xtabs
 #' @export
 Tbll_xtabs.data.frame <-
-  function(data,
+  function(x,
            ...,
            include.count = TRUE,
            include.percent = TRUE,
@@ -157,7 +144,7 @@ Tbll_xtabs.data.frame <-
            exclude = if (!addNA) c(NA, NaN),
            drop.unused.levels = FALSE) {
 
-    X <- stp25tools::prepare_data2(data, ...)
+    X <- stp25tools::prepare_data2(x, ...)
 if(!is.null( X$group.vars ))
   stop("group.vars sind fuer xtabs nicht definert!")
 
@@ -189,14 +176,18 @@ if(!is.null( X$group.vars ))
 Tbll_xtabs.table <- function(...) Tbll_xtabs.xtabs(...)
 
 
+#' @param margin,add.margins Prozent und Total add.margins gibt an welche Spalten  geht am addmargins()
+#' @param include.count Anzahl
+#' @param include.percent  Prozent
+#' @param include.prop.chisq,include.chisq,include.fisher,include.test  Sig. Test
+#' @param include.correlation Korrelation
+#' @param include.diagnostic,prevalence  Diagnostic
+#' @param addNA,exclude,drop.unused.levels an xtabs()'
+#' @param lvs,N_data  internal was fuer eine Tabelle kommt
+#' @param digits Nachkommastellen
 #' @rdname Tbll_xtabs
 #' @export
-#' @param digits Nachkommastellen
-#' @param include.percent,include.count ausgabe
-#' @param include.test,test,include.prop.chisq,include.chisq,include.fisher die Tests
-#' @param include.correlation Korrelation
-#' @param include.diagnostic,include.sensitivity,prevalence ascostat
-#' @param ... not used
+#'
 #' @return list("xtab","fisher_test","diagnostic.test")
 Tbll_xtabs.xtabs  <- function(x,
                               include.count = TRUE,
@@ -213,7 +204,7 @@ Tbll_xtabs.xtabs  <- function(x,
                               prevalence = NULL,
                               N_data = sum(x),
                               ...) {
-  # cat( "\n in Tbll_xtabs.xtabs\n" )
+
   res <- list()
   dim_x <- dimension(x)
   # get position of margin
@@ -342,13 +333,6 @@ Tbll.summary.table <- function(x, ...) {
 }
 
 #' main function for xtabs
-#'
-#' @param x xtabs Tabelle
-#' @param margin  Prozent geht an prop.table
-#' @param add.margins welche Spalten  add.margins geht am addmargins()
-#' @param include.count,include.percent Include
-#' @param digits Komastellen
-#' @param dim_x was fuer eine Tabelle kommt
 #' @noRd
 format_xtab <- function(x,
                         margin = NULL,
@@ -444,17 +428,13 @@ dimension <- function(x) {
 #'
 #' Klassifikation fuer Binominal-GLM
 #'
-#' @param x glm oder xtab Objekt
-#' @param thresh Klassifikation auf Basis der Vorhersage Schwelle bei P=0.5
-#' @param caption an Output
-#' @param ... weitere Objekte nicht benutzt
 #' @return A data.frame Objekt.
 #' @export
 Klassifikation <- function(x, ...) {
   UseMethod("Klassifikation")
 }
 
-
+#' @param thresh Klassifikation auf Basis der Vorhersage Schwelle bei P=0.5
 #' @rdname Tbll_xtabs
 #' @description Klassifikation.glm
 #' @export

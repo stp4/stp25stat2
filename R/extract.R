@@ -7,6 +7,7 @@
 #' @param digits Nachkomastellen
 #' @param ...  weitere Argumente
 #'
+#' @param Positive_Class,type,test,note,include.I2,include.Q,include.tau,include.H,include.sumsq,include.meansq,include.omega,include.power,conf.int,fix_format,digits.param,digits.odds,digits.test,digits.beta,format,conf.style.1,anova description
 #' @return data.frame
 #' @export
 #'
@@ -29,12 +30,12 @@ tbll_extract.default <- function(x, ...) {
 #' @export
 #'
 tbll_extract.anova <- function(x, include.eta = TRUE, ...) {
- # cat("\n   tbll_extract.anova\n")
+
   rslt <- x
   rslt[-ncol(rslt)] <-
-    stp25stat2:::render_f(rslt[-ncol(rslt)], digits = 2)
+    render_f(rslt[-ncol(rslt)], digits = 2)
   rslt[[ncol(rslt)]] <-
-    stp25stat2:::rndr_P(rslt[[ncol(rslt)]], FALSE)#
+    rndr_P(rslt[[ncol(rslt)]], FALSE)
   names(rslt)[ncol(rslt)] <- "P Value"
 
   if (include.eta & names(x)[1] == "Sum Sq") {
@@ -47,8 +48,6 @@ tbll_extract.anova <- function(x, include.eta = TRUE, ...) {
                   rslt[ncol(rslt)])
   }
 
-
- # print(rslt)
   prepare_output(stp25tools::fix_to_df(rslt, include.rownames = TRUE),
                  caption =   attr(rslt, "heading")[1])
 }
@@ -82,7 +81,9 @@ tbll_extract.aov <- function(...) {
 
 #' @rdname extract
 #' @export
-tbll_extract.TukeyHSD <- function(x, digits = 2, ...) {
+tbll_extract.TukeyHSD <- function(x,
+                                  digits = 2,
+                                  ...) {
   rslt <- broom::tidy(x)
   rslt <- transform(
     rslt,
@@ -90,8 +91,7 @@ tbll_extract.TukeyHSD <- function(x, digits = 2, ...) {
     conf.low    = render_f(conf.low, digits = digits),
     conf.high   = render_f(conf.high, digits = digits),
     null.value  = render_f(null.value, digits = 0),
-    adj.p.value = rndr_P(adj.p.value,
-                                      include.symbol = FALSE)
+    adj.p.value = rndr_P(adj.p.value, include.symbol = FALSE)
   )
   prepare_output(rslt,
                  caption = "Tukey Honest Significant Differences")
@@ -102,7 +102,7 @@ tbll_extract.TukeyHSD <- function(x, digits = 2, ...) {
 #' @export
 tbll_extract.aovlist <- function(x, ...) {
   if (!is.null(attr(x, "weights")))
-    Stop("Note: Das habe ich noch nicht implementiert\n")
+    stop("Note: Das habe ich noch nicht implementiert\n")
   nx <- names(x)
   nx <- nx[-1]
   nx <- nx[-length(nx)]
@@ -413,32 +413,32 @@ tbll_extract.epi.tests <-
   function (x,
             type =
               c(
-              #  ap = "Apparent prevalence",
-              #  tp = "True prevalence",
+                #  ap = "Apparent prevalence",
+                #  tp = "True prevalence",
                 se = "Sensitivity",
                 sp = "Specificity",
                 pv.pos = "Positive predictive value",
                 pv.neg = "Negative predictive value",
-             #   lr.pos = "Positive likelihood ratio",
-             #   lr.neg = "Negative likelihood ratio",
+                #   lr.pos = "Positive likelihood ratio",
+                #   lr.neg = "Negative likelihood ratio",
                 p.tpdn = "False T+ proportion for true D-",
                 p.tndp = "False T- proportion for true D+",
                 p.dntp = "False T+ proportion for T+",
                 p.dptn = "False T- proportion for T-",
                 diag.ac = "Correctly classified proportion"
 
-              #  p.rout ="proportion of subjects with the outcome ruled out",
-              #  p.rin ="proportion of subjects with the outcome ruled in",
-             #   youden = "Youden's index",
-             #   nndx ="number needed to diagnose",
-             #   diag.or="Diagnostic odds ratio"
-             ),
-            digits=2){
-    # print(x$tab, ...)
+                #  p.rout ="proportion of subjects with the outcome ruled out",
+                #  p.rin ="proportion of subjects with the outcome ruled in",
+                #   youden = "Youden's index",
+                #   nndx ="number needed to diagnose",
+                #   diag.or="Diagnostic odds ratio"
+              ),
+            digits = 2,
+            ...) {
     x$detail$statistic <-
       factor(x$detail$statistic, names(type), type)
     x$detail$est <-
-      render_f(x$detail$est, digits=digits)
+      render_f(x$detail$est, digits = digits)
     x$detail$CI <-
       rndr_CI(cbind(x$detail$lower, x$detail$upper), digits = digits)
 
@@ -448,9 +448,13 @@ tbll_extract.epi.tests <-
       caption =  paste0("Point estimates and ",
                         x$conf.level * 100, "%"
                         , " CIs:"),
-      note = x$method)
+      note = x$method
+    )
   }
 
+
+
+# tbll_extract.roc not tested
 
 #' @rdname extract
 #' @export
@@ -473,11 +477,13 @@ tbll_extract.roc <- function(x,
                                fpr = "False Positive Rate",
                                tnr = "True Negative Rate",
                                fnr = "False Negative Rate",
-                               fdr = "False Discovery Rate"#,
+                               fdr = "False Discovery Rate"
                                #  youden = "Youden Index"#,
                                #  closest.topleft = "Distance to the top left corner of the ROC space"
-                             )) {
-  c_crd <-  coords(roc.fit, "best", ret = names(type))
+                             ),
+                             ...
+                             ) {
+  c_crd <-  pROC::coords(x, "best", ret = names(type))
   auc <- data.frame(Source  = "AUC",  Estimate = x$auc[1])
 
   rslt <- t(c_crd)

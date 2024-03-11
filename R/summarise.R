@@ -3,14 +3,14 @@
 #' Summarise: ist eine  Erweiterung  aggregate()
 #'
 #' @export
-#' @param ... An Long() daten Formeln,Variablen-Namen
+#' @param ... An Long() daten Formeln, Variablen-Namen
 #' @param fun  function(x) length(na.omit(x)) an aggregate
 #' @param key,value,include.label  an Long
 #' @param na.action  an aggregate
 #' @param formula Zeilen/Spalten Lang/Weit
 #' @param margins,margins_name  Gesamt
 #'
-#' @return reshape objek
+#' @return data.frame, tibble
 #' @export
 #' @examples
 #'
@@ -25,7 +25,7 @@
 #'
 #' \donttest{
 #' data(hyper, package = "stp25data")
-#' #data(hyper, package = "stp25data", lib.loc = "C:/Users/wpete/AppData/Local/R/win-library/4.3")
+#'
 #' mean3 <- function(x)
 #'   round(mean(x, na.rm = TRUE), 2)
 #'
@@ -84,7 +84,7 @@ Summarise <- function(...,
                       margins = FALSE,
                       margins_name = "Total",
                       include.label = TRUE) {
-  # fehler abfangen
+
   value <- make.names(value)
   key <- make.names(key)
   values_from <- value
@@ -95,7 +95,9 @@ Summarise <- function(...,
                      use.label = include.label)
 
   default_formula <-
-    formula(paste(value, "~", paste(names(molten)[-ncol(molten)], collapse = "+")))
+    formula(paste(value, "~",
+                  paste(names(molten)[-ncol(molten)],
+                        collapse = "+")))
 
   rslts <-
     aggregate(default_formula,
@@ -151,7 +153,7 @@ Summarise <- function(...,
   }
 
   if(any(is.na(names(rslts))))
-  names(rslts)[is.na(names(rslts))] <- "NA"
+    names(rslts)[is.na(names(rslts))] <- "NA"
   tibble::as_tibble(rslts)
 }
 
@@ -159,7 +161,7 @@ Summarise <- function(...,
 check_formula <- function(formula, key, value) {
   if (key != "variable" | value != "value") {
     print(list(formula = formula, c(key = key, value = value)))
-    stop("Sorry das geht nicht key und value dürfen nicht verändert werden!")
+    stop("Sorry das geht nicht key und value duerfen nicht veraendert werden!")
   }
 
   if (length(formula) == 3)
@@ -168,9 +170,5 @@ check_formula <- function(formula, key, value) {
     all.vars(formula)
 
 }
-
-
-
-
 
 

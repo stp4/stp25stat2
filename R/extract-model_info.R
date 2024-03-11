@@ -1,68 +1,30 @@
-#' model_info
+#' Regression Infomation
 #'
 #' Extrahiert die Variablen namen die Labels und die Daten
 #'
+#' Alternative ist die Library insight
 #'
+#' mit zb der Funktion
 #'
-#' @name model_info
+#' model_info(m4<-Hmisc::spearman2(mpg ~ factor(vs), mtcars))
 #'
-#' @param x Fit Objekt
-#' @return Liste mit c("class",  "family", "y", "x", "labels", "N")
+#' insight::model_info(m2)
+#'
+#' insight::find_response(m4)
+#'
+#' insight::find_predictors(m4)
+#'
+#' aber es gehen noch nicht so viel Modelle
+#'
+#' @param ... Regressinsmodelle
 #' @export
+#'
 #' @examples
-#'  \donttest{
-#' # das geht nicht mehr model_info(mpg ~ cyl)
-#' model_info(glm(vs ~ mpg, mtcars, family = binomial()))
-#' model_info(lm(mpg ~ drat + wt + qsec, mtcars))
-#' model_info(wilcox.test(mpg ~ vs, mtcars))
-#' model_info(t.test(mpg ~ vs, mtcars))
-#' }
 #'
-model_info <- function(x) {
-
-
-  # Alternative ist die Library insight
-  # mit zb der Funktion
-  # model_info(m4<-Hmisc::spearman2(mpg ~ factor(vs), mtcars))
-  # insight::model_info(m2)
-  # insight::find_response(m4)
-  # insight::find_predictors(m4)
-  # aber es gehen noch nicht so viel Modelle
-
-  UseMethod("model_info")
-}
-
-#' @rdname model_info
-#' @export
-model_info.default <- function(x) {
-  list(
-    class = class(x) ,
-    family = NULL ,
-    y = NULL ,
-    x = NULL ,
-    labels = NULL,
-    N = NULL,
-    missing = NULL
-  )
-}
-
-
-#' @rdname model_info
-#' @export
-model_info.data.frame <- function(x) {
-  list(
-    class = class(x) ,
-    family = NULL ,
-    y = NULL ,
-    x = NULL ,
-    labels = NULL,
-    N = nrow(x),
-    missing = NULL
-  )
-}
-
-#' @rdname model_info
-#' @export
+#'  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
+#'  lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
+#'  Infomation(lm1, lm2)
+#'
 Infomation <- function(...) {
   my_fit <- list(...)
   names <- abbreviate(gsub("[~??+\\:=]", "",
@@ -80,25 +42,52 @@ Infomation <- function(...) {
   rslt
 }
 
-# @rdname model_info
-# @export
 
-# model_info.formula <- function(x) {
-#   fm <-  Formula_Names(x)
-#   list(
-#     class = class(x) ,
-#     family = NULL ,
-#     y = fm$yname,
-#     x = fm$xname,
-#     labels = NULL,
-#     N = NULL,
-#     missing = NULL
-#   )
-# }
 
-#' @rdname model_info
+# @name model_info
+# @param x Fit Objekt
+# @return Liste mit c("class",  "family", "y", "x", "labels", "N")
+
+
+# # das geht nicht mehr model_info(mpg ~ cyl)
+# model_info(glm(vs ~ mpg, mtcars, family = binomial()))
+# model_info(lm(mpg ~ drat + wt + qsec, mtcars))
+# model_info(wilcox.test(mpg ~ vs, mtcars))
+# model_info(t.test(mpg ~ vs, mtcars))
+#
+
+
 #' @export
+model_info <- function(x) {
+ UseMethod("model_info")
+}
 
+
+#' @export
+model_info.default <- function(x) {
+  list(
+    class = class(x) ,
+    family = NULL ,
+    y = NULL ,
+    x = NULL ,
+    labels = NULL,
+    N = NULL,
+    missing = NULL
+  )
+}
+#' @export
+model_info.data.frame <- function(x) {
+  list(
+    class = class(x) ,
+    family = NULL ,
+    y = NULL ,
+    x = NULL ,
+    labels = NULL,
+    N = nrow(x),
+    missing = NULL
+  )
+}
+#' @export
 model_info.eff <- function(x) {
   list(
     #formula=fm,
@@ -114,14 +103,7 @@ model_info.eff <- function(x) {
 
 
 }
-
-#' @rdname model_info
 #' @export
-#' @examples
-#'
-#' \donttest{
-#' # model_info(Hmisc::spearman2(mpg ~ factor(vs), mtcars))
-#' }
 model_info.htest <- function(x) {
 
   if (names(x$statistic) == "t") {
@@ -147,18 +129,12 @@ model_info.htest <- function(x) {
   }
 
 }
-
-#' @rdname model_info
 #' @export
 model_info.lm  <- function(x)
   model_info_glm(x)
-
-#' @rdname model_info
 #' @export
 model_info.glm  <- function(x)
   model_info_glm(x)
-
-#' @rdname model_info
 #' @export
 model_info.anova  <- function(x) {
   fm <- formula(x)
@@ -181,8 +157,7 @@ model_info.anova  <- function(x) {
 
 
 }
-
-# helper lm glm
+#' @export
 model_info_glm <- function(x) {
   fm <- formula(x)
   list(
@@ -196,30 +171,19 @@ model_info_glm <- function(x) {
 
   )
 }
-
-
-
-
-#' @rdname model_info
 #' @export
 model_info.lmerModLmerTest <- function(x)
   model_info_lmer(x)
-
-#' @rdname model_info
 #' @export
 model_info.merModLmerTest <- function(x)
   model_info_lmer(x)
-
-#' @rdname model_info
 #' @export
 model_info.lmerTest <- function(x)
   model_info_lmer(x)
-
-#' @rdname model_info
 #' @export
 model_info.glmerMod <- function(x)
   model_info_lmer(x)
-#--   "merModLmerTest"  "lmerTest" "glmerMod"
+#' @export
 model_info_lmer <- function(x) {
   fm <- formula(x)
 
@@ -235,8 +199,6 @@ model_info_lmer <- function(x) {
   )
 
 }
-
-#' @rdname model_info
 #' @export
 model_info.lme <- function(x) {
     fm <-  insight::model_info(x)
@@ -255,15 +217,7 @@ model_info.lme <- function(x) {
   )
 
 }
-
-
-
-#' @rdname model_info
 #' @export
-#' @examples
-#' \donttest{
-#' # model_info(coin::wilcox_test(mpg ~ factor(vs), mtcars))
-#' }
 model_info.ScalarIndependenceTest <- function(x) {
   list(
     class = "coin" ,
@@ -275,13 +229,7 @@ model_info.ScalarIndependenceTest <- function(x) {
     missing = NULL
   )
 }
-
-#' @rdname model_info
 #' @export
-#' @examples
-#' \donttest{
-#' # model_info(Hmisc::spearman2(mpg ~ factor(vs), mtcars))
-#' }
 model_info.biVar <- function(x) {
   list(
     class = "biVar" ,
@@ -293,21 +241,13 @@ model_info.biVar <- function(x) {
     missing = NULL
   )
 }
-
-
-
-#' @rdname model_info
 #' @export
 model_info.survfit <- function(x)
   model_info_surv(x)
-
-
-#' @rdname model_info
 #' @export
 model_info.coxph <- function(x)
   model_info_surv(x)
-
-
+#' @export
 model_info_surv <- function(x) {
   fm <- formula(x)
   list(
@@ -320,8 +260,6 @@ model_info_surv <- function(x) {
     missing = NULL
   )
 }
-
-#' @rdname model_info
 #' @export
 model_info.survdiff <- function(x) {
   fm <- formula(x)
@@ -335,10 +273,6 @@ model_info.survdiff <- function(x) {
     missing = NULL
   )
 }
-
-
-
-#' @rdname model_info
 #' @export
 model_info.polr <- function(x) {
   list(

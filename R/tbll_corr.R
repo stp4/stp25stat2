@@ -1,14 +1,10 @@
-#' @param include.mean Mittelwerte
-#' @param include.n  Anzahl an gueltigen Werten
-#' @param cor_diagonale_up diagonale
-#' @param type c("pearson", "spearman")
-#' @param ...  an prepare_data2
-#' @param include.label Labels
-#' @param include.stars,include.p P-Werte
-#'
+#' @param include.stars,include.p Tbll_corr(): P-Werte,Explizite p-Werte, Sternchen als p-Werte
+#' @param cor_diagonale_up Tbll_corr(): Diagonale oben oder unter
+#' @param type Tbll_corr(): enweder "pearson" oder "spearman"
 #' @rdname Tbll_desc
 #' @export
 #' @examples
+#'
 #'
 #' \donttest{
 #' require(stp25tools)
@@ -36,7 +32,6 @@
 #' }
 Tbll_corr <-
   function(...,
-          # caption="",
            include.label=TRUE,
            include.mean = FALSE,
            include.n = TRUE,
@@ -51,24 +46,11 @@ Tbll_corr <-
       include.p  = include.p,
       include.mean = include.mean,
       include.n = include.n,
-      type = type,
-    #  caption = caption,
-   #  note = ""
+      type = type
     )
   }
 
 
-
-
-# Helpers -----------------------------------------------------------------
-
-
-#' @param cor_diagonale_up Diagonale oben oder unter
-#' @param include.stars Sternchen als p-Werte
-#' @param include.p  Explizite p-Werte
-#' @param type enweder "pearson" oder "spearman"
-#'
-#' @noRd
 Hmisc_rcorr <- function(...,
                         cor_diagonale_up = TRUE,
                         include.stars = TRUE,
@@ -217,8 +199,6 @@ Hmisc_rcorr <- function(...,
 }
 
 
-
-#-- Hmisc
 format_diagonale <- function(mycorrtable,
                              cor_diagonale_up,
                              d = 1,

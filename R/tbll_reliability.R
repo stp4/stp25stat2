@@ -20,13 +20,17 @@
 #'
 #'
 #' For reliability analysis, Cronbach’s alpha was calculated to assess the internal consistency of the subscale for positive affect, which consists of ten questions. The internal consistency of the questionnaire is satisfying, with Cronbach’s alpha for positive affect = .89.
-#'
-#'
-#' @param ... Data, Formula
-#' @param caption,note  an prepare
+
+
+
+
+
+
+#' @param include.inter.item.correlation,include.Alpha cronbachs Alpha
+#' @param x,type,names ... Data, Formula
 #' @param include.label Labels
-#' @param include.item_statistic Item Statistic
-#' @param include.scale_statistic  Scale Statistic
+#' @param include.item_statistics Item Statistic
+#' @param include.scale_statistics  Scale Statistic
 #' @param revcoded,check.keys,keys numeric oder logikal TRUE entspricht check.keys = TRUE
 #' @param na.rm an psych::alpha
 #' @param digits Digits
@@ -92,7 +96,7 @@ Tbll_reliability.default <-
            include.label = TRUE,
            include.item_statistics = TRUE,
            include.scale_statistics = TRUE,
-           include.cronbachs.alpha = TRUE,
+           include.Alpha = TRUE,
            include.inter.item.correlation = FALSE,
            revcoded = FALSE,
            check.keys = NULL,
@@ -142,7 +146,7 @@ Tbll_reliability.default <-
           )
         )
 
-      if (include.cronbachs.alpha)
+      if (include.Alpha)
         aplha_statistik$Alpha <- render_f(rslt$Alpha, 2)
 
       if (include.inter.item.correlation)
@@ -196,7 +200,7 @@ Tbll_reliability.default <-
 #' @export
 Tbll_reliability.psych <-
   function(x,
-           digits = 2) {
+           digits = 2, ...) {
     if (!inherits(x, "alpha"))
       return(str(x))
 
@@ -239,18 +243,6 @@ Tbll_reliability.psych <-
   }
 
 
-#' @rdname APA
-#' @export
-APA.psych  <- function(x) {
-  paste("Alpha =", render_f(x$total$raw_alpha, digits = 2))
-}
-
-
-#' @rdname APA
-#' @export
-APA.psych_alpha <- function(x) {
-  paste("Alpha =", x$scale_statistics$Alpha)
-}
 
 
 #' @rdname Tbll_reliability

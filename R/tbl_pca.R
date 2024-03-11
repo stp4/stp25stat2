@@ -82,6 +82,7 @@ Tbll_pca_loadings <-
 
 
 #' @rdname Tbll_pca
+#' @param extprn loadings brauch nicht angegeben werden
 #' @export
 Tbll_pca_eigen <- function(x,
                            digits = 2,

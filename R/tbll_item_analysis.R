@@ -1,8 +1,7 @@
-
-#' @param include.n,include.mean,include.median,include.sd,include.range Masszahlen
+#' @param include.mean,include.median,include.sd Masszahlen
 #' @param include.shapiro,include.ks Normalverteilung Tests
 #' @param include.skew,include.kurtosi Eigenschaften
-#'
+#' @param digits  Nachkommastellen
 #' @rdname Tbll_desc
 #' @export
 #' @examples
@@ -26,7 +25,6 @@
 Tbll_desc_item <- function(...,
                            include.label = FALSE,
                            include.n = TRUE,
-                           #  include.missing = TRUE,
                            include.mean = TRUE,
                            include.median = FALSE,
                            include.sd = TRUE,
@@ -35,7 +33,6 @@ Tbll_desc_item <- function(...,
                            include.ks = FALSE,
                            include.skew = TRUE,
                            include.kurtosi = include.skew,
-                           #   na.omit = FALSE,
                            digits = 2) {
   caption<- "Summary"
   note <- ""
@@ -43,7 +40,7 @@ Tbll_desc_item <- function(...,
   if (!include.label)
     X$row_name <- X$measure.vars
 
-  # n_col <- length(X$measure.vars)
+
   n_row <- length(X$data)
   X$data[X$measure.vars] <-  stp25tools:::dapply1(X$data[X$measure.vars])
 
@@ -144,8 +141,6 @@ Tbll_desc_item <- function(...,
 #' Discrimination
 #' Discrimination of the item (u-l)/n
 #'
-
-#'
 #' Item.Reliab
 #' Item reliability index
 #'
@@ -158,10 +153,17 @@ Tbll_desc_item <- function(...,
 #'
 #' Item.Validity
 #' Item validity index
-#'
 #' @param ... daten
-#' @param include.label Labels
 #' @param digits  Nachkommastellen
+#' @param include.Sample.SD Standard deviation of the item
+#' @param include.Item.total  (unkorrigierte) Trennschaerfe
+#' @param include.Item.Tot.woi  korrigierte Trennschaerfe Alpha if Item Deleted
+#' @param include.Difficulty  Difficulty Mean of the item (p)
+#' @param include.Discrimination Itemschwierigkeit Discrimination of the item (u-l)/n
+#' @param include.Item.Reliab Item reliability index
+#' @param include.Item.Rel.woi Item reliability index (scored without item)
+#'
+#'
 #'
 #' @return data.frame
 #' @export
@@ -201,6 +203,7 @@ Tbll_desc_item <- function(...,
 #'   0  0  0  0  0  1  0  0  1   1 3.16
 #'   0  0  0  0  0  1  0  0  1   1 5.15
 #'   0  0  0  0  1  0  0  0  1   1 0.52")
+#'
 #' Tbll_item_analysis(TestScores,
 #'     i1, i2, i3, i4, i5, i6, i7, i8, i9, i10,
 #'     by = ~ y)
@@ -209,18 +212,16 @@ Tbll_item_analysis <-
   function (...,
             include.label = FALSE,
             include.Sample.SD =  FALSE,
-            include.Item.total = FALSE,   #  (unkorrigierte) Trennschärfe
+            include.Item.total = FALSE,
             include.Alpha = TRUE,
-            include.Item.Tot.woi = include.Alpha, # korrigierte Trennschärfe Alpha if Item Deleted
-            include.Difficulty = TRUE,    # Itemschwierigkeit
+            include.Item.Tot.woi = include.Alpha,
+            include.Difficulty = TRUE,
             include.Discrimination = FALSE,
-
             include.Item.Reliab = TRUE,
             include.Item.Rel.woi = FALSE,
-
             digits = 2)  {
+
     X <- stp25tools::prepare_data2(...)
-   # n.measure <- length(X$measure.vars)
 
     if (!include.label)
       X$row_name <- X$measure.vars
@@ -232,7 +233,7 @@ Tbll_item_analysis <-
     was_kommt <- apply(x, 2, range)
     if (!(all(range(was_kommt) == 0:1))) {
       warning(
-        "Für die Difficulty erwarte ich Werte von 0 bis 1. Die werde werden daher automatisch umcodiert!"
+        "Fuer die Difficulty erwarte ich Werte von 0 bis 1. Die werde werden daher automatisch umcodiert!"
       )
       x <- stp25tools:::dapply1(x, function(z) {
         z <- z - min(z)
@@ -251,8 +252,8 @@ Tbll_item_analysis <-
     TOT.woi <- TOT - (x)
 
     diff <- apply(x, 2, mean) # Itemschwierigkeit
-    rix <- as.vector(cor(x, TOT, use = "complete"))   #  (unkorrigierte) Trennschärfe
-    rix.woi <- diag(cor(x, TOT.woi, use = "complete")) # korrigierte Trennschärfe
+    rix <- as.vector(cor(x, TOT, use = "complete"))   #  (unkorrigierte) Trennschaerfe
+    rix.woi <- diag(cor(x, TOT.woi, use = "complete")) # korrigierte Trennschaerfe
     sx <- apply(x, 2, sd)
     vx <- ((n - 1) / n) * sx ^ 2
     i.rel <- rix * sqrt(vx)
@@ -276,11 +277,6 @@ Tbll_item_analysis <-
     if (include.Item.Rel.woi)
       rslt$Item.Rel.woi <- render_f(i.rel.woi, digits = digits)
 
-
-
-
-
-
     if (!is.null(y)) {
       riy <- as.vector(cor(x, y, use = "complete"))
       i.val <- riy * sqrt(vx)
@@ -289,8 +285,6 @@ Tbll_item_analysis <-
     }
     rslt
   }
-
-
 
 
 discrim <- function (x,

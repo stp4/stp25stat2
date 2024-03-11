@@ -1,11 +1,9 @@
-
 #' @rdname Tbll_desc
+#' @param include.range   in Tbll_desc_long()
+#' @param abbreviate Tbll_desc_long
 #'
 #' @description  Tbll_desc_long
 #'
-#' @param include.range lang oder kurz
-#' @param measure.name "m"
-#' @param include.custom eigene Funktion function(x){ mean(x)}
 #' @export
 #'
 #' @examples
@@ -90,19 +88,16 @@
 Tbll_desc_long <- function(...,
                            include.range = TRUE,
                            include.n = TRUE,
-                          # include.test = FALSE,
                            include.label = TRUE,
                            include.custom = NULL,
-
                            digits = NULL,
                            abbreviate = TRUE
-                         #  measure.name = "m"
+
                           ) {
 
   X <- stp25tools::prepare_data2(...)
 
   type <- if (include.range) "auto_long" else "auto_kurz"
-
 
   if(is.null(include.custom))
   rslt <-
@@ -159,8 +154,7 @@ analyse_sesc_long <- function(X,
                        digits = NULL,
                        type =  "auto_kurz",
                        include.label=FALSE,
-                       abbreviate = FALSE)
-{
+                       abbreviate = FALSE) {
   rslt <- NULL
 
   for (i in seq_len(length(X$measure))) {
@@ -240,8 +234,7 @@ berechne_all <- function(data,
                          fun = function(x)length(na.omit(x)),
                          fm = NULL,
                          digits = get_opt("mean","digits" ),
-                         measure.name = NULL
-) {
+                         measure.name = NULL) {
 
 
   mdn <- function() {

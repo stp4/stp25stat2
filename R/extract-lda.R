@@ -34,39 +34,38 @@ tbll_extract.lda <-
            digits=3,
            ...) {
     means <- fix_and_format(t(x$means),
-                            caption = "Means", digits=digits)
+                            caption = "Means",
+                            digits = digits)
 
     scaling <-  stp25tools::fix_to_df(x$scaling)
     scaling <- prepare_output(
-      fix_format(scaling[order(-scaling[, 2]), ]),
-      caption = "Coefficients of linear discriminants")
+                  fix_format(scaling[order(-scaling[, 2]), ]),
+                  caption = "Coefficients of linear discriminants"
+                  )
     svd <- x$svd
     names(svd) <- dimnames(x$scaling)[[2L]]
     if (length(svd) > 1L) {
       svd <- prepare_output(
-        fix_format(
-          data.frame(t(data.frame(
-            svd ^ 2 / sum(svd ^ 2)
-          )))),
-        caption = "Proportion of trace")
+               fix_format(data.frame(t(data.frame(svd ^ 2 / sum(svd ^ 2))))),
+               caption = "Proportion of trace")
     }
 
     cTab1 <- table(newdata[, 1], fit_predict$class,
                    dnn = c(names(newdata)[1], "Predict"))
 
-    cTab <- fix_and_format(
-      addmargins(cTab1),
-      caption = "Kontingenztafel tatsaechlicher und vorhergesagter Kategorien",
-      digits=0)
+    cTab <- fix_and_format(addmargins(cTab1),
+                           caption = "Kontingenztafel tatsaechlicher und vorhergesagter Kategorien",
+                           digits = 0)
 
 
     cTotal <- c(diag(prop.table(cTab1, 1)),
                 Total = sum(diag(prop.table(cTab1)))) * 100
     cTotal <-
-      prepare_output(
-        data.frame(Item = names(cTotal),
-                   percent = render_f(cTotal, digits=1)),
-        caption = "prozentuale Uebereinstimmung")
+      prepare_output(data.frame(
+        Item = names(cTotal),
+        percent = render_f(cTotal, digits = 1)
+      ),
+      caption = "prozentuale Uebereinstimmung")
 
     names(cTotal)[1] <- names(cTab)[1]
 
@@ -80,7 +79,9 @@ tbll_extract.lda <-
   }
 
 
-fix_and_format<- function(x, caption, digits=2, ...) {
+fix_and_format<- function(x,
+                          caption,
+                          digits=2, ...) {
   prepare_output(
     fix_format(
       stp25tools::fix_to_df(x),

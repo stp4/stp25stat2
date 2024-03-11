@@ -28,40 +28,35 @@
 #'
 #'
 #' }
-tbll_extract.emm_list <- function(x,
-                                  include.ci = TRUE,
-                                  ...) {
-  means <-
-    broom::tidy(x$emmeans,
-                conf.int = include.ci,
-                conf.level = 0.95,
-                ...)
-  contrasts <-
-    broom::tidy(x$contrasts,
-                conf.int = include.ci,
-                conf.level = 0.95,
-                ...)
+tbll_extract.emm_list <-
+  function(x,
+           include.ci = TRUE,
+           ...) {
+    means <-
+      broom::tidy(x$emmeans,
+                  conf.int = include.ci,
+                  conf.level = 0.95,
+                  ...)
+    contrasts <-
+      broom::tidy(x$contrasts,
+                  conf.int = include.ci,
+                  conf.level = 0.95,
+                  ...)
 
-  list(
-    means = prepare_output(
-      fix_format(means),
-      caption = "Means"
-    ),
-    contrasts = prepare_output(
-      fix_format(contrasts),
-      caption = "Contrasts",
+    list(
+      means = prepare_output(fix_format(means),
+                             caption = "Means"),
+      contrasts = prepare_output(fix_format(contrasts),
+                                 caption = "Contrasts",)
     )
-  )
 
-}
+  }
 
 
 #' @rdname Tbll
 #' @export
 tbll_extract.emmGrid <-
   function(x,
-           caption = "",
-           note = "",
            include.ci = TRUE,
            ...) {
     contrasts <-  means <- NULL
