@@ -593,27 +593,39 @@ Tbll_desc_multi <-
     )
 
     if (include.order) {
-      rslt_order <- Summarise(
+      ord_rslt <- Tbll_desc(
         ...,
-        fun = function(x) {
-          x <- na.omit(x)
-          if (is.logical(x))  mean(x)
-          else if (is.numeric(x)) mean(x == 1)
+        by = by,
+        use.level = use.level,
+        include.n = include.n,
+        include.nr = include.nr,
+        include.custom = function(x, by, ..., use_level = use.level) {
+          if (is.logical(x))
+            x <-  as.numeric(x)
+          else if (is.factor(x))
+            x <- ifelse(x == levels(x)[use_level], 1, 0)
           else
-            mean(x == levels(x)[use.level])
-        }
+            x <- 0
+          mean(x, na.rm = TRUE)
+        },
+        include.multiresponse = TRUE
+
       )
 
-      rslt_order<-rslt_order$value
-      if(grepl("^\\(N)", rslt$Item[1] )){
-        rslt_order  <- c( max( rslt_order ) +1, rslt_order)
+      rslt_order <- as.numeric(ord_rslt$custom)
+
+      if (grepl("^\\(N)", rslt$Item[1])) {
+        rslt_order  <-  order(c(1000,  rslt_order[-1]), decreasing = TRUE)
       }
+      else
+        rslt_order <- order(rslt_order, decreasing = TRUE)
 
       if (exclude.last.order) {
         rslt_order[length(rslt_order)] <- 0
       }
 
-      rslt <- rslt[order(rslt_order, decreasing = TRUE), ]
+      rslt <- rslt[rslt_order,]
+
     }
 
     rslt
