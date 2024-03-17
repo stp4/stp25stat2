@@ -364,7 +364,8 @@ APA(t1)
 
  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
  lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
-
+ 
+ Infomation(lm1, lm2)
 
  Tbll_reg(
   lm1,

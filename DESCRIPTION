@@ -1,6 +1,6 @@
 Package: stp25stat2
 Type: Package
-Title: Functions for statistical computations.
+Title: Functions for statistical computations
 Version: 0.2.1
 Date: 05-01-2024
 Authors@R: person("Wolfgang", "Peter", email = "w.peter@statistik-peter.at",  role = c("aut", "cre"))
@@ -11,45 +11,30 @@ LazyData: true
 RoxygenNote: 7.3.1
 Imports:
   Hmisc, 
-  magrittr, 
   car, 
-  stp25tools,
+  stp25tools,   
   stp25settings,
- methods, pscl
+  purrr,    
+  tibble,  
+  plyr,  
+  lazyeval, 
+  tidyr,   
+  dplyr,
+  knitr,
+  stringr,  
+  broom 
 Suggests: 
- stats, 
- knitr,
+ stats, methods,    
+ stp25data, carData, 
+ broom.mixed, glue, reshape2,
  psych, 
- purrr, 
- tibble, 
- plyr, 
- lazyeval, 
- tidyr,
- dplyr,
- stringr,
- haven,
- broom, 
- broom.mixed,
- lmtest, 
- lme4, 
- lmerTest,
- nlme,
- pscl, 
- MASS,  
- emmeans, 
- effects,
- survival, 
- pROC,
- epiR, 
- vcd,
- DescTools, 
- units,
- MuMIn,
- caret,
- coin,
- insight,
- rockchalk,
- performance,
- rms
+ lmtest, lme4, lmerTest, nlme, pscl, MASS, rms, 
+ multcomp,
+ effects, effectsize, emmeans, insight, performance, parameters,
+ survival, pROC, epiR,  
+ DescTools, units, MuMIn,
+ caret, coin, vcd, rockchalk,
+ lavaan, semPlot, piecewiseSEM,
+ meta, heplots
 VignetteBuilder: knitr  
 Language: de_DE
