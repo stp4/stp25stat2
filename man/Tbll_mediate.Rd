@@ -5,7 +5,7 @@
 \alias{Sobel_Test}
 \title{Tbll_mediate}
 \usage{
-Sobel_Test(y_x, y_xm, m_x, treat, mediator, digits = 2)
+Sobel_Test(y_x, y_xm, m_x, treat, mediator, digits = 2, ...)
 }
 \arguments{
 \item{y_x, y_xm, m_x}{lm -Objekte}
@@ -14,7 +14,9 @@ Sobel_Test(y_x, y_xm, m_x, treat, mediator, digits = 2)
 
 \item{mediator}{Mediator}
 
-\item{...}{}
+\item{digits}{Nachkomastellen}
+
+\item{...}{weitere Einstellungen}
 }
 \value{
 data.frame
@@ -22,35 +24,39 @@ data.frame
 data.frame
 }
 \description{
-Tbll_mediate
+Causal Mediation Analysis
+}
+\details{
+Eine Mediation beschreibt die Wirkung einer Einfluss Variablen (X) auf eine
+Zielvariable Variable (Y) über die Zwischenstufe einer Mediatorvariablen (M).
+oder auch unabhängige Variable > Mediator > abhängige Variable.
+
+
+Einfache Mediation und Moderationsanalyse mit Sobel-Test. Mediation ist gegeben wenn alle Modelle signifikant (1) und (4)
+
+Y ~ X
+Y ~ X + M
+(wenn hier M signifikant ist => partielle Mediation) (4) M ~ X
+
+Moderation ist gegeben wenn die Interaktion (X:M) signifikant ist
+
+Y ~ X + M + X:M
+
+
+Quelle: https://bjoernwalther.com/mediation-in-r/
+
+ Sobel-Test:
+Ein Beispiel mit Laavan findet sich unter
+https://paolotoffanin.wordpress.com/2017/05/06/multiple-mediator-analysis-with-lavaan/
 }
 \examples{
 
 
-#' #install.packages("mediation")
-library(mediation)
-require(stp25stat2)
-require(stp25output2)
 
-#' # Causal Mediation Analysis
-#'
-#' Eine Mediation beschreibt die Wirkung einer Einfluss Variablen (X) auf eine
-#' Zielvariable Variable (Y) über die Zwischenstufe einer Mediatorvariablen (M).
-#' oder auch unabhängige Variable > Mediator > abhängige Variable.
-#'
-#'
-#' Einfache Mediation und Moderationsanalyse mit Sobel-Test. Mediation ist gegeben wenn alle Modelle signifikant (1) und (4)
-#'
-#' Y ~ X
-#' Y ~ X + M
-#' (wenn hier M signifikant ist => partielle Mediation) (4) M ~ X
-#'
-#' Moderation ist gegeben wenn die Interaktion (X:M) signifikant ist
-#'
-#' Y ~ X + M + X:M
-#'
-#'
-#' Quelle: https://bjoernwalther.com/mediation-in-r/
+# install.packages("mediation")
+#library(mediation)
+#require(stp25stat2)
+#require(stp25output2)
 
 
 # Data --------------------------------------------------------------------
@@ -80,17 +86,11 @@ dat <- data.frame(
   Motivation = Motivation
 )
 
-dat \%>\% Tbll_desc_item(Note, Motivation , Lerndauer)
-
-
-
+dat |> Tbll_desc_item(Note, Motivation , Lerndauer)
 
 
 # library mediation -------------------------------------------------------
-
-
 pfad_x <- lm(Note ~ Motivation , dat)
-
 # Direkter Effekt von X auf Y und Effekt von M auf Y
 pfad_xm_y <- lm(Note ~ Motivation + Lerndauer, dat)
 pfad_x_i_m_y <- lm(Note ~ Motivation * Lerndauer, dat)
@@ -99,88 +99,15 @@ pfad_x_m <- lm(Lerndauer ~ Motivation , dat)
 
 Tbll_reg(pfad_x, pfad_x_m, pfad_xm_y, pfad_x_i_m_y , include.ci = FALSE)
 
-library(mediation)
-rslt <- mediation::mediate(pfad_x_m, pfad_xm_y,
-                           treat = "Motivation", mediator = "Lerndauer",
-                           boot = FALSE,
-                           sims = 100)
-summary(rslt)
-Tbll(rslt)
-#
-#  indirekten Effekt
-#ACME ist der average causal mediation effect. Das ist der indirekte Effekt (Pfad X und M)
-pfad_x_m$coefficients["Motivation"] * pfad_xm_y$coefficients["Lerndauer"]
-
-
-
-# library psych -----------------------------------------------------------
-
-
-library(psych)
-
-mod4 <-
-  psych::mediate(
-    Note ~ Motivation + (Lerndauer),
-    data = dat,
-    n.iter = 50,
-    std = FALSE,
-    plot = FALSE
-  )
-# mod4 <- psych::mediate(Note ~ Motivation + Motivation:Lerndauer + (Lerndauer), data =dat, n.iter=50)
-class(mod4)
-
-print(mod4, short = TRUE )
-# summary(mod4)
-#
-#  mediate.diagram(mod4)
-#  moderate.diagram(mod4)
-#
-# summary(mod4,plot=FALSE)
-
-Tbll(mod4) # \%>\% Output()
-Tbll(rslt)
-
-
-
-# Sobel-Test --------------------------------------------------------------
-
-
-#'
-#'  Eine andere Methode ist
-#'   Mediation und Moderationsanalyse mit Sobel-Test.
-#' Mediation ist gegeben wenn alle Modelle signifikant (1) und (4)
-#'
-#'   (1) Y~X
-#'   (2) Y~X+M  (wenn hier M signifikant ist => partielle Mediation)
-#'   (4) M~X
-#'
-#'   Moderation ist gegeben wenn die Interaktion (X:M) signifikant ist
-#'
-#'   (3) Y~ X + M + X:M
-#'
-#'   Ein Beispiel mit Laavan findet sich unter
-#'   https://paolotoffanin.wordpress.com/2017/05/06/multiple-mediator-analysis-with-lavaan/
-#'
-#'
-
-
-
-
-
-
-
 
 pfad_x_y <- lm(Note ~ Motivation , dat)
 pfad_x_m_y <- lm(Note ~ Motivation + Lerndauer, dat)
 # Direkter Effekt von X auf M
 pfad_x_m <- lm(Lerndauer ~ Motivation , dat)
 
-
-
 # pfad_x_y <- lmerTest::lmer(Note ~ Motivation +time+ (1 | id), dat)
 # pfad_x_m_y <- lmerTest::lmer(Note ~ Motivation + Lerndauer +time+ (1 | id), dat)
 # pfad_x_m <- lmerTest::lmer(Lerndauer ~ Motivation +time+ (1 | id), dat)
-
 
 Sobel_Test(pfad_x_y, pfad_x_m_y, pfad_x_m,
            treat="Motivation",
@@ -188,4 +115,41 @@ Sobel_Test(pfad_x_y, pfad_x_m_y, pfad_x_m,
 
 
 
+# library(mediation)
+# rslt <- mediation::mediate(pfad_x_m, pfad_xm_y,
+#                            treat = "Motivation", mediator = "Lerndauer",
+#                            boot = FALSE,
+#                            sims = 100)
+# summary(rslt)
+# Tbll(rslt)
+# #
+# #  indirekten Effekt
+# #ACME ist der average causal mediation effect. Das ist der indirekte Effekt (Pfad X und M)
+# pfad_x_m$coefficients["Motivation"] * pfad_xm_y$coefficients["Lerndauer"]
+
+
+
+# library(psych)
+#
+# mod4 <-
+#   psych::mediate(
+#     Note ~ Motivation + (Lerndauer),
+#     data = dat,
+#     n.iter = 50,
+#     std = FALSE,
+#     plot = FALSE
+#   )
+# # mod4 <- psych::mediate(Note ~ Motivation + Motivation:Lerndauer + (Lerndauer), data =dat, n.iter=50)
+# class(mod4)
+#
+# print(mod4, short = TRUE )
+# # summary(mod4)
+# #
+# #  mediate.diagram(mod4)
+# #  moderate.diagram(mod4)
+# #
+# # summary(mod4,plot=FALSE)
+#
+# Tbll(mod4) # |> Output()
+# Tbll(rslt)
 }

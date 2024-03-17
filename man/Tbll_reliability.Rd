@@ -29,7 +29,7 @@ Tbll_reliability(...)
   include.label = TRUE,
   include.item_statistics = TRUE,
   include.scale_statistics = TRUE,
-  include.cronbachs.alpha = TRUE,
+  include.Alpha = TRUE,
   include.inter.item.correlation = FALSE,
   revcoded = FALSE,
   check.keys = NULL,
@@ -38,26 +38,42 @@ Tbll_reliability(...)
   digits = 2
 )
 
-\method{Tbll_reliability}{psych}(x, digits = 2)
+\method{Tbll_reliability}{psych}(x, digits = 2, ...)
 
 Tbll_Alpha(..., type = 1, names = NULL)
 }
 \arguments{
-\item{...}{Data, Formula}
+\item{...}{daten}
 
 \item{include.label}{Labels}
 
+\item{include.Sample.SD}{Standard deviation of the item}
+
+\item{include.Item.total}{(unkorrigierte) Trennschaerfe}
+
+\item{include.Item.Tot.woi}{korrigierte Trennschaerfe Alpha if Item Deleted}
+
+\item{include.Difficulty}{Difficulty Mean of the item (p)}
+
+\item{include.Discrimination}{Itemschwierigkeit Discrimination of the item (u-l)/n}
+
+\item{include.Item.Reliab}{Item reliability index}
+
+\item{include.Item.Rel.woi}{Item reliability index (scored without item)}
+
 \item{digits}{Digits}
+
+\item{include.item_statistics}{Item Statistic}
+
+\item{include.scale_statistics}{Scale Statistic}
+
+\item{include.inter.item.correlation, include.Alpha}{cronbachs Alpha}
 
 \item{revcoded, check.keys, keys}{numeric oder logikal TRUE entspricht check.keys = TRUE}
 
 \item{na.rm}{an psych::alpha}
 
-\item{caption, note}{an prepare}
-
-\item{include.item_statistic}{Item Statistic}
-
-\item{include.scale_statistic}{Scale Statistic}
+\item{x, type, names}{... Data, Formula}
 }
 \value{
 data.frame
@@ -81,7 +97,6 @@ Mean of the item (p)
 
 Discrimination
 Discrimination of the item (u-l)/n
-
 
 Item.Reliab
 Item reliability index
@@ -153,6 +168,7 @@ TestScores <- stp25tools::get_data(
   0  0  0  0  0  1  0  0  1   1 3.16
   0  0  0  0  0  1  0  0  1   1 5.15
   0  0  0  0  1  0  0  0  1   1 0.52")
+
 Tbll_item_analysis(TestScores,
     i1, i2, i3, i4, i5, i6, i7, i8, i9, i10,
     by = ~ y)
@@ -185,6 +201,7 @@ m2 <-  Tbll_reliability(dat, x, y, z, w)
 
 Tbll_Alpha(m1, m2)
 
+\donttest{
 require(psych)
 
 keys <-
@@ -198,4 +215,7 @@ scores <- psych::scoreItems(keys,bfi,min=1,max=6) #specify the minimum and maxim
 scores$alpha
 summary(scores)
 head(scores$scores)
+
+ }
+
 }

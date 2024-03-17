@@ -19,7 +19,7 @@
 \usage{
 R2(x, ...)
 
-\method{R2}{list}(..., caption, note)
+\method{R2}{list}(...)
 
 \method{R2}{lm}(x, ...)
 
@@ -49,24 +49,6 @@ RMSE(x, ...)
 \item{x}{fit-Objekt lm glm}
 
 \item{...}{weitere Objekte nicht benutzt}
-
-\item{varF}{fot glmm Variance of fixed effects}
-
-\item{varRand}{fot glmm Variance of random effects}
-
-\item{varResid}{fot glmm Residual variance. Only necessary for "gaussian" family}
-
-\item{family}{fot glmm family of the glmm (currently works with gaussian, binomial and poisson)}
-
-\item{link}{fot glmm model link function. Working links are: gaussian: "identity" (default);
-binomial: "logit" (default), "probit"; poisson: "log" (default), "sqrt"}
-
-\item{mdl.aic}{fot glmm The model's AIC}
-
-\item{mdl.class}{fot glmm The name of the model's class}
-
-\item{null.fixef}{fot glmm Numeric vector containing the fixed effects of the null model.
-Only necessary for "poisson" family}
 }
 \value{
 ein data.frame-Objekt.
@@ -148,30 +130,26 @@ corresponding class to get varF, varRand and the family from the specific object
  return A data frame with "Class", "Family", "Marginal", "Conditional", and "AIC" columns
 }
 \examples{
-
-#  fit1<-lm(chol1~chol0, hyper)
-#  summary(fit1)$r.squared
-#  R2(fit1)
-
-
-
-# fit1<-lm(score ~ grade + treatment, schools)
-# fit2<-lm(score ~ grade + treatment + stdTest, schools)
-# R2.list(fit1, fit2)
-
-
+ \donttest{
+ fit1<-lm(score ~ grade + treatment, schools)
+ fit2<-lm(score ~ grade + treatment + stdTest, schools)
+ R2.list(fit1, fit2)
+}
+ \donttest{
  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
 R2(lm1)
 broom::glance(lm1)[c( "r.squared", "adj.r.squared")]
-
-
+}
+ \donttest{
 lm2 <- glm(wool~ breaks + tension, warpbreaks, family= binomial())
 R2(lm2)
 #DescTools::PseudoR2(lm2,c("McFadden", "CoxSnell", "Nagelkerke"))
-
-
+}
+ \donttest{
  require(MASS)
 options(contrasts = c("contr.treatment", "contr.poly"))
 house.plr <- polr(Sat ~ Infl + Type + Cont, weights = Freq, data = housing)
 R2(house.plr)
+}
+
 }

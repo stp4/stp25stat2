@@ -16,6 +16,8 @@
 )
 }
 \arguments{
+\item{x}{Objekt}
+
 \item{baseline.model}{an lavaan}
 
 \item{include.ci, include.model, include.varianz, include.latent}{Lavan: was soll ausgegeben werden}
@@ -84,6 +86,8 @@ Quelle: https://sites.education.miami.edu/statsu/2020/10/12/steps-of-conducting-
 }
 \examples{
 
+\donttest{
+
 # require(psych)
 require(lavaan)
 # require(stp25stat2)
@@ -137,10 +141,10 @@ x<-Tbll(
   include.ci = TRUE
 )
 summary(fit2)
-x$latent # \%>\% Output()
+x$latent # |> Output()
 
-x$varianz # \%>\% Output()
-x  # \%>\% Output("Hallo")
+x$varianz # |> Output()
+x  # |> Output("Hallo")
 
 
 library(piecewiseSEM)
@@ -186,6 +190,10 @@ summary(mod)
 #
 # g1
 
+ }
+
+
+ \donttest{
 require(stp25data)
 head(fkv)
 
@@ -219,11 +227,6 @@ summary(fit.Lavaan)
 
 #semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
 #title("Std", line = 3)
-
-
-
-
-
-
+}
 
 }

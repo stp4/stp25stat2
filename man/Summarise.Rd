@@ -17,11 +17,11 @@ Summarise(
 )
 }
 \arguments{
-\item{...}{An Long() daten Formeln,Variablen-Namen}
+\item{...}{An Long() daten Formeln, Variablen-Namen}
 
 \item{fun}{function(x) length(na.omit(x)) an aggregate}
 
-\item{key, value, use.label}{an Long}
+\item{key, value, include.label}{an Long}
 
 \item{na.action}{an aggregate}
 
@@ -30,15 +30,13 @@ Summarise(
 \item{margins, margins_name}{Gesamt}
 }
 \value{
-reshape objek
+data.frame, tibble
 }
 \description{
 Summarise: ist eine  Erweiterung  aggregate()
 }
 \examples{
-#'
-mean3 <- function(x)
-  round(mean(x, na.rm = TRUE), 2)
+
 df <- data.frame(
   month = rep(1:3, 2),
   student = rep(c("Amy", "Bob"), each = 3),
@@ -48,16 +46,22 @@ df <- data.frame(
 
 Summarise(A + B ~ student, df)
 
+\donttest{
+data(hyper, package = "stp25data")
+
+mean3 <- function(x)
+  round(mean(x, na.rm = TRUE), 2)
+
 Summarise(
   df,
-  A,  B,
-  by =  ~  month,
+  A, B,
+  by = ~ month,
   fun = mean3,
   formula = month ~ variable,
   margins = TRUE
 )
 
-require(stp25data)
+
 Summarise(
   chol0 + chol1 + chol6 + chol12 ~ g,
   hyper,
@@ -67,36 +71,30 @@ Summarise(
 )
 
 Summarise(
-chol0 + chol1 + chol6 + chol12 ~ g,
-hyper,
-fun = mean,  # function(x) c(m=mean(x), sd = sd(x)),
-# key = "Zeit",
-#  value = "Cholesterin",
-formula = variable~g
- )
-
-
+  chol0 + chol1 + chol6 + chol12 ~ g,
+  hyper,
+  fun = mean,
+  formula = variable ~ g
+)
 
 Summarise(
   chol0 + chol1 + chol6 + chol12 ~ g,
   hyper,
-  fun =  function(x)
+  fun = function(x)
     c(m = mean(x), sd = sd(x)),
   magin = TRUE,
   formula = variable ~ g
 )
 
+hyper |>
+  Summarise(
+    chol0, chol1, chol6, chol12,
+    by = ~ g + med,
+    fun = function(x)
+      c(m = mean(x), sd = sd(x)),
+    formula = ~ g + med
+  )
 
+  }
 
-Summarise(
-  hyper,
-  chol0 ,
-  chol1 ,
-  chol6 ,
-  chol12,
-  by = ~ g + med,
-  fun =  function(x)
-    c(m = mean(x), sd = sd(x)),
-  formula = ~ g + med
-)
 }

@@ -11,14 +11,18 @@ Tbll(...)
 
 \method{tbll_extract}{emm_list}(x, include.ci = TRUE, ...)
 
-\method{tbll_extract}{emmGrid}(x, caption = "", note = "", include.ci = TRUE, ...)
+\method{tbll_extract}{emmGrid}(x, include.ci = TRUE, ...)
 
 \method{tbll_extract}{visreg}(x, include.ci = TRUE, digits = 2, ...)
 }
 \arguments{
 \item{...}{an  broom::tidy zB  adjust = "tukey"}
 
+\item{x}{object}
+
 \item{include.ci}{an broom::tidy mit conf.int = include.ci, conf.level = 0.95,}
+
+\item{digits}{decimal places}
 }
 \value{
 data.frame oder liste mit data.frames
@@ -49,22 +53,24 @@ Tbll(
 )
 
 
-#require(stpvers)
+ \donttest{
 require(emmeans)
 
- warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
-x1<-emmeans (warp.lm,  ~ wool | tension)
-Tbll(emmeans (warp.lm,  ~ wool | tension))
+warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+x1 <- emmeans(warp.lm, ~ wool | tension)
+Tbll(emmeans(warp.lm, ~ wool | tension))
 
-x2<-emmeans (warp.lm, poly ~ tension | wool)
-Tbll(emmeans (warp.lm, poly ~ tension | wool))
+x2 <- emmeans(warp.lm, poly ~ tension | wool)
+Tbll(emmeans(warp.lm, poly ~ tension | wool))
 
-x3<-emmeans (warp.lm, pairwise ~ tension | wool)
-Tbll(emmeans (warp.lm, pairwise ~ tension | wool))
+x3 <- emmeans(warp.lm, pairwise ~ tension | wool)
+Tbll(emmeans(warp.lm, pairwise ~ tension | wool))
 
 Tbll(x3, adjust = "tukey")
 Tbll(x3, adjust = "scheffe")
 
-?summary.emmGrid
+# ?summary.emmGrid
 
+
+}
 }

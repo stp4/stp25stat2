@@ -37,7 +37,7 @@ Tbll_xtabs(x, ...)
 )
 
 \method{Tbll_xtabs}{data.frame}(
-  data,
+  x,
   ...,
   include.count = TRUE,
   include.percent = TRUE,
@@ -93,29 +93,31 @@ Klassifikation(x, ...)
 )
 }
 \arguments{
-\item{x, data}{formula und data.frame geht an xtabs}
+\item{x}{Objekt  glm, xtab, formula}
 
-\item{...}{weitere Objekte nicht benutzt}
+\item{...}{include.test usw}
 
 \item{thresh}{Klassifikation auf Basis der Vorhersage Schwelle bei P=0.5}
 
-\item{addNA, exclude, drop.unused.levels}{an xtabs()}
+\item{data}{formula und data.frame geht an xtabs}
 
-\item{margin, add.margins}{Prozent und total}
+\item{addNA, exclude, drop.unused.levels}{an xtabs()'}
 
-\item{include.percent, include.count}{ausgabe}
+\item{margin, add.margins}{Prozent und Total add.margins gibt an welche Spalten  geht am addmargins()}
 
-\item{include.test, test, include.prop.chisq, include.chisq, include.fisher}{die Tests}
+\item{include.count}{Anzahl}
+
+\item{include.percent}{Prozent}
+
+\item{include.prop.chisq, include.chisq, include.fisher, include.test}{Sig. Test}
 
 \item{include.correlation}{Korrelation}
 
-\item{include.diagnostic, include.sensitivity, prevalence}{ascostat}
+\item{include.diagnostic, prevalence}{Diagnostic}
 
 \item{digits}{Nachkommastellen}
 
-\item{x}{glm oder xtab Objekt}
-
-\item{caption}{an Output}
+\item{lvs, N_data}{internal was fuer eine Tabelle kommt}
 }
 \value{
 list("xtab","fisher_test","diagnostic.test")
@@ -158,136 +160,36 @@ xtabs-Objekt
 }
 \examples{
 
-
- data(infert, package = "datasets")
-infert$case  <- factor(infert$case , 1:0, c("case", "control"))
-
-infert$spontaneous <- factor(infert$spontaneous)
-infert$induced2    <- factor(infert$induced == 0)
-
-Tbll_xtabs( ~  case, infert)
-Tbll_xtabs( ~ induced2 + case, infert)
-Tbll_xtabs( ~ induced + case, infert)
-Tbll_xtabs( ~ induced + education, infert)
-
-
-Tbll_xtabs( ~ induced + education + case,
-            infert,
-            margin = "case",
-            #  add.margins = c("education", "induced"),
-            include.count = FALSE)
-
-Tbll_xtabs(
-  ~ induced + education + case,
-  infert,
-  margin = "case",
-  add.margins = c("case"),
-  include.count = FALSE
-)
-
-
-
-
-df<- data.frame(A = c(1,0,0,1,0,1,0,1,1,0,0,0,0,1,1),
-B = c(0,0,1,0,1,0,1,1,1,1,1,1,1,0,0)
-)
-
-
-Tbll_xtabs(
-  ~ A + B,
-  df,
-  include.percent = FALSE,
-  include.test = TRUE,
-  include.diagnostic = TRUE
-)
-
-
-
+\donttest{
 
 data(infert, package = "datasets")
 infert$case  <- factor(infert$case ,1:0, c("case", "control") )
-
 infert$spontaneous <- factor(infert$spontaneous)
 infert$induced2    <- factor(infert$induced==0)
 
-tab_1<- xtabs(~  case, infert)
-tab_2x2<- xtabs(~ induced2 + case, infert)
-tab_3x2<- xtabs(~ induced + case, infert)
-tab_3x3<- xtabs(~ induced + education, infert)
-tab_3x3x2<- xtabs(~ induced + education+case, infert)
+tab_1 <- xtabs( ~  case, infert)
+tab_2x2 <- xtabs( ~ induced2 + case, infert)
+tab_3x2 <- xtabs( ~ induced + case, infert)
+tab_3x3 <- xtabs( ~ induced + education, infert)
+tab_3x3x2 <- xtabs( ~ induced + education + case, infert)
 
-#Tbll_xtabs(summary(tab_3x3x2))
+Tbll(summary(tab_3x3x2))
 
-(Tbll_xtabs(tab_1, include.test=TRUE))
-(Tbll_xtabs(tab_2x2, include.test=TRUE))
-(Tbll_xtabs(tab_3x2, include.test=TRUE))
-(Tbll_xtabs(tab_3x3, include.test=TRUE))
-(Tbll_xtabs(tab_3x3x2, include.test=TRUE))
-
-
-a <- letters[1:3]
-Tbll(summary(table(a, sample(a))))
+Tbll_xtabs(tab_1, include.test=TRUE)
+Tbll_xtabs(tab_2x2, include.test=TRUE)
+Tbll_xtabs(tab_3x2, include.test=TRUE)
+Tbll_xtabs(tab_3x3, include.test=TRUE)
+Tbll_xtabs(tab_3x3x2, include.test=TRUE)
 
 
- require(stp25data)
+Klassifikation(tab_2x2)
 
-x<-xtabs(~gruppe+lai, hkarz)
+tab <- matrix(c(94, 40, 39, 40), ncol = 2, byrow = TRUE)
+tbll_extract(caret::confusionMatrix(tab))
+tbll_extract(epiR::epi.tests(tab) )
 
-Klassifikation(x)
+Klassifikation(as.table(tab))
 
-# require(stp25data)
-# fit1<- glm(gruppe~lai, hkarz, family = binomial)
-# thkarz <- as.data.frame(xtabs(~gruppe+lai, hkarz))
-# fit2<- glm(Freq ~ gruppe*lai, thkarz, family = poisson())
-
-
- # require(stp25data)
- # hkarz$LAI<- factor(hkarz$lai, 0:1, c("pos", "neg"))
- # Klassifikation(xtabs(~gruppe+LAI, hkarz), test=TRUE, type="fischer")
-
- tab <- matrix(c(94, 40, 39, 40), ncol = 2, byrow = TRUE)
- tbll_extract(caret::confusionMatrix(tab))
- tbll_extract(epiR::epi.tests(tab) )
-
- Klassifikation(as.table(tab))
-
-
-# dat <-
-#   get_data("
-# outcome    A B
-# a   94 40
-# b   39  40",
-#            tabel_expand = TRUE,
-#            value = "test")
-#
-#
-# dat$outcome <- ifelse(dat$outcome =="a",1,0)
-# dat$test <- ifelse(dat$test =="A",1,0)
-# xtabs( ~ outcome + test, dat)
-#
-# fit<- glm(outcome~ test, dat, family = binomial())
-#
-#
-# summary(fit)
-# dat$residuals <- residuals(fit)
-# dat$predict <- predict(fit)
-#
-# (dat)
-#
-# require(glue)
-# require(pROC)
-# fit_roc <- pROC::roc( dat$outcome, dat$test )
-# Tbll( fit_roc )
-# ?coords(fit_roc)
-#
-#
-# roc.liver <- roc( outcome ~ predict, dat)
-#
-# auc<- roc.liver$auc
-# glue( 'Area under the curve: {sprintf("\%.3f", auc)} it means there is a {sprintf("\%.0f", auc*100)} \% chance that the model
-#  will be able to distinguish between positive class and negative class.')
-#
-#
-# plot(roc.liver)
+}
 
 }

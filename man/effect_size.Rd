@@ -11,9 +11,13 @@ effect_size(x, by, measure, measure.test, ...)
 
 \item{by}{factor}
 
-\item{measure}{intern c("mean", "median", "numeric", "factor", "logical")}
+\item{measure}{intern c("mean", "median",
+"numeric", "factor", "logical")}
 
-\item{measure.test, }{test  intern c("cattest", "contest", "notest", "ttest", ...)}
+\item{measure.test, }{test  intern c("cattest",
+"contest", "notest", "ttest", ...)}
+
+\item{...}{description folgt}
 }
 \description{
 Cohen's d  d=(x1-x2)/s psych::cohen.d
@@ -24,16 +28,17 @@ g enspricht  x<-scale(x)  (mean(x1) - mean(x2))
 Generalized Log Odds Ratios for Frequency Tables vcd::oddsratio
 }
 \examples{
-
- # effect_size(c(2, 3, 4, 2, 3, 4, 3, 6,
- # 7, 6, 8, 9, 4, 5, 6, 7) ,
- # gl(2, 8, labels = c("Control", "Treat")))
- # x<- c(2, 3, 4, 2, 3, 4, 3, 6,7, 6, 8, 9, 4, 5, 6, 7)
- # y<- factor(c(2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2))
-#  z<- gl(2, 8, labels = c("Control", "Treat"))
- #  rbind(
- # effect_size(x, z),
- # effect_size(y, z)
- # )
+ \donttest{
+  effect_size(c(2, 3, 4, 2, 3, 4, 3, 6,
+  7, 6, 8, 9, 4, 5, 6, 7) ,
+  gl(2, 8, labels = c("Control", "Treat")))
+  x<- c(2, 3, 4, 2, 3, 4, 3, 6,7, 6, 8, 9, 4, 5, 6, 7)
+  y<- factor(c(2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2))
+   z<- gl(2, 8, labels = c("Control", "Treat"))
+   rbind(
+  effect_size(x, z),
+  effect_size(y, z)
+  )
+}
 
 }

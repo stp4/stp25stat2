@@ -68,11 +68,16 @@ Tbll_coxph_uni(
 )
 }
 \arguments{
-\item{x}{a formula object, with the response on the left of a ~ operator, and the terms on the right. The response must be a survival object as returned by the Surv function.}
+\item{x}{a formula object, with the response on the left of a ~ operator,
+and the terms on the right. The response must be a survival object as returned
+by the Surv function.}
 
 \item{...}{an summary.surfit times, censored = FALSE, scale = 1, extend=FALSE}
 
-\item{data}{a data.frame in which to interpret the variables named in the formula, or in the subset and the weights argument.}
+\item{data}{a data.frame in which to interpret the variables named in the
+formula, or in the subset and the weights argument.}
+
+\item{names, formula, digits, include.z.test, include.wald.test}{description folgt}
 
 \item{include.param}{Regrssionstabelle}
 
@@ -83,8 +88,6 @@ Tbll_coxph_uni(
 \item{include.se}{Standardfehler}
 
 \item{include.survival}{Tabelle mit allen Ueberlebenszeiten}
-
-\item{note}{an Output}
 }
 \value{
 data.frame or list with data.frames
@@ -113,25 +116,25 @@ Cox regression: Hazard das unmittelbare Risiko
 }
 \examples{
 
-require(magrittr)
-# require(stp25stat2)
+\donttest{
+
 require(survival)
 
 fit0 <- survfit(Surv(futime, fustat) ~ 1, data = ovarian)
 fit1 <- survfit(Surv(futime, fustat) ~ rx, data = ovarian)
 fit2 <-
   survfit(Surv(futime, fustat) ~ rx + resid.ds, data = ovarian)
-#summary(fit1)
+# summary(fit1)
 Tbll(fit0)
 Tbll(fit1)
 Tbll(fit2)
 
 Tbll(fit1, include.survival = TRUE)
 
-"Survival Curve Differences"
-survdiff(Surv(futime, fustat) ~ rx, data = ovarian) \%>\% Tbll()
+# Survival Curve Differences
+survdiff(Surv(futime, fustat) ~ rx, data = ovarian) |> Tbll()
 
-coxph(Surv(futime, fustat) ~ rx, data = ovarian) \%>\% Tbll()
+coxph(Surv(futime, fustat) ~ rx, data = ovarian) |> Tbll()
 
 Tbll_surv(
   fit1,
@@ -141,11 +144,13 @@ Tbll_surv(
   include.test = TRUE
 )
 
+}
 
+\donttest{
 Tbll_surv(Surv(futime, fustat) ~ rx, data = ovarian)
+}
 
-
-#'
+ \donttest{
 Tbll_coxph_uni(
   lung,
   age,
@@ -153,14 +158,14 @@ Tbll_coxph_uni(
   include.z.test = TRUE,
   include.wald.test = FALSE
 )
-coxph(Surv(time, status) ~ age, data = lung) \%>\%  summary() \%>\% Tbll()
+coxph(Surv(time, status) ~ age, data = lung) |>  summary() |> Tbll()
 
 Tbll_coxph_uni(lung, age, sex,
                ph.karno, ph.ecog, wt.loss,
                by = ~ time + status)
 
 coxph(Surv(time, status) ~ age + sex + ph.karno + ph.ecog + wt.loss,
-      data = lung) \%>\%  summary() \%>\% Tbll()
+      data = lung) |>  summary() |> Tbll()
 
 
 # The variables sex, age and ph.ecog have highly statistically significant
@@ -170,5 +175,6 @@ coxph(Surv(time, status) ~ age + sex + ph.karno + ph.ecog + wt.loss,
 # coefficient. Thus, older age and higher ph.ecog are associated with poorer
 # survival, whereas being female (sex=2) is associated with better survival.
 
+}
 
 }

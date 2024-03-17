@@ -2,8 +2,8 @@
 % Please edit documentation in R/zzz.R
 \docType{package}
 \name{stp25stat2}
-\alias{stp25stat2}
 \alias{stp25stat2-package}
+\alias{stp25stat2}
 \title{Analytics}
 \description{
 Collection of convenient functions for common statistical computations.

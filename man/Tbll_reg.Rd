@@ -7,7 +7,6 @@
 \usage{
 Tbll_reg(
   ...,
-  caption = "",
   include.label = FALSE,
   names = NULL,
   digits = NULL,
@@ -36,7 +35,6 @@ Tbll_reg(
 
 Tbll_reg_long(
   ...,
-  caption = "",
   include.label = FALSE,
   digits = NULL,
   include.b = TRUE,
@@ -60,25 +58,60 @@ Tbll_reg_long(
   include.custom = NULL
 )
 }
+\arguments{
+\item{...}{ein oder mehrer Modelle}
+
+\item{include.label}{Namen oder Labels FALSE}
+
+\item{names}{Spaltenname}
+
+\item{digits}{Nachkomastellen}
+
+\item{include.b, include.ci}{estimate}
+
+\item{include.se}{SE}
+
+\item{include.beta}{st. Beta}
+
+\item{include.odds, include.odds.ci}{Odds}
+
+\item{include.statistic}{Test Statistik}
+
+\item{conf.method}{für glm zb "Wald"}
+
+\item{include.p, include.stars}{P-Werte,Sternchen}
+
+\item{include.param}{Ausgabe der Parameter}
+
+\item{include.gof}{ModellGüte ausgeben}
+
+\item{include.r, include.pseudo}{R-Quadrat}
+
+\item{include.aic, include.bic}{Gütemasse}
+
+\item{include.loglik, include.minus.LL}{für glm}
+
+\item{include.test}{Anova Test für das gesamt Modell}
+
+\item{include.rmse}{RMSE}
+
+\item{include.custom}{Eigene Spalte}
+}
 \description{
 Bei glm  kann mit dem Parameter conf.method Wald oder z-test für
- die Test statistik gewaelt werden.
+die Test statistik gewaelt werden.
 }
 \examples{
 
  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
  lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
 
-
  Tbll_reg(
-  lm1,
-  lm2,
+  lm1, lm2,
   include.p = FALSE,
   include.ci = TRUE,
-  include.se=FALSE,
-  caption = "Regression Table"
+  include.se=FALSE
 )
 
-Tbll(lm1, lm2)
 
 }

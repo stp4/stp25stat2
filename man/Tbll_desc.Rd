@@ -11,7 +11,6 @@
 \usage{
 Tbll_corr(
   ...,
-  caption = "",
   include.label = TRUE,
   include.mean = FALSE,
   include.n = TRUE,
@@ -81,35 +80,44 @@ Tbll_desc_item(
 \arguments{
 \item{...}{an prepare_data2}
 
-\item{caption}{besser mit Output verwenden}
-
 \item{include.label}{Labels ja-nein}
 
-\item{include.mean}{mean + sd}
+\item{include.mean, include.median, include.sd}{Masszahlen}
 
-\item{include.n, include.nr, include.total, include.multiresponse}{weitere param}
+\item{include.n}{Anzahl an gueltigen Werten}
 
-\item{include.stars, include.p}{P-Wert}
+\item{include.stars, include.p}{Tbll_corr(): P-Werte,Explizite p-Werte, Sternchen als p-Werte}
 
-\item{cor_diagonale_up}{diagonale}
+\item{cor_diagonale_up}{Tbll_corr(): Diagonale oben oder unter}
 
-\item{type}{c("pearson", "spearman"}
+\item{type}{Tbll_corr(): enweder "pearson" oder "spearman"}
+
+\item{include.nr, include.total, include.multiresponse}{weitere param}
 
 \item{include.test, include.normality.tests}{Test}
 
-\item{include.custom}{eigene Funktion function(x){ mean(x)}}
+\item{include.custom}{eigene Funktion mit (x, by, fun) return kann ein Vector oder eine Matrix sein
+ function(x , by, ...){
+ x <- scale(as.numeric(x))
+ diff(sapply(split(x, by), mean, na.rm=TRUE))})
 
-\item{include.value}{vector oder data.frame in exact der reihenfolge wie die meassure-variablen.}
+ in Tbll_desc_long(include.custom = function(x){ mean(x)})}
 
-\item{include.range}{lang oder kurz}
+\item{include.value}{vector oder data.frame in exact der Reihenfolge wie die meassure-variablen.}
+
+\item{digits}{Nachkommastellen}
+
+\item{use.level, include.order, exclude.last.order}{Tbll_desc_multi weitere einstellungen}
+
+\item{by}{Gruppenvariable}
+
+\item{include.range}{in Tbll_desc_long()}
+
+\item{abbreviate}{Tbll_desc_long}
 
 \item{include.shapiro, include.ks}{Normalverteilung Tests}
 
 \item{include.skew, include.kurtosi}{Eigenschaften}
-
-\item{measure.name}{"m"}
-
-\item{include.n, include.mean, include.median, include.sd, include.range}{Masszahlen}
 }
 \value{
 data.frame
@@ -121,6 +129,8 @@ Tbll_desc_long
 }
 \examples{
 
+
+\donttest{
 require(stp25tools)
 n <- 2 * 20
 e <- rnorm(n)
@@ -143,11 +153,7 @@ Tbll_corr(a ~ c, dat)
 Tbll_corr(a + b + c ~ d, dat)
 Tbll_corr(a + b + c ~ d, dat, groups = ~ g)
 
-
-
-require(magrittr)
-#require(stp25tools)
-
+}
 
 n<- 100
 set.seed(1)
@@ -158,7 +164,7 @@ DF <- data.frame(
 
 )
 
-DF<- na.omit(DF )
+DF<- na.omit(DF)
 
 set_opt(
   median = list(digits = 0, style=2),
@@ -166,8 +172,7 @@ set_opt(
 )
 
 
-
-DF \%>\%
+DF |>
   Tbll_desc( sex[ratio],
              group[freq],
              age[median],
@@ -186,16 +191,16 @@ Tbll_desc(
   include.test = TRUE
 )
 
-
+\donttest{
 warpbreaks2 <- stp25tools::Label(warpbreaks,
                      breaks	=	"The number of breaks",
                      wool	=	"The type of wool",
                      tension	=	"The level of tension")
 warpbreaks2$tension2 <- as.numeric(warpbreaks2$tension)
 
-warpbreaks2 \%>\%
+warpbreaks2 |>
   Tbll_desc(breaks + tension ~ wool)
-warpbreaks2 \%>\%
+warpbreaks2 |>
   Tbll_desc_long(breaks + tension ~ wool)
 
 
@@ -225,7 +230,7 @@ x <- Tbll_desc(
   include.value = data.frame(ES = 1:2, OR = 3:4)
 
 )
-Tbll_corr(breaks ~ tension2, warpbreaks2,  groups = ~ wool)
+
 
 Tbll_xtabs( ~ tension + wool, warpbreaks2, include.label = FALSE)
 
@@ -238,22 +243,23 @@ Tbll_reg(
   lm2,
   include.p = FALSE,
   include.ci = TRUE,
-  include.se = FALSE,
-  caption = "Regression Table"
+  include.se = FALSE
 )
 
 
 Tbll_reg(lm1, lm2)
 
- dat <- data.frame(
-Hotel =  c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-Pension = c(1, 1, 0, 0, 0, 1, 1, 1, 1, 1),
-Hostel = c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1),
-Ferienwohnung = c(1, 1, 1, 1, 0, 0, 0, 1, 0, 0),
-Airbnb = c(0, 0, 0, 0, 0, 1, 0, 1, 1, 1),
-Campingplatz = c(0, 0, 0, 1, 0, 1, 1, 0, 0, 0),
-Couchsurfing =c(0,0,0,0,0, 0, 1, 0, 0, 0)
+ }
 
+
+dat <- data.frame(
+  Hotel =  c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+  Pension = c(1, 1, 0, 0, 0, 1, 1, 1, 1, 1),
+  Hostel = c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1),
+  Ferienwohnung = c(1, 1, 1, 1, 0, 0, 0, 1, 0, 0),
+  Airbnb = c(0, 0, 0, 0, 0, 1, 0, 1, 1, 1),
+  Campingplatz = c(0, 0, 0, 1, 0, 1, 1, 0, 0, 0),
+  Couchsurfing =c(0,0,0,0,0, 0, 1, 0, 0, 0)
 )
 
 Tbll_desc_multi(dat,
@@ -264,6 +270,7 @@ Tbll_desc_multi(dat,
                  Airbnb,
                  Campingplatz,
                  Couchsurfing)
+
 
 
 #mtcars |> Tbll_desc(mpg, cyl,  disp,  hp, drat,
@@ -300,6 +307,10 @@ include.custom = function(x, by, ...){
 }
 
 )
+
+
+\donttest{
+
 mtcars$G <- factor(mtcars$vs, 0:1, c("A", "B"))
 
 mtcars <- stp25tools::Label(
@@ -336,9 +347,7 @@ mtcars |> Tbll_desc_long(
   include.label=FALSE
 )
 
-
-require(stp25stat2)
-require(stp25tools)
+}
 
 
 df <- data.frame(
@@ -349,12 +358,12 @@ df <- data.frame(
   E = c(1,2,3,4,5, 3,2,1,1, 1,1,1,5,5,5)
 )
 
-df$index <-scale( rowSums(df) )
-
-
-Tbll_desc_item(  ~ A + B + C + D + E, df)
+# Tbll_desc_item(  ~ A + B + C + D + E, df)
 
 Tbll_reliability(~ A + B + C + D + E, df,
                  include.item_statistics = TRUE)
-Tbll_item_analysis(  A + B + C + D + E ~ index, df)
+
+#  df$index <-scale( rowSums(df) )
+#  Tbll_item_analysis(  A + B + C + D + E ~ index, df)
+
 }

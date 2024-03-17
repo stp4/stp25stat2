@@ -24,6 +24,8 @@ Post_Hoc(
 
 \item{p.adjust.method}{method for adjusting p value c("holm", "hochberg", "hommel", "bonferroni", "BH", "BY",}
 
+\item{test}{default test = "wilcox.test"}
+
 \item{alternative, mu, paired, exact, correct, conf.int, conf.level, tol.root, digits.rank}{not used}
 }
 \value{
@@ -40,12 +42,14 @@ Tukey HSD, wird verwendet, um alle Gruppen miteinander zu vergleichen (also alle
   Bonferroni-Korrektur, wenn eine Reihe von geplanten Vergleichen durchgeführt werden soll.
 }
 \examples{
+
+ \donttest{
 #' require(stp25stat2)
 airquality$Month <- factor(airquality$Month)
 Post_Hoc(airquality, Ozone, Month)
 Post_Hoc(airquality, Ozone, Month, test= "t.test")
 res_aov<-aov( Ozone ~ Month, airquality)
-TukeyHSD( res_aov ) \%>\% Tbll()
+TukeyHSD( res_aov ) |> Tbll()
 DescTools::PostHocTest( res_aov, method = "hsd")
 # Dunnett's test:
 library(multcomp)
@@ -55,4 +59,6 @@ post_test <-
 
 summary(post_test)
 summary(lm(res_aov))
+
+}
 }

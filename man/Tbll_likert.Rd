@@ -38,7 +38,8 @@ Tbll_likert(...)
   include.count = TRUE,
   ReferenceZero = include.reference,
   labels = c("low", "neutral", "high"),
-  decreasing = TRUE
+  decreasing = TRUE,
+  ...
 )
 
 Likert(

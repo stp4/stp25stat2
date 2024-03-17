@@ -2,8 +2,6 @@
 % Please edit documentation in R/tbll_effect.R
 \name{Tbll_effect}
 \alias{Tbll_effect}
-\alias{extract_effect}
-\alias{tbll_extract.eff}
 \alias{tbll_extract.efflist}
 \title{Effect Displays}
 \usage{
@@ -17,39 +15,25 @@ Tbll_effect(
   digits = 2
 )
 
-extract_effect(..., names = NULL, transformation, xlevels = list())
-
-\method{tbll_extract}{eff}(x, ...)
-
 \method{tbll_extract}{efflist}(x, ...)
 }
 \arguments{
-\item{x, term}{fit  und effecte x = mod    (a regression model objec)  term    (the quoted name of a term)}
+\item{x}{fit  und effecte x = mod    (a regression model objec)  term    (the quoted name of a term)}
 
 \item{...}{param an effect transformation = list(link = log, inverse = exp)}
 
-\item{names}{erste Spalte}
-
-\item{transformation}{an effects::allEffect}
-
-\item{caption, include.se, include.ci, include.n, digits}{an Output}
+\item{include.se, include.ci, include.n, digits}{an Output}
 }
 \value{
 data.frame ore  list with data.frame
-
-data.frame(term, level, fit, se,lower, upper, value)
-Ausgabe der Effekte als dataframe zum erstellen von Grafiken
 }
 \description{
 Workaraund fuer effect {effects}. Dei Funktion erlaubt formulas und kann  ~a*b
  sowie ~b*a evaluieren.
-
-Extrahiert die Effectte (magrinal-means) mit effects::allEffects
-alternative ist  marginaleffects::marginal_means aber hier können nur
- Factoren untersucht werden.
 }
 \examples{
 
+\donttest{
 require(effects)
 
 mod <- lm(prestige ~ type * (education + income) + women, Prestige)
@@ -111,33 +95,6 @@ cbind(
                                include.ci=FALSE)[[2]]
 )
 
-
-set.seed(1)
-
-g<- gl(2, 8, labels = c("Control", "Treat"))
-x<- rnorm(2*8)
-y<- rnorm(2*8)/10 + x
-fit1<-lm(y~x)
-fit2<-lm(y~x+g)
-
-extract_effect(fit1, xlevels=list(x=c(-3,0,1)))
-extract_effect(fit1, fit2, xlevels=list(x=c(-1,0,1)))
-
-require(effects)
-fit1 <-
-  lm (Sepal.Length ~ Sepal.Width * Species + Petal.Width, data = iris)
-fit2 <-
-  lm (log(Sepal.Length) ~ Sepal.Width * Species + Petal.Width, data = iris)
-
-x1 <- allEffects(fit1)
-x2 <- allEffects(fit2,
-                 transformation = list(link = log, inverse = exp))
-x3 <- effect("Petal.Width",  fit1)
-x4 <- effect("Petal.Width",  fit2,
-             transformation = list(link = log, inverse = exp))
-Tbll(x1)
-Tbll(x3)
-Tbll(x2)
-Tbll(x4)
+}
 
 }

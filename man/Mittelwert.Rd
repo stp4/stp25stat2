@@ -43,9 +43,15 @@ calc_mean(
 \arguments{
 \item{x}{vector}
 
+\item{na.rm, exclude}{fehlende werte}
+
+\item{...}{platzhalter}
+
 \item{digits}{nachkomastellen (2)}
 
 \item{n}{laenge des vectors}
+
+\item{max_factor_length, is_true_false}{Argumente an calc_percent}
 
 \item{style}{lang oder Kurz}
 

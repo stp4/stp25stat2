@@ -20,8 +20,6 @@ Tbll_ranking(
 
 Rangreihe_default(
   items,
-  caption = "",
-  note = "",
   include.percent = TRUE,
   include.freq = TRUE,
   include.mean = TRUE,
@@ -38,13 +36,13 @@ Rangreihe_default(
 \arguments{
 \item{...}{Weitere Argumente}
 
+\item{na.action, include.order}{sortieren und Fehlende Werte}
+
 \item{include.percent, include.freq, include.mean, include.z, include.na}{was soll ausgewertet werden}
 
 \item{digits.mean, order, decreasing}{sortierung}
 
 \item{items}{data.frame}
-
-\item{caption, note, output}{an stp25output}
 
 \item{groups}{gruppen}
 

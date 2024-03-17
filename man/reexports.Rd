@@ -11,7 +11,6 @@
 \alias{ggplot_theme}
 \alias{bw_theme}
 \alias{wrap_string}
-\alias{\%>\%}
 \alias{Cs}
 \alias{contr.Treatment}
 \alias{contr.Sum}
@@ -26,8 +25,6 @@ below to see their documentation.
   \item{Hmisc}{\code{\link[Hmisc]{Cs}}}
 
   \item{car}{\code{\link[car:Contrasts]{contr.Helmert}}, \code{\link[car:Contrasts]{contr.Sum}}, \code{\link[car:Contrasts]{contr.Treatment}}}
-
-  \item{magrittr}{\code{\link[magrittr:pipe]{\%>\%}}}
 
   \item{stp25settings}{\code{\link[stp25settings:set_lattice]{bw_theme}}, \code{\link[stp25settings]{farbe}}, \code{\link[stp25settings:set_opt]{get_opt}}, \code{\link[stp25settings:set_lattice]{ggplot_theme}}, \code{\link[stp25settings]{set_opt}}, \code{\link[stp25settings:set_lattice]{standard_theme}}, \code{\link[stp25settings]{which_output}}}
 

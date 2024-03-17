@@ -25,6 +25,8 @@ Tbll_pca_test(x, ...)
 \item{digits}{digits}
 
 \item{...}{not used}
+
+\item{extprn}{loadings brauch nicht angegeben werden}
 }
 \value{
 data.frame or list with data.frame
@@ -46,16 +48,17 @@ Stichprobengroesse: Wenn je Faktor zehn oder mehr Variablken anfallen,
  Eigenwert ~ Gesamt-Varianz aller Variablen bezogen auf die Faktoren.
 }
 \examples{
-#'
-require(magrittr)
+
+  \donttest{
 library(stp25data)
 
 
 rslt <- psych::principal(fkv, 5)
 
-rslt  \%>\%  Tbll_pca_loadings()
-rslt  \%>\%  Tbll_pca_eigen()
-rslt  \%>\%  Tbll_pca_test()
+rslt  |>  Tbll_pca_loadings()
+rslt  |>  Tbll_pca_eigen()
+rslt  |>  Tbll_pca_test()
 
+}
 
 }
