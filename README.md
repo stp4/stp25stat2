@@ -5,12 +5,18 @@ This library provides a simple and intuitive formula and pipe-based
 framework for performing basic statistical tests such as t-test,
 Wilcoxon test, ANOVA, Kruskal-Wallis and correlation analysis.
 
-The output of each test is automatically converted into an APA-style
-table.
+The results of the individual tests are automatically converted into a
+table in an almost APA-style format.
 
 Additional functions for transforming, rearranging and manipulating are
 included in *spp25tools*. Visualisation functions are included in
 *stp25plot*.
+
+<!-- badges: start -->
+![](https://lifecycle.r-lib.org/reference/figures/lifecycle-experimental.svg)
+<!-- badges: end -->
+
+
 
 ## Descriptive statistics
 
@@ -835,7 +841,8 @@ APA(t1)
 
 My personal problem with the alternative libraries is always the output
 with ‘copy and paste’ - I usually output an HTML and then copy
-everything into MS Word.
+everything into MS Word. The library `modelsummary` works with my way of
+working, here I can output `flextables` or `gt`.
 
 ``` r
 require(modelsummary)
