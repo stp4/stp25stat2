@@ -7,7 +7,8 @@ editor_options:
 
 ```{r setup, include=FALSE}
 require(knitr)
- 
+# require(stp25stat2)
+require(stp25tools)
  
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -35,9 +36,9 @@ Additional functions for transforming, rearranging and manipulating are included
 Visualisation functions are included in *stp25plot*.
   
 
-```{r}
+```{r setup-2, include=FALSE}
+
 require(stp25stat2)
-# which_output()
 ```
 
   
@@ -52,14 +53,21 @@ require(stp25stat2)
 ### Tbll_desc
 
 
-```{r, Tbll_desc-basic, error=TRUE}
-
-Tbll_desc(~ breaks + wool, warpbreaks)
+```{r, Tbll_desc-basic-1, error=TRUE}
+#' Formula, Data
+Tbll_desc(~ breaks + wool, warpbreaks) |> 
+  kable(caption = "Formula, Data")
+```
+    
+```{r, Tbll_desc-basic-2, error=TRUE}
 
 warpbreaks |> Tbll_desc(~breaks + wool)
 
 warpbreaks |> Tbll_desc(breaks, wool)
 ```
+   
+ 
+    
     
     
 ```{r, Tbll_desc-groups-test}
@@ -74,6 +82,9 @@ warpbreaks |> Tbll_desc(
 ```
     
     
+Parameters for the variables can be passed in square brackets. The parameters include the number of decimal places and evaluation methods such as mean, median, freq and multi.
+     
+    
      
 ```{r, Tbll_desc_long-basic, results='asis'}
 mtcars |> Tbll_desc_long(
@@ -84,10 +95,9 @@ mtcars |> Tbll_desc_long(
 ) |> kable(caption ="summary statistics" )
 ```
  
- 
+
 ```{r data-set-2, include=FALSE}
-require(stp25stat2)
-require(stp25tools)
+
 n<- 100
 set.seed(1)
 DF <- data.frame(
@@ -120,6 +130,9 @@ DF <- data.frame(
 
       
 ```
+
+
+Fine tuning is carried out using the `set_opt()` function. The decimal separator and the notation of the statistical key figures can be set.
 
 ```{r set_opt}
 set_opt(
@@ -163,10 +176,9 @@ DF |>
   ) |> stp25output2::Output()
 ```
  
- Hinzufügen von zusätzliche Spalten mit
- **include.value**.
- Vector oder data.frame in exact der Reihenfolge wie die meassure-variablen.
- 
+ Additional columns are added with **include.value**.
+A vector or data.frame is transferred in the same order as the measurement variables.
+
 ```{r tbll-desc-add-df}
 Info <- data.frame( var_name=c("age", "sex"), y=1:2)
 rownames(Info) <- c("age", "sex" )
@@ -200,22 +212,27 @@ DF2 <- data.frame(
   Geschlecht = cut(rnorm(n), 2, c("m", "f"))
 )
 
-
 ```
 
 ```{r Tbll_likert}
 Lik <- Tbll_likert(DF2,
-                   Magazines, Comic.books, Fiction, Newspapers,
+                   Magazines, 
+                   Comic.books, 
+                   Fiction, 
+                   Newspapers,
                    ReferenceZero=2)
 
 Lik
 ```
+  
+  
   
 ```
 stp25plot::likertplot(
      Item  ~ . , 
      data = Lik)
 ```
+  
   
 
 ### Tbll_xtabs 
@@ -345,7 +362,6 @@ Tbll_item_analysis(  A + B + C + D + E ~ index, df,
 
 
 
-
 ```{r}
 t1 <- wilcox.test(mpg ~ vs, mtcars)
 t1
@@ -361,12 +377,15 @@ APA(t1)
 
 
 ```{r}
-
  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
  lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
  
  Infomation(lm1, lm2)
 
+```
+
+
+```{r}
  Tbll_reg(
   lm1,
   lm2,
@@ -374,8 +393,10 @@ APA(t1)
   include.ci = TRUE,
   include.se=FALSE
 )
+```
 
 
+```{r}
  Tbll_reg(
    lm2,
    include.p = TRUE,
@@ -384,21 +405,64 @@ APA(t1)
    include.statistic = TRUE,
    include.stars = TRUE
  )
-
-
-
-
-
 ```
+
 
 ```{r}
  counts <- c(18,17,15,20,10,20,25,13,12)
  outcome <- gl(3,1,9)
  treatment <- gl(3,3)
- data.frame(treatment, outcome, counts) # showing data
- lm.D93 <- lm(counts ~ outcome + treatment )
+ # data.frame(treatment, outcome, counts) 
+ 
+ lm.D93 <- lm(counts ~ outcome + treatment)
  glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
+ 
  Tbll_reg(lm.D93, glm.D93, digits=2)
- Tbll_reg(lm.D93, glm.D93, digits=c(0,2,2,1,1))
+
+```
+
+
+```{r}
+ Tbll_reg(lm.D93, glm.D93, 
+          names = c("A", "B"),
+          digits=c(0,2,2,1,1)
+          )
+```
+
+
+## Alternative packages
+
+
+
+My personal problem with the alternative libraries is always the output with 'copy and paste' - I usually output an HTML and then copy everything into MS Word.
+
+
+```{r}
+require(modelsummary)
+```
+
+
+```{r}
+# ~ A + B + C + D + E, df
+modelsummary::datasummary(
+  All(df) ~ Mean + SD + Histogram,
+  data = df)
+ 
+```
+
+
+```{r}
+
+modelsummary::datasummary_skim(DF2, type = "categorical")
+ 
+```
+
+
+```{r}
+modelsummary::modelsummary(
+   list(lm.D93,glm.D93),
+   fmt = 1,
+   estimate  = "{estimate} [{conf.low}, {conf.high}]"
+  )
 ```
 

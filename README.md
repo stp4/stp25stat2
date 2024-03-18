@@ -12,11 +12,6 @@ Additional functions for transforming, rearranging and manipulating are
 included in *spp25tools*. Visualisation functions are included in
 *stp25plot*.
 
-``` r
-require(stp25stat2)
-# which_output()
-```
-
 ## Descriptive statistics
 
 - `Tbll_desc`, `Tbll_desc_long()`, `Tbll_desc_item()` und
@@ -29,16 +24,22 @@ require(stp25stat2)
 ### Tbll_desc
 
 ``` r
+#' Formula, Data
+Tbll_desc(~ breaks + wool, warpbreaks) |> 
+  kable(caption = "Formula, Data")
+```
 
-Tbll_desc(~ breaks + wool, warpbreaks)
-# # A tibble: 5 × 2
-#   Item            m              
-# * <chr>           <chr>          
-# 1 "(N) "          "54"           
-# 2 "breaks (mean)" "28.15 (13.20)"
-# 3 "wool "         ""             
-# 4 "    A"         "50% (27)"     
-# 5 "    B"         "50% (27)"
+| Item          | m             |
+|:--------------|:--------------|
+| \(N\)         | 54            |
+| breaks (mean) | 28.15 (13.20) |
+| wool          |               |
+| A             | 50% (27)      |
+| B             | 50% (27)      |
+
+Formula, Data
+
+``` r
 
 warpbreaks |> Tbll_desc(~breaks + wool)
 # # A tibble: 5 × 2
@@ -81,6 +82,10 @@ warpbreaks |> Tbll_desc(
 | M             | 33% (18)      | 33% (9)       | 33% (9)      |                       |
 | H             | 33% (18)      | 33% (9)       | 33% (9)      |                       |
 
+Parameters for the variables can be passed in square brackets. The
+parameters include the number of decimal places and evaluation methods
+such as mean, median, freq and multi.
+
 ``` r
 mtcars |> Tbll_desc_long(
   mpg[mean, 1],  cyl[median],  disp[0],
@@ -105,6 +110,9 @@ mtcars |> Tbll_desc_long(
 | carb(mean)  |  32 | 2.81 (SD 1.62, range 1.00 to 8.00)  |
 
 summary statistics
+
+Fine tuning is carried out using the `set_opt()` function. The decimal
+separator and the notation of the statistical key figures can be set.
 
 ``` r
 set_opt(
@@ -456,8 +464,9 @@ Serum Bilirubin (mg/dl) (median)
 </tfoot>
 </table>
 
-Hinzufügen von zusätzliche Spalten mit **include.value**. Vector oder
-data.frame in exact der Reihenfolge wie die meassure-variablen.
+Additional columns are added with **include.value**. A vector or
+data.frame is transferred in the same order as the measurement
+variables.
 
 ``` r
 Info <- data.frame( var_name=c("age", "sex"), y=1:2)
@@ -492,7 +501,10 @@ DF |>
 
 ``` r
 Lik <- Tbll_likert(DF2,
-                   Magazines, Comic.books, Fiction, Newspapers,
+                   Magazines, 
+                   Comic.books, 
+                   Fiction, 
+                   Newspapers,
                    ReferenceZero=2)
 
 Lik
@@ -710,7 +722,6 @@ APA(t1)
 ## Regression
 
 ``` r
-
  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)
  lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
  
@@ -720,7 +731,9 @@ APA(t1)
 # 2       Observations       54       54
 # 3            Missing        0        0
 # 4               Type gaussian gaussian
+```
 
+``` r
  Tbll_reg(
   lm1,
   lm2,
@@ -743,8 +756,9 @@ APA(t1)
 # 10 BIC                    "433.9"    <NA>     "433… <NA>    
 # 11 RMSE                   "11.18"    <NA>     "10.… <NA>    
 # 12 Obs                    "54"       <NA>     "54"  <NA>
+```
 
-
+``` r
  Tbll_reg(
    lm2,
    include.p = TRUE,
@@ -768,19 +782,11 @@ APA(t1)
  counts <- c(18,17,15,20,10,20,25,13,12)
  outcome <- gl(3,1,9)
  treatment <- gl(3,3)
- data.frame(treatment, outcome, counts) # showing data
-#   treatment outcome counts
-# 1         1       1     18
-# 2         1       2     17
-# 3         1       3     15
-# 4         2       1     20
-# 5         2       2     10
-# 6         2       3     20
-# 7         3       1     25
-# 8         3       2     13
-# 9         3       3     12
- lm.D93 <- lm(counts ~ outcome + treatment )
+ # data.frame(treatment, outcome, counts) 
+ 
+ lm.D93 <- lm(counts ~ outcome + treatment)
  glm.D93 <- glm(counts ~ outcome + treatment, family = poisson())
+ 
  Tbll_reg(lm.D93, glm.D93, digits=2)
 # # A tibble: 14 × 5
 #    term          lm.D93_b lm.D93_conf glm.D93_b glm.D93_conf
@@ -799,22 +805,113 @@ APA(t1)
 # 12 CoxSnell      <NA>     <NA>        0.45      <NA>        
 # 13 Nagelkerke    <NA>     <NA>        0.46      <NA>        
 # 14 Obs           9        <NA>        9         <NA>
- Tbll_reg(lm.D93, glm.D93, digits=c(0,2,2,1,1))
-# # A tibble: 14 × 5
-#    term          lm.D93_b lm.D93_conf glm.D93_b glm.D93_conf
-#    <chr>         <chr>    <chr>       <chr>     <chr>       
-#  1 (Intercept)   21**     [30, 12]    3***      [3, 3]      
-#  2 outcome[T.2]  -7.67    [2.68, -18… -0.45*    [-0.06, -0.…
-#  3 outcome[T.3]  -5.33    [5.01, -15… -0.29     [0.08, -0.6…
-#  4 treatment[T.… 0.0      [10.3, -10… 0.0       [0.4, -0.4] 
-#  5 treatment[T.… 0.0      [10.3, -10… 0.0       [0.4, -0.4] 
-#  6 R2            0.53     <NA>        <NA>      <NA>        
-#  7 adj. R2       0.05     <NA>        <NA>      <NA>        
-#  8 AIC           57.6     <NA>        56.8      <NA>        
-#  9 BIC           58.8     <NA>        57.7      <NA>        
-# 10 RMSE          3.04     <NA>        0.19      <NA>        
-# 11 McFadden      <NA>     <NA>        0.10      <NA>        
-# 12 CoxSnell      <NA>     <NA>        0.45      <NA>        
-# 13 Nagelkerke    <NA>     <NA>        0.46      <NA>        
-# 14 Obs           9        <NA>        9         <NA>
 ```
+
+``` r
+ Tbll_reg(lm.D93, glm.D93, 
+          names = c("A", "B"),
+          digits=c(0,2,2,1,1)
+          )
+# # A tibble: 14 × 5
+#    term           A_b   A_conf         B_b    B_conf        
+#    <chr>          <chr> <chr>          <chr>  <chr>         
+#  1 (Intercept)    21**  [30, 12]       3***   [3, 3]        
+#  2 outcome[T.2]   -7.67 [2.68, -18.01] -0.45* [-0.06, -0.86]
+#  3 outcome[T.3]   -5.33 [5.01, -15.68] -0.29  [0.08, -0.68] 
+#  4 treatment[T.2] 0.0   [10.3, -10.3]  0.0    [0.4, -0.4]   
+#  5 treatment[T.3] 0.0   [10.3, -10.3]  0.0    [0.4, -0.4]   
+#  6 R2             0.53  <NA>           <NA>   <NA>          
+#  7 adj. R2        0.05  <NA>           <NA>   <NA>          
+#  8 AIC            57.6  <NA>           56.8   <NA>          
+#  9 BIC            58.8  <NA>           57.7   <NA>          
+# 10 RMSE           3.04  <NA>           0.19   <NA>          
+# 11 McFadden       <NA>  <NA>           0.10   <NA>          
+# 12 CoxSnell       <NA>  <NA>           0.45   <NA>          
+# 13 Nagelkerke     <NA>  <NA>           0.46   <NA>          
+# 14 Obs            9     <NA>           9      <NA>
+```
+
+## Alternative packages
+
+My personal problem with the alternative libraries is always the output
+with ‘copy and paste’ - I usually output an HTML and then copy
+everything into MS Word.
+
+``` r
+require(modelsummary)
+```
+
+``` r
+# ~ A + B + C + D + E, df
+modelsummary::datasummary(
+  All(df) ~ Mean + SD + Histogram,
+  data = df)
+```
+
+|       | Mean |   SD | Histogram |
+|:------|-----:|-----:|----------:|
+| A     | 2.53 | 1.77 |     ▇▂▁▁▄ |
+| B     | 2.67 | 1.68 |     ▇▆▁▁▆ |
+| C     | 3.07 | 1.58 |     ▇▂▇▃▇ |
+| D     | 3.47 | 1.77 |     ▄▁▁▂▇ |
+| E     | 2.67 | 1.72 |     ▇▂▂▁▅ |
+| index | 0.00 | 1.00 |    ▇▃▅▂▂▇ |
+
+``` r
+
+modelsummary::datasummary_skim(DF2, type = "categorical")
+```
+
+|             |     |   N |    % |
+|:------------|----:|----:|-----:|
+| Magazines   |   – |   8 |  8.0 |
+|             |  \- |  22 | 22.0 |
+|             |   o |  34 | 34.0 |
+|             |  \+ |  23 | 23.0 |
+|             |  ++ |  13 | 13.0 |
+| Comic.books |   – |   4 |  4.0 |
+|             |  \- |  15 | 15.0 |
+|             |   o |  35 | 35.0 |
+|             |  \+ |  35 | 35.0 |
+|             |  ++ |  11 | 11.0 |
+| Fiction     |   – |  19 | 19.0 |
+|             |  \- |  36 | 36.0 |
+|             |   o |  28 | 28.0 |
+|             |  \+ |  14 | 14.0 |
+|             |  ++ |   3 |  3.0 |
+| Newspapers  |   – |   2 |  2.0 |
+|             |  \- |  19 | 19.0 |
+|             |   o |  44 | 44.0 |
+|             |  \+ |  26 | 26.0 |
+|             |  ++ |   9 |  9.0 |
+| Geschlecht  |   m |  61 | 61.0 |
+|             |   f |  39 | 39.0 |
+
+``` r
+modelsummary::modelsummary(
+   list(lm.D93,glm.D93),
+   fmt = 1,
+   estimate  = "{estimate} [{conf.low}, {conf.high}]"
+  )
+```
+
+|                  |               \(1\) |               \(2\) |
+|:-----------------|--------------------:|--------------------:|
+| (Intercept)      | 21.0 \[11.6, 30.4\] |    3.0 \[2.7, 3.4\] |
+|                  |               (3.4) |               (0.2) |
+| outcome\[T.2\]   | -7.7 \[-18.0, 2.7\] | -0.5 \[-0.9, -0.1\] |
+|                  |               (3.7) |               (0.2) |
+| outcome\[T.3\]   | -5.3 \[-15.7, 5.0\] |  -0.3 \[-0.7, 0.1\] |
+|                  |               (3.7) |               (0.2) |
+| treatment\[T.2\] | 0.0 \[-10.3, 10.3\] |   0.0 \[-0.4, 0.4\] |
+|                  |               (3.7) |               (0.2) |
+| treatment\[T.3\] | 0.0 \[-10.3, 10.3\] |   0.0 \[-0.4, 0.4\] |
+|                  |               (3.7) |               (0.2) |
+| Num.Obs.         |                   9 |                   9 |
+| R2               |               0.527 |                     |
+| R2 Adj.          |               0.053 |                     |
+| AIC              |                57.6 |                56.8 |
+| BIC              |                58.8 |                57.7 |
+| Log.Lik.         |             -22.786 |             -23.381 |
+| F                |               1.112 |               1.372 |
+| RMSE             |                3.04 |                3.04 |
