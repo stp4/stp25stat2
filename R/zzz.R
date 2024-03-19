@@ -1,11 +1,3 @@
-
-.onLoad <- function(libname, pkgname) {
-  # oldc <- getOption("contrasts")
-  # contrasts =  c("contr.Treatment contr.poly")
-  # options(contrasts = contrasts)
-  packageStartupMessage("\nHi Wolfgang!\n\nI wish you a good and successful working day.\n\n")
-}
-
 .onAttach <- function(...) {
 
   oldc <- getOption("contrasts")
