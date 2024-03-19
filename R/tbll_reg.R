@@ -69,12 +69,30 @@ Tbll_reg  <- function(...,
                       include.custom = NULL) {
 
   fit <- list(...)
-  if( is.null(names)){
-    names <- abbreviate(
-    gsub("[~??+\\:=]", "",
-         as.character(as.list(sys.call()))[seq_len(length(fit))+1]),
-    minlength=7
-    )
+
+  if (inherits(fit[[1]], "rowwise_df")) {
+    if (length(fit) != 1)
+      warning(
+        "\n\nEtwas ist faul: es ist eine liste der Länge = ",
+        length(fit),
+        " gekommen!\n",
+        "Ich erwarte hier ein nest_by Modell."
+      )
+    # hier kommt
+    # nest_by(cyl) |>
+    #  mutate(models = list(lm(mpg ~ hp, data)))
+    fit <- fit[[1]]
+    fit <- fit |> dplyr::pull(models, name = names(fit[1]))
+
+    if (is.null(names)) {
+      names <- abbreviate(gsub("[~??+\\:=]", "", names(fit)),
+                          minlength = 7)
+    }
+  } else if (is.null(names)) {
+    names <- abbreviate(gsub("[~??+\\:=]", "",
+                             as.character(as.list(sys.call(
+                             )))[seq_len(length(fit)) + 1]),
+                        minlength = 7)
   }
 
   if(inherits(fit[[1]], "coxph" ) ){

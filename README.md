@@ -13,10 +13,12 @@ included in *spp25tools*. Visualisation functions are included in
 *stp25plot*.
 
 <!-- badges: start -->
-![](https://lifecycle.r-lib.org/reference/figures/lifecycle-experimental.svg)
+
+add_lifecycle_badge(lifecycle = “experimental”, quiet = FALSE)
+
 <!-- badges: end -->
 
-
+.
 
 ## Descriptive statistics
 
@@ -835,6 +837,25 @@ APA(t1)
 # 12 CoxSnell       <NA>  <NA>           0.45   <NA>          
 # 13 Nagelkerke     <NA>  <NA>           0.46   <NA>          
 # 14 Obs            9     <NA>           9      <NA>
+```
+
+``` r
+#' Subgroup estimation with nest_by
+mtcars |>
+  nest_by(cyl) |>
+  mutate(models = list(lm(mpg ~ hp, data))) |>
+  Tbll_reg()
+# # A tibble: 8 × 7
+#   term        X4_b      X4_conf  X6_b  X6_conf X8_b  X8_conf
+#   <chr>       <chr>     <chr>    <chr> <chr>   <chr> <chr>  
+# 1 (Intercept) "  36***" [47.7, … 20.7… [29.2,… 18.1… [24.6,…
+# 2 hp          "-0.113"  [0.0256… -0.0… [0.060… -0.0… [0.016…
+# 3 R2          "0.27"    <NA>     0.02  <NA>    0.08  <NA>   
+# 4 adj. R2     "0.19"    <NA>     -0.18 <NA>    0.00  <NA>   
+# 5 AIC         "65.8"    <NA>     29.9  <NA>    69.8  <NA>   
+# 6 BIC         "67.0"    <NA>     29.7  <NA>    71.8  <NA>   
+# 7 RMSE        "3.66"    <NA>     1.33  <NA>    2.37  <NA>   
+# 8 Obs         "11"      <NA>     7     <NA>    14    <NA>
 ```
 
 ## Alternative packages

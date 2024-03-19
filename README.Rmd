@@ -9,7 +9,7 @@ editor_options:
 require(knitr)
 # require(stp25stat2)
 require(stp25tools)
- 
+require(dplyr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   warning = FALSE,
@@ -435,6 +435,18 @@ APA(t1)
           digits=c(0,2,2,1,1)
           )
 ```
+
+
+```{r}
+#' Subgroup estimation with nest_by
+mtcars |>
+  nest_by(cyl) |>
+  mutate(models = list(lm(mpg ~ hp, data))) |>
+  Tbll_reg()
+```
+
+
+
 
 
 ## Alternative packages
