@@ -503,6 +503,19 @@ DF |>
 | Zwichen Ueberschrift |             |             |             |          |     |
 | Age (median)         | 43 (35, 59) | 51 (29, 62) | 41 (36, 55) | age      |   1 |
 
+``` r
+ Tbll_mean(breaks ~ tension + wool, warpbreaks)
+# # A tibble: 6 × 5
+#   Item      levels     n  mean    sd
+#   <chr>     <fct>  <dbl> <dbl> <dbl>
+# 1 "tension" "L"       18  36.4 16.4 
+# 2 ""        "M"       18  26.4  9.12
+# 3 ""        "H"       18  21.7  8.35
+# 4 "wool"    "A"       27  31.0 15.8 
+# 5 ""        "B"       27  25.3  9.3 
+# 6 "Overall" ""        54  28.2 13.2
+```
+
 ### Tbll_likert
 
 - `Tbll_likert()`: Univariate

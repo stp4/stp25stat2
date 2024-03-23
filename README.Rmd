@@ -203,6 +203,14 @@ DF |>
   ) |> kable()
 ```
  
+ 
+
+```{r}
+ Tbll_mean(breaks ~ tension + wool, warpbreaks)
+```
+ 
+ 
+ 
 ### Tbll_likert 
  
 - `Tbll_likert()`: Univariate
