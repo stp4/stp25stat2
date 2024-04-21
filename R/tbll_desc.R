@@ -7,6 +7,7 @@
 #' @param include.nr,include.total,include.multiresponse  weitere param
 #' @param include.test,include.normality.tests Test
 #' @param include.label Labels ja-nein
+#' @param use.duplicated erlaube duplikate der Messwerte
 #' @param include.custom eigene Funktion mit (x, by, fun) return kann ein Vector oder eine Matrix sein
 #'  function(x , by, ...){
 #'  x <- scale(as.numeric(x))
@@ -126,7 +127,8 @@ Tbll_desc <-
             include.custom = NULL,
             include.value = NULL,
             digits = NULL,
-            use.level = 1 # multiresponse
+            use.level = 1, # multiresponse,
+            use.duplicated = FALSE
   ) {
     rslt_all <- NULL
     tbl_rstl <- NULL
@@ -134,6 +136,18 @@ Tbll_desc <-
     # Einstellungen
     #
     X <- stp25tools::prepare_data2(...)
+
+    if(use.duplicated){
+     # erlaube doppelte parameter
+      in_vars <- strsplit(as.character(X$formula)[2L], " \\+ ")[[1L]]
+      X$measure.vars <- in_vars
+      X$measure.class <- X$measure.class[in_vars]
+      X$digits <- X$digits[in_vars]
+      X$measure <- X$measure[in_vars]
+      X$row_name <- X$row_name[in_vars]
+      X$measure.test <- X$measure.test[in_vars]
+    }
+
 
     if (is.character(include.test)) {
       include.test <- gsub("[^[:alpha:]]", "", tolower(include.test))
@@ -191,7 +205,7 @@ Tbll_desc <-
         ))
     }
     #
-    # 2. oder include.totalinclude.total mit purrr::pmap
+    # 2. oder include.total  mit purrr::pmap
     #
     if (include.total) {
       rslt_all <-
