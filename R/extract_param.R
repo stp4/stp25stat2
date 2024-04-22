@@ -340,7 +340,7 @@ extract_param_aov <- function(x,
       TRUE
     )]
   }
-  else
+  else{
     my_names <- c(
       "Parameter" = "term",
       "Mean_Square" = "meansq",
@@ -360,12 +360,21 @@ extract_param_aov <- function(x,
       include.omega,
       include.power,
       TRUE
-    )]
+    )]}
 
+
+  cat("\n hier gets weiter\n")
   effectsize_type <- NULL
-  if (eta_squared)
+
+  # include.eta = FALSE,
+  # include.sumsq = TRUE,
+  # include.meansq = FALSE,
+  # include.omega = FALSE,
+  # include.power = FALSE,
+
+  if (include.eta)
     effectsize_type <- c(effectsize_type, "eta")
-  if (omega_squared)
+  if (include.omega)
     effectsize_type <- c(effectsize_type, "omega")
 
 
