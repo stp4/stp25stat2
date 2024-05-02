@@ -887,14 +887,14 @@ symbol_kleiner_gleich <- function(output = which_output()) {
     if (output == "html")
       "&le;"
     else
-      "=<"
+      "<="
   }
 
 symbol_groesser_gleich <-  function(output = which_output()) {
     switch(
       output,
       html = "&ge;",
-      "=>")
+      ">=")
   }
 
 symbol_alpha	<- function(output = which_output()) {

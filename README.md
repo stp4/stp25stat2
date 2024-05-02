@@ -889,44 +889,186 @@ modelsummary::datasummary(
   data = df)
 ```
 
-|       | Mean |   SD | Histogram |
-|:------|-----:|-----:|----------:|
-| A     | 2.53 | 1.77 |     ▇▂▁▁▄ |
-| B     | 2.67 | 1.68 |     ▇▆▁▁▆ |
-| C     | 3.07 | 1.58 |     ▇▂▇▃▇ |
-| D     | 3.47 | 1.77 |     ▄▁▁▂▇ |
-| E     | 2.67 | 1.72 |     ▇▂▂▁▅ |
-| index | 0.00 | 1.00 |    ▇▃▅▂▂▇ |
+|       | Mean | SD   | Histogram |
+|-------|------|------|-----------|
+| A     | 2.53 | 1.77 | ▇▂▁▁▄     |
+| B     | 2.67 | 1.68 | ▇▆▁▁▆     |
+| C     | 3.07 | 1.58 | ▇▂▇▃▇     |
+| D     | 3.47 | 1.77 | ▄▁▁▂▇     |
+| E     | 2.67 | 1.72 | ▇▂▂▁▅     |
+| index | 0.00 | 1.00 | ▇▃▅▂▂▇    |
 
 ``` r
 
 modelsummary::datasummary_skim(DF2, type = "categorical")
 ```
 
-|             |     |   N |    % |
-|:------------|----:|----:|-----:|
-| Magazines   |   – |   8 |  8.0 |
-|             |  \- |  22 | 22.0 |
-|             |   o |  34 | 34.0 |
-|             |  \+ |  23 | 23.0 |
-|             |  ++ |  13 | 13.0 |
-| Comic.books |   – |   4 |  4.0 |
-|             |  \- |  15 | 15.0 |
-|             |   o |  35 | 35.0 |
-|             |  \+ |  35 | 35.0 |
-|             |  ++ |  11 | 11.0 |
-| Fiction     |   – |  19 | 19.0 |
-|             |  \- |  36 | 36.0 |
-|             |   o |  28 | 28.0 |
-|             |  \+ |  14 | 14.0 |
-|             |  ++ |   3 |  3.0 |
-| Newspapers  |   – |   2 |  2.0 |
-|             |  \- |  19 | 19.0 |
-|             |   o |  44 | 44.0 |
-|             |  \+ |  26 | 26.0 |
-|             |  ++ |   9 |  9.0 |
-| Geschlecht  |   m |  61 | 61.0 |
-|             |   f |  39 | 39.0 |
+<table style="width:43%;">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 6%" />
+<col style="width: 6%" />
+<col style="width: 9%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th></th>
+<th>N</th>
+<th>%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Magazines</td>
+<td>–</td>
+<td>8</td>
+<td>8.0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><ul>
+<li></li>
+</ul></td>
+<td>22</td>
+<td>22.0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>o</td>
+<td>34</td>
+<td>34.0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><ul>
+<li></li>
+</ul></td>
+<td>23</td>
+<td>23.0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>++</td>
+<td>13</td>
+<td>13.0</td>
+</tr>
+<tr class="even">
+<td>Comic.books</td>
+<td>–</td>
+<td>4</td>
+<td>4.0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><ul>
+<li></li>
+</ul></td>
+<td>15</td>
+<td>15.0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>o</td>
+<td>35</td>
+<td>35.0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><ul>
+<li></li>
+</ul></td>
+<td>35</td>
+<td>35.0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>++</td>
+<td>11</td>
+<td>11.0</td>
+</tr>
+<tr class="odd">
+<td>Fiction</td>
+<td>–</td>
+<td>19</td>
+<td>19.0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><ul>
+<li></li>
+</ul></td>
+<td>36</td>
+<td>36.0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>o</td>
+<td>28</td>
+<td>28.0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><ul>
+<li></li>
+</ul></td>
+<td>14</td>
+<td>14.0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>++</td>
+<td>3</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<td>Newspapers</td>
+<td>–</td>
+<td>2</td>
+<td>2.0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><ul>
+<li></li>
+</ul></td>
+<td>19</td>
+<td>19.0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>o</td>
+<td>44</td>
+<td>44.0</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><ul>
+<li></li>
+</ul></td>
+<td>26</td>
+<td>26.0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>++</td>
+<td>9</td>
+<td>9.0</td>
+</tr>
+<tr class="odd">
+<td>Geschlecht</td>
+<td>m</td>
+<td>61</td>
+<td>61.0</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>f</td>
+<td>39</td>
+<td>39.0</td>
+</tr>
+</tbody>
+</table>
 
 ``` r
 modelsummary::modelsummary(
@@ -936,23 +1078,113 @@ modelsummary::modelsummary(
   )
 ```
 
-|                  |               \(1\) |               \(2\) |
-|:-----------------|--------------------:|--------------------:|
-| (Intercept)      | 21.0 \[11.6, 30.4\] |    3.0 \[2.7, 3.4\] |
-|                  |               (3.4) |               (0.2) |
-| outcome\[T.2\]   | -7.7 \[-18.0, 2.7\] | -0.5 \[-0.9, -0.1\] |
-|                  |               (3.7) |               (0.2) |
-| outcome\[T.3\]   | -5.3 \[-15.7, 5.0\] |  -0.3 \[-0.7, 0.1\] |
-|                  |               (3.7) |               (0.2) |
-| treatment\[T.2\] | 0.0 \[-10.3, 10.3\] |   0.0 \[-0.4, 0.4\] |
-|                  |               (3.7) |               (0.2) |
-| treatment\[T.3\] | 0.0 \[-10.3, 10.3\] |   0.0 \[-0.4, 0.4\] |
-|                  |               (3.7) |               (0.2) |
-| Num.Obs.         |                   9 |                   9 |
-| R2               |               0.527 |                     |
-| R2 Adj.          |               0.053 |                     |
-| AIC              |                57.6 |                56.8 |
-| BIC              |                58.8 |                57.7 |
-| Log.Lik.         |             -22.786 |             -23.381 |
-| F                |               1.112 |               1.372 |
-| RMSE             |                3.04 |                3.04 |
+<table style="width:79%;">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 27%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th><ol type="1">
+<li></li>
+</ol></th>
+<th><ol start="2" type="1">
+<li></li>
+</ol></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(Intercept)</td>
+<td>21.0 [11.6, 30.4]</td>
+<td>3.0 [2.7, 3.4]</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>(3.4)</td>
+<td>(0.2)</td>
+</tr>
+<tr class="odd">
+<td>outcome[T.2]</td>
+<td>-7.7 [-18.0, 2.7]</td>
+<td>-0.5 [-0.9, -0.1]</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>(3.7)</td>
+<td>(0.2)</td>
+</tr>
+<tr class="odd">
+<td>outcome[T.3]</td>
+<td>-5.3 [-15.7, 5.0]</td>
+<td>-0.3 [-0.7, 0.1]</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>(3.7)</td>
+<td>(0.2)</td>
+</tr>
+<tr class="odd">
+<td>treatment[T.2]</td>
+<td>0.0 [-10.3, 10.3]</td>
+<td>0.0 [-0.4, 0.4]</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>(3.7)</td>
+<td>(0.2)</td>
+</tr>
+<tr class="odd">
+<td>treatment[T.3]</td>
+<td>0.0 [-10.3, 10.3]</td>
+<td>0.0 [-0.4, 0.4]</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>(3.7)</td>
+<td>(0.2)</td>
+</tr>
+<tr class="odd">
+<td>Num.Obs.</td>
+<td>9</td>
+<td>9</td>
+</tr>
+<tr class="even">
+<td>R2</td>
+<td>0.527</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>R2 Adj.</td>
+<td>0.053</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>AIC</td>
+<td>57.6</td>
+<td>56.8</td>
+</tr>
+<tr class="odd">
+<td>BIC</td>
+<td>58.8</td>
+<td>57.7</td>
+</tr>
+<tr class="even">
+<td>Log.Lik.</td>
+<td>-22.786</td>
+<td>-23.381</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>1.112</td>
+<td>1.372</td>
+</tr>
+<tr class="even">
+<td>RMSE</td>
+<td>3.04</td>
+<td>3.04</td>
+</tr>
+</tbody>
+</table>
