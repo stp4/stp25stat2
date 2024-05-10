@@ -14,8 +14,12 @@ included in *spp25tools*. Visualisation functions are included in
 
 <!-- badges: start -->
 
-add_lifecycle_badge(lifecycle = “experimental”, quiet = FALSE)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/stp25stat2)](https://CRAN.R-project.org/package=stp25stat2)
 
+<!-- [![Badge: example](https://img.shields.io/badge/any_text-you_like-blue)](https://statistik-peter.at/) -->
 <!-- badges: end -->
 
 .
