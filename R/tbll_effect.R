@@ -381,17 +381,17 @@ tbll_extract_eff <-
           rndr_mean_CI(rslt[[i]]$fit,
                        cbind(rslt[[i]]$lower, rslt[[i]]$upper),
                        digits = digits)
-        note <- "mean [95%-CI]"
+        note <- "Average [95%-CI]"
       }
       else if (include.fit & include.se) {
         rslt[[i]]$value  <-
           rndr_mean(rslt[[i]]$fit,  rslt[[i]]$se, digits)
-        note <- "mean (SE)"
+        note <- "Average (SE)"
       }
       else if (include.fit) {
         rslt[[i]]$value <-
           render_f(rslt[[i]]$fit, digits = digits)
-        note <- "mean"
+        note <- "Average"
       }
       else {
         return(rslt[[i]])
