@@ -10,7 +10,6 @@ prepare_output(
   note = "",
   N = NULL,
   labels = NA,
-  include.n = get_opt("caption"),
   rgroup = NULL,
   n.rgroup = NULL,
   ...

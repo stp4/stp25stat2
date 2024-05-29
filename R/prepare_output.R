@@ -17,7 +17,7 @@ prepare_output <- function(x,
                            note = "",
                            N = NULL,
                            labels = NA,
-                           include.n =  get_opt("caption"),
+                         #  include.n =  get_opt("caption"),
                            rgroup = NULL,
                            n.rgroup = NULL,
                           # class = NULL,
@@ -39,7 +39,7 @@ prepare_output <- function(x,
 
   if (is.null(note))  note <- ""
   if (is.null(caption)) caption <- ""
-  if (!is.null(include.n) & !is.null(N))  caption <- paste0(caption, " (N=", N, ")")
+ # if (!is.null(include.n) & !is.null(N))  caption <- paste0(caption, " (N=", N, ")")
 
   attr(x, "caption") <-  caption
   attr(x, "note") <- note
