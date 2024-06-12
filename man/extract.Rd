@@ -47,7 +47,7 @@
   x,
   fit_predict = MASS:::predict.lda(x),
   newdata = model.frame(x),
-  digits = 3,
+  digits = 2,
   ...
 )
 
@@ -299,8 +299,8 @@ Irgendas ist hier faul!!!
 #fit2 <- lda(Job ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
 #fit3 <- lda(Job2 ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
 
-#tbll_extract.lda(fit2)
-#tbll_extract.lda(fit3)
+#Tbll(fit2)
+#Tbll(fit3)
 
 }
 

@@ -47,7 +47,6 @@ Visualisation functions are included in *stp25plot*.
  
 <!-- badges: end -->
 
- .  
 
 
 ```{r setup-2, include=FALSE}

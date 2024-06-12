@@ -22,8 +22,6 @@ status](https://www.r-pkg.org/badges/version/stp25stat2)](https://CRAN.R-project
 <!-- [![Badge: example](https://img.shields.io/badge/any_text-you_like-blue)](https://statistik-peter.at/) -->
 <!-- badges: end -->
 
-.
-
 ## Descriptive statistics
 
 - `Tbll_desc`, `Tbll_desc_long()`, `Tbll_desc_item()` und
