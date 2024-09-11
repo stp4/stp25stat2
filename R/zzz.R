@@ -91,9 +91,10 @@ stp25settings::bw_theme
 #' @export
 stp25tools::wrap_string
 
-#' @importFrom Hmisc Cs
-#' @export
-Hmisc::Cs
+# wird won stp25tools explortiert
+# @importFrom Hmisc Cs
+# @export
+# Hmisc::Cs
 
 #' @importFrom car contr.Treatment
 #' @export

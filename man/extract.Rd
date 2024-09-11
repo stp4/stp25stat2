@@ -11,6 +11,7 @@
 \alias{tbll_extract.data.frame}
 \alias{tbll_extract.lm}
 \alias{tbll_extract.aov}
+\alias{tbll_extract.manova}
 \alias{tbll_extract.TukeyHSD}
 \alias{tbll_extract.aovlist}
 \alias{tbll_extract.summary.aov}
@@ -45,8 +46,11 @@
 \usage{
 \method{tbll_extract}{lda}(
   x,
-  fit_predict = MASS:::predict.lda(x),
-  newdata = model.frame(x),
+  newdata = NULL,
+  include.means = FALSE,
+  include.scal = TRUE,
+  include.cTab = TRUE,
+  include.svd = TRUE,
   digits = 2,
   ...
 )
@@ -62,6 +66,8 @@ tbll_extract(...)
 \method{tbll_extract}{lm}(...)
 
 \method{tbll_extract}{aov}(...)
+
+\method{tbll_extract}{manova}(...)
 
 \method{tbll_extract}{TukeyHSD}(x, digits = 2, ...)
 
@@ -139,7 +145,15 @@ extract_gof(
   ...
 )
 
-extract.manova(x, test = "Wilks", include.eta = FALSE, ...)
+extract.manova(
+  x,
+  test = "Pillai",
+  include.manova = !is.null(test),
+  include.univariate = TRUE,
+  include.eta = FALSE,
+  include.order = TRUE,
+  ...
+)
 
 \method{tbll_extract}{mediate}(x, ...)
 
@@ -210,10 +224,6 @@ extract_effect(..., names = NULL, transformation, xlevels = list())
 \arguments{
 \item{x}{Objekt oder Formel}
 
-\item{fit_predict}{an MASS predict.lda}
-
-\item{newdata}{model.frame(x)}
-
 \item{digits}{in extract.matchit}
 
 \item{...}{weitere Optionen}
@@ -232,6 +242,12 @@ extract_effect(..., names = NULL, transformation, xlevels = list())
 
 \item{include.r, include.sigma, include.rmse, include.aic, include.bic, include.residual, include.normality, include.multicollin}{GOF for lm and glm}
 
+\item{test}{The name of the test statistic c("Pillai", "Wilks", "Hotelling-Lawley", "Roy")}
+
+\item{include.univariate, include.manova}{logical}
+
+\item{include.order}{reorder univariate results by F-values}
+
 \item{include.b, include.beta, include.ci, include.se, include.odds, include.odds.ci, include.statistic, include.p, include.stars, include.df, include.effects, conf.level, conf.method}{Parameter fuer die Regress-Tabellen}
 
 \item{names}{erste Spalte}
@@ -245,8 +261,6 @@ extract_effect(..., names = NULL, transformation, xlevels = list())
 \item{response}{effects: y-var}
 }
 \value{
-data.frame
-
 data.frame
 
 data.frame
@@ -283,27 +297,6 @@ Quelle: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/pdf/i1949-8357-4-3-2
 Irgendas ist hier faul!!!
 }
 \examples{
-
-\donttest{
-#' Linear Discriminant Analysis
-
- require(MASS)
-#DF2 <- stp25aggregate::GetData(
-  #"C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/discrim.sav")
-
-# https://stats.idre.ucla.edu/spss/dae/discriminant-function-analysis/
-
-# DF2$Job <- factor(DF2$JOB, 1:3, Cs("customer service", "mechanic","dispatcher"))
-# DF2$Job2 <- factor(DF2$JOB, c(2,3,1), Cs( "mechanic","dispatcher","customer service"))
-
-#fit2 <- lda(Job ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
-#fit3 <- lda(Job2 ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
-
-#Tbll(fit2)
-#Tbll(fit3)
-
-}
-
 
 \donttest{
 summary(lm1 <- lm(Fertility ~ ., data = swiss))
@@ -423,6 +416,9 @@ summary(fit1)$Eigenvalues
 
 
 }
+
+
+
 
 \donttest{
  library(meta)

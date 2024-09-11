@@ -459,6 +459,11 @@ mtcars |>
 ```
 
 
+### Contraste
+
+```{r, results='asis'}
+Tbll_contrasts(lm1) |> stp25output2::Output()
+```
 
 
 

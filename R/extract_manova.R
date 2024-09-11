@@ -2,6 +2,11 @@
 #'
 #' @description MANOVA: extract.manova(x, , test="Wilks") test : "Wilks", "Pillai"
 #' @param include.eta die Manova wird ueber heplots::etasq berechnet und die anova mit den SS eta2=SS/SS_total
+#' @param test The name of the test statistic c("Pillai", "Wilks", "Hotelling-Lawley", "Roy")
+#' @param include.univariate,include.manova logical
+#' @param include.order  reorder univariate results by F-values
+#'
+#' @export
 #' @examples
 #' \donttest{
 #' #- manova ---------------------------------------------
@@ -65,101 +70,186 @@
 #'
 #'
 #' }
+#'
+#'
+#'
 extract.manova <-
   function(x,
-           test = "Wilks",
+           test = "Pillai",
+           include.manova = !is.null(test),
+           include.univariate = TRUE,
            include.eta = FALSE,
-           ...
-     ) {
+           include.order =TRUE,
+           ...) {
+    muvrt_rslt <- NULL
+    unvrt_rslt <- NULL
+    rhs <- x$terms[[3L]]
 
-caption <- "MANOVA"
-note <- ""
-    aov_result <- NULL
-    res <- summary.aov(x)
+    if (include.univariate) {
+      res <- summary.aov(x)
 
-    for (i in names(res)) {
-      rs <- res[[i]]
+      for (i in names(res)) {
+        rs <- res[[i]]
+        resp_name <- data.frame(
+          Source = i,
+          F = NA,
+          df = NA,
+          p.value = NA,
+          stringsAsFactors = FALSE
+        )
+        rs <- cbind(Source = gsub(".*\\$", "", rownames(rs)),
+                    rs[, c("F value", "Df", "Pr(>F)")],
+                    stringsAsFactors = FALSE)
+        names(rs) <- c("Source", "F", "df", "p.value")
 
-      resp_name <- data.frame(
-        Source = i,
-        F = NA,
-        df = NA,
-        p.value = NA,
-        stringsAsFactors = FALSE
+        if (include.eta) {
+          # Eta-quadrat Ueberprueft und soweit ist es korrekt
+          ss <- res[[i]][, 2]
+          ss1 <- ss[-length(ss)]
+          sst <- ss[length(ss)]
+          eta_ss <- ss1 / sst
+          rs <- cbind(rs[1:3], part.eta2 =  c(eta_ss, NA), rs[4])
+          resp_name <- cbind(resp_name[1:3], part.eta2 = NA, resp_name[4])
+        }
+
+        rs <- rbind(resp_name, rs)
+        if (is.null(unvrt_rslt))
+          unvrt_rslt <- rs
+        else
+          unvrt_rslt <- rbind(unvrt_rslt, rs)
+      }
+
+      if( length(rhs) == 1 ){
+        unvrt_rslt <- unvrt_rslt[seq(2, nrow(unvrt_rslt), by = 3) , ]
+        unvrt_rslt$Source <- gsub("Response ", "", names(res))
+        names(unvrt_rslt)[1] <- "Response"
+        if(include.order)
+          unvrt_rslt <- unvrt_rslt[order(unvrt_rslt[[2]], decreasing = TRUE),]
+
+        rhs <- as.character(rhs)
+      } else {
+        rhs <-  paste(as.character(rhs)[-1], collapse = " + ")
+      }
+
+      unvrt_rslt <- prepare_output(
+        fix_data_frame_2(unvrt_rslt),
+        caption = paste("Univariate F-tests by", rhs )
+
       )
-      rs <- cbind(Source = gsub(".*\\$", "", rownames(rs)),
-                  rs[, c("F value", "Df", "Pr(>F)")],
-                  stringsAsFactors = FALSE)
-      names(rs) <- c("Source", "F", "df", "p.value")
+    }
+
+
+    if (include.manova) {
+      muvrt_rslt <-
+        broom::tidy(x, test = test) |>
+        fix_format(include.rownames = FALSE, df = c("num.df", "den.df", "df"))
 
       if (include.eta) {
-        # Eta-quadrat Ueberprueft und soweit ist es korrekt
-        ss <- res[[i]][, 2]
-        ss1 <- ss[-length(ss)]
-        sst <- ss[length(ss)]
-        eta_ss <- ss1 / sst
-        #   cat("\neta^2=\n")
-        #
-        #   print(ss)
-        #   print(eta_ss)
-        # df2<- rs$df[nrow(rs)]
-        # dfF<- rs$df*rs$F
-        # eta<- (dfF)/(dfF+ df2)
-        rs <- cbind(rs[1:3], part.eta2 =  c(eta_ss, NA),
-                    rs[4])
-        resp_name <- cbind(resp_name[1:3],
-                           part.eta2 = NA,
-                           resp_name[4])
-
+        eta <- heplots::etasq(x, test = test)
+        n <- ncol(muvrt_rslt)
+        muvrt_rslt <-
+          cbind(muvrt_rslt[1:(n - 1)],
+                part.eta2 = c( render_f(eta[, 1], 2), ""),
+                muvrt_rslt[n])
       }
-      #html wird anderst ausgegeben markdown_html ist noch nicht implementiert
-    #  if( !grepl("html", output) )
-        rs <- rbind(resp_name, rs)
 
-     #   print(rs)
-
-      if (is.null(aov_result))
-        aov_result <- rs
-      else
-        aov_result <- rbind(aov_result, rs)
+      muvrt_rslt <-
+        prepare_output(muvrt_rslt, caption = "Multivariate Analysis of Variance", note = test)
     }
 
- #   print(aov_result)
-    # names(aov_result)[length(names(aov_result))] <-   "p.value"
-    aov_result <- prepare_output(
-      # aov_result,
-    fix_data_frame_2(aov_result),
-      caption = caption,
-      note = note,
-      rgroup = names(res),
-      n.rgroup = rep(nrow(res[[1]]), (length(res) - 1))
-
-    )
 
 
-    maov_result <- summary(x, test = test)
-    maov_result <-  stp25tools::fix_to_df(maov_result$stats)
-
-    maov_result$Source <- gsub(".*\\$", "", maov_result$Source)
-
-    if (include.eta) {
-      ## OK und Korrekt
-      eta <-  heplots::etasq(x, test = test)
-      n <- ncol(maov_result)
-      maov_result <-
-        cbind(maov_result[1:(n - 1)],  part.eta2 = c(eta[, 1], NA),  maov_result[n])
-
-    }
-
-        names(maov_result)[length(names(maov_result))] <-   "p.value"
-    maov_result <- prepare_output(
-        fix_data_frame_2(maov_result),
-                                  caption = paste(test, "Test"))
+    if( include.manova & include.univariate)
+      list(univariate = unvrt_rslt, manova = muvrt_rslt)
+    else if( include.manova ) muvrt_rslt
+    else unvrt_rslt
 
 
-
-    list(manova = aov_result, test = maov_result)
   }
+
+
+
+
+# extract.manova <-
+#   function(x,
+#            test = "Wilks",
+#            include.eta = FALSE,
+#            ...
+#      ) {
+#
+# caption <- "MANOVA"
+# note <- ""
+#     aov_result <- NULL
+#     res <- summary.aov(x)
+#
+#     for (i in names(res)) {
+#       rs <- res[[i]]
+#
+#       resp_name <- data.frame(
+#         Source = i,
+#         F = NA,
+#         df = NA,
+#         p.value = NA,
+#         stringsAsFactors = FALSE
+#       )
+#       rs <- cbind(Source = gsub(".*\\$", "", rownames(rs)),
+#                   rs[, c("F value", "Df", "Pr(>F)")],
+#                   stringsAsFactors = FALSE)
+#       names(rs) <- c("Source", "F", "df", "p.value")
+#
+#       if (include.eta) {
+#         # Eta-quadrat Ueberprueft und soweit ist es korrekt
+#         ss <- res[[i]][, 2]
+#         ss1 <- ss[-length(ss)]
+#         sst <- ss[length(ss)]
+#         eta_ss <- ss1 / sst
+#         rs <- cbind(rs[1:3], part.eta2 =  c(eta_ss, NA), rs[4])
+#         resp_name <- cbind(resp_name[1:3], part.eta2 = NA, resp_name[4])
+#       }
+#
+#       rs <- rbind(resp_name, rs)
+#
+#
+#       if (is.null(aov_result))
+#         aov_result <- rs
+#       else
+#         aov_result <- rbind(aov_result, rs)
+#     }
+#
+#
+#     aov_result <-
+#       prepare_output(
+#         fix_data_frame_2(aov_result),
+#         caption = paste(caption, "Univariate F-tests"),
+#         note = note,
+#         rgroup = names(res),
+#         n.rgroup = rep(nrow(res[[1]]), (length(res) - 1))
+#       )
+#
+#     maov_result <- summary(x, test = test)
+#     maov_result <- stp25tools::fix_to_df(maov_result$stats)
+#     maov_result$Source <- gsub(".*\\$", "", maov_result$Source)
+#
+#     ## OK und Korrekt
+#     if (include.eta) {
+#       eta <- heplots::etasq(x, test = test)
+#       n <- ncol(maov_result)
+#       maov_result <-
+#         cbind(maov_result[1:(n - 1)],
+#               part.eta2 = c(eta[, 1], NA),
+#               maov_result[n])
+#
+#     }
+#
+#     names(maov_result)[length(names(maov_result))] <- "p.value"
+#     maov_result <-
+#       prepare_output(fix_data_frame_2(maov_result),
+#                      caption = paste(test, "Test"))
+#
+#
+#
+#     list(manova = aov_result, test = maov_result)
+#   }
 
 
 

@@ -1,102 +1,152 @@
-#' @rdname extract
+#' Tbll_lda
+#'
+#' Linear Discriminant Analysis
+#'
 #' @export
+#' @param x lda {MASS}
+#' @param newdata  Test daten wenn Null dann wird model.frame(x) verwendet und an MASS::predict.lda weitergegeben.
+#' @param digits digits
+#' @param include.means aritmetic means
+#' @param include.scal scaling (LD)
+#' @param include.cTab Accuracy Table
+#' @param include.svd Eigenvalue
+#' @param ...
 #'
-#' @param fit_predict an MASS predict.lda
-#' @param newdata model.frame(x)
-#'
-#' @return data.frame
+#' @return list with means, scal, cTab, include.svd and predictiv-Data
 #'
 #' @examples
 #'
-#' \donttest{
-#' #' Linear Discriminant Analysis
-#'
+#' # Linear Discriminant Analysis
 #'  require(MASS)
-#' #DF2 <- stp25aggregate::GetData(
-#'   #"C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/discrim.sav")
-#'
-#' # https://stats.idre.ucla.edu/spss/dae/discriminant-function-analysis/
-#'
-#' # DF2$Job <- factor(DF2$JOB, 1:3, Cs("customer service", "mechanic","dispatcher"))
-#' # DF2$Job2 <- factor(DF2$JOB, c(2,3,1), Cs( "mechanic","dispatcher","customer service"))
-#'
-#' #fit2 <- lda(Job ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
-#' #fit3 <- lda(Job2 ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
-#'
-#' #Tbll(fit2)
-#' #Tbll(fit3)
-#'
-#' }
-#'
+Tbll_lda <- function(...) tbll_extract.lda(...)
+
+
+#' @rdname extract
+#' @export
 tbll_extract.lda <-
   function(x,
-           fit_predict = MASS:::predict.lda(x),
-           newdata = model.frame(x),
-           digits = 2,
-           ...) {
-    means <- fix_and_format(t(x$means), caption = "Means", digits = digits)
-    scaling <- fix_and_format(x$scaling, caption = "Coefficients of linear discriminants", digits = digits)
+           newdata = NULL,
 
-    svd <- x$svd
-    names(svd) <- dimnames(x$scaling)[[2L]]
-    if (length(svd) > 1L) {
-      svd <- prepare_output(fix_format(data.frame(t(
-        data.frame(svd ^ 2 / sum(svd ^ 2))
-      ))), caption = "Proportion of trace")
+           include.means = FALSE,
+           include.scal = TRUE,
+           include.cTab = TRUE,
+           include.svd = TRUE,
+            digits = 2,
+           ...) {
+
+    if(is.null(newdata)){
+       newdata = model.frame(x)
+       note_test <- note_train <- ""
+
+       }
+    else{
+      note_test <- paste("Test-Data n = ", nrow( newdata ))
+      note_train <- paste("Train-Data n = ", nrow( model.frame(x) ))
+      }
+
+    fit_predict <- MASS:::predict.lda(x, newdata)
+    rslt <- list()
+
+    if (include.means)
+      rslt$means <-
+        fix_and_format(t(x$means), caption = "Means", note = note_train, digits = digits)
+
+    if (include.scal)
+      rslt$scaling <-
+        prepare_output(stp25tools::fix_to_df(
+          render_f_signif(x$scaling, digits)),
+          caption = "Coefficients of linear discriminants",
+          note = note_train)
+
+    if (include.svd) {
+      svd <- x$svd
+      names(svd) <- dimnames(x$scaling)[[2L]]
+      if (length(svd) > 1L) {
+        svd <- prepare_output(fix_format(data.frame(t(
+          data.frame(svd ^ 2 / sum(svd ^ 2))
+        ))), caption = "Proportion of trace",
+        note = note_train)
+      }
+      rslt$svd <- svd
     }
 
-    cTab1 <- table(newdata[, 1], fit_predict$class, dnn = c(names(newdata)[1], "Predict"))
-
-    cTab <- fix_and_format(addmargins(cTab1), caption = "Kontingenztafel tatsaechlicher und vorhergesagter Kategorien", digits = 0)
-
-    cTotal <- c(diag(prop.table(cTab1, 1)), Total = sum(diag(prop.table(cTab1)))) * 100
-    cTotal <-
-      prepare_output(data.frame(
-        Item = names(cTotal),
-        percent = render_f(cTotal, digits = 1)
-      ), caption = "prozentuale Uebereinstimmung")
-
-    names(cTotal)[1] <- names(cTab)[1]
-
-    list(
-      mean = means,
-      scal = scaling,
-      svd =  svd,
-      cTab = cTab,
-      cTotal = cTotal
-    )
+    if (include.cTab) {
+      xx <- newdata[[x$terms[[2L]]]]
+      yy <- fit_predict$class
+      cTab  <- table(xx, yy, dnn = c(x$terms[[2L]] , "Predict"))
+      if (length(cTab) == 4L) {
+        cat(" in 2x2 ")
+        cTab <-  Klassifikation(cTab)
+        rslt$cTab <-
+          fix_and_format(
+            cTab[[1]],
+            caption = "Contingency table of actual and predicted categories",
+            note = note_test,
+            digits = 0)
+        rslt$Accuracy <- cTab[[2]][c(1, 7, 8), ]
+      }
+      else {
+        rslt$cTab <-
+          fix_and_format(cTab,
+                         caption = "Contingency table of actual and predicted categories",
+                         note =note,
+                         digits = 0)
+        Accuracy <- NULL
+        for (i in seq_len(dim(cTab)[1] - 1)) {
+          msr <- colnames(cTab)[i + 1]
+          cTab1 <-
+            table(
+            factor(xx == msr, c(TRUE, FALSE)) ,
+            factor(yy == msr, c(TRUE, FALSE))
+            )
+          accr <-  Klassifikation(cTab1)[[2]][c(1, 7, 8), ]
+          if (is.null(Accuracy))
+            Accuracy <-  accr
+          else
+            Accuracy <- cbind(Accuracy, accr[2])
+          names(Accuracy)[i + 1] <- msr
+        }
+        attr(Accuracy, "note") <- note_test
+        rslt$Accuracy <- Accuracy
+      }
+    }
+    rslt$predict <-
+      list(data = cbind(
+        newdata,
+        fit_predict$posterior,
+        predict = fit_predict$class,
+        fit_predict$x))
+    rslt
   }
 
+render_f_signif <- function(m, digits = 2) {
+  apply(
+    m, 2,
+    FUN = function(x) {
+      sapply(
+        x,
+        FUN = function(x)
+          formatC(
+            signif(x, digits = digits),
+            digits = digits ,
+            format = "fg",
+            flag = "#"
+          )
+      )
+    }
+  )
+}
 
-fix_and_format <- function(x, caption, digits = 2, ...) {
+fix_and_format <- function(x, caption, note = "", digits = 2, ...) {
   prepare_output(
     fix_format(
       stp25tools::fix_to_df(x),
       digits = digits,
       include.rownames = FALSE
     ),
-    caption = caption
+    caption = caption,
+    note = note
   )
 }
 
-#' library(stp25stat2)
-#' library(stp25data)
-#' #' Linear Discriminant Analysis
-#'
-#' require(MASS)
-#' DF2 <- stp25tools::get_data(
-#'   "C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/discrim.sav")
-#'
-#' # https://stats.idre.ucla.edu/spss/dae/discriminant-function-analysis/
-#'
-#' DF2$Job <- factor(DF2$job, 1:3, Cs("customer service", "mechanic","dispatcher"))
-#' DF2$Job2 <- factor(DF2$job, c(2,3,1), Cs( "mechanic","dispatcher","customer service"))
-#'
-#' fit2 <- lda(Job ~ outdoor+social+conservative, data=DF2)
-#' fit3 <- lda(Job2 ~ outdoor+social+conservative, data=DF2)
 
-
-
-#tbll_extract_lda(fit2)
-# x <- tbll_extract_lda(fit3)
-# stp25output2::Output(x)

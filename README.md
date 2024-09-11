@@ -60,6 +60,9 @@ warpbreaks |> Tbll_desc(~breaks + wool)
 # 3 "wool "         ""             
 # 4 "    A"         "50% (27)"     
 # 5 "    B"         "50% (27)"
+```
+
+``` r
 
 warpbreaks |> Tbll_desc(breaks, wool)
 # # A tibble: 5 × 2
@@ -170,7 +173,7 @@ DF |>
 <thead>
 <tr>
 <td colspan="5" style="text-align: left;">
-Tab 1: group (N=47) (N=47)
+Tab 1: group (N=47)
 </td>
 </tr>
 <tr>
@@ -613,11 +616,17 @@ Tbll_corr( ~ a + b + c, dat)
 # 1 (1) Alpha "1"   ".17, " ".25, " 
 # 2 (2) Beta  ""    "1"     "-.20, "
 # 3 (3) Gamma ""    ""      "1"
+```
+
+``` r
 Tbll_corr(a ~ c, dat)
 # # A tibble: 1 × 4
 #   Characteristics   c_N c_r   c_p.value
 # * <chr>           <dbl> <chr> <chr>    
 # 1 Alpha              40 .25   .119
+```
+
+``` r
 Tbll_corr(a + b + c ~ d, dat)
 # # A tibble: 3 × 4
 #   Characteristics   d_N d_r   d_p.value
@@ -625,6 +634,9 @@ Tbll_corr(a + b + c ~ d, dat)
 # 1 Alpha              40 .39   .012     
 # 2 Beta               40 .83   <.001    
 # 3 Gamma              40 -.15  .343
+```
+
+``` r
 Tbll_corr(a + b + c ~ d, 
           dat, 
           groups = ~ g, 
@@ -733,11 +745,17 @@ t1
 # data:  mpg by vs
 # W = 22.5, p-value = 9.034e-05
 # alternative hypothesis: true location shift is not equal to 0
+```
+
+``` r
 Tbll(t1)
 # # A tibble: 1 × 3
 #   Source    W     p.value
 # * <chr>     <chr> <chr>  
 # 1 mpg by vs 22.50 <.001
+```
+
+``` r
 APA(t1)
 # [1] "W=22.50, p<.001"
 ```
@@ -872,6 +890,293 @@ mtcars |>
 # 7 RMSE        "3.66"    <NA>     1.33  <NA>    2.37  <NA>   
 # 8 Obs         "11"      <NA>     7     <NA>    14    <NA>
 ```
+
+### Contraste
+
+``` r
+Tbll_contrasts(lm1) |> stp25output2::Output()
+```
+
+Contrast: wool tension
+
+<table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
+<thead>
+<tr>
+<td colspan="11" style="text-align: left;">
+Tab 2: Marginal Contrasts Analysis. Response: breaks
+</td>
+</tr>
+<tr>
+<th colspan="3" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+</th>
+<th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
+ 
+</th>
+<th colspan="2" style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+CI
+</th>
+<th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
+ 
+</th>
+<th colspan="4" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+</th>
+</tr>
+<tr>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+Level1
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+Level2
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+Coefficient
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
+ 
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+low
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+high
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
+ 
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+SE
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+df
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+Statistic
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+A
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+B
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+5.78
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+-0.57
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+12.13
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+3.16
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+50
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+1.83
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+.074
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td colspan="11">
+Marginal contrasts estimated at wool p-value adjustment method: Holm
+(1979)
+</td>
+</tr>
+</tfoot>
+</table>
+<table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
+<thead>
+<tr>
+<td colspan="11" style="text-align: left;">
+Tab 3: Marginal Contrasts Analysis. Response: breaks
+</td>
+</tr>
+<tr>
+<th colspan="3" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+</th>
+<th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
+ 
+</th>
+<th colspan="2" style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+CI
+</th>
+<th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
+ 
+</th>
+<th colspan="4" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+</th>
+</tr>
+<tr>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+Level1
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+Level2
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+Coefficient
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
+ 
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+low
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+high
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
+ 
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+SE
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+df
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+Statistic
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+p
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+L
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+H
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+14.72
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+5.13
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+24.31
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+3.87
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+50
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+3.80
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+.001
+</td>
+</tr>
+<tr>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+L
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+M
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+10.00
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+0.41
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+19.59
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+3.87
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+50
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+2.58
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+.026
+</td>
+</tr>
+<tr>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+M
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+H
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+4.72
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+-4.87
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+14.31
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+3.87
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+50
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+1.22
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+.228
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td colspan="11">
+Marginal contrasts estimated at tension p-value adjustment method: Holm
+(1979)
+</td>
+</tr>
+</tfoot>
+</table>
 
 ## Alternative packages
 
