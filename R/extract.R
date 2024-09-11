@@ -77,7 +77,11 @@ tbll_extract.aov <- function(...) {
   )
 }
 
-
+#' @rdname extract
+#' @export
+tbll_extract.manova <- function(...) {
+  extract.manova(...)
+}
 
 #' @rdname extract
 #' @export
@@ -300,7 +304,7 @@ tbll_extract.pairwise.htest <- function(x,
 #' @rdname extract
 #' @export
 #'
-tbll_extract.likert <- function(...) Tbll_likert.likert(...)
+tbll_extract.likert <- function(...) stp25likert::Tbll_likert.likert(...)
 
 
 
