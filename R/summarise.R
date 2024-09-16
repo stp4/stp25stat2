@@ -8,7 +8,7 @@
 #' @param key,value,include.label  an Long
 #' @param na.action  an aggregate
 #' @param formula Zeilen/Spalten Lang/Weit
-#' @param margins,margins_name  Gesamt
+#' @param include.total,margins,margins_name  Gesamt
 #'
 #' @return data.frame, tibble
 #' @export
@@ -81,7 +81,8 @@ Summarise <- function(...,
                       value = "value",
                       na.action = na.pass,
                       formula = NULL,
-                      margins = FALSE,
+                      include.total = TRUE,
+                      margins = include.total,
                       margins_name = "Total",
                       include.label = TRUE) {
 

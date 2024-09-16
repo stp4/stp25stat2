@@ -11,7 +11,8 @@ Summarise(
   value = "value",
   na.action = na.pass,
   formula = NULL,
-  margins = FALSE,
+  include.total = TRUE,
+  margins = include.total,
   margins_name = "Total",
   include.label = TRUE
 )
@@ -27,7 +28,7 @@ Summarise(
 
 \item{formula}{Zeilen/Spalten Lang/Weit}
 
-\item{margins, margins_name}{Gesamt}
+\item{include.total, margins, margins_name}{Gesamt}
 }
 \value{
 data.frame, tibble
