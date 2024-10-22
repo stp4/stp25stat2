@@ -54,6 +54,31 @@ render_f <- function(x, digits = NULL, ...) {
   UseMethod("render_f")
 }
 
+#' @rdname render_f
+#'
+#' @description
+#' render_sigf:  Format numbers to significant figures nicely
+#'
+#' @export
+#'
+#' @examples
+#'
+#' render_sigf(c(123456, 23.2546, 1), 4)
+#'
+#'
+render_sigf <- function(x, digits = 3) {
+  out <- gsub("\\.$",
+              "",
+              formatC(
+                signif(x, digits = digits),
+                digits = digits,
+                format = "fg",
+                flag = "#"
+              ))
+  out[grepl(".", out, fixed = TRUE)] <-
+    strtrim(out[grepl(".", out, fixed = TRUE)], digits + c(1, 2)[grepl("-", out, fixed = TRUE) + 1])
+  out
+}
 
 #' @rdname render_f
 #' @export

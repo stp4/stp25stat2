@@ -2,6 +2,7 @@
 % Please edit documentation in R/render.R, R/rndr_percent.R
 \name{render_f}
 \alias{render_f}
+\alias{render_sigf}
 \alias{render_f.list}
 \alias{render_f.matrix}
 \alias{render_f.data.frame}
@@ -12,6 +13,8 @@
 \title{Format a vector of provided numeric values}
 \usage{
 render_f(x, digits = NULL, ...)
+
+render_sigf(x, digits = 3)
 
 \method{render_f}{list}(x, digits = NULL, ...)
 
@@ -75,6 +78,8 @@ character; formatted values as character strings
 \description{
 Given a vector of data return as strings formatted as requested
 
+render_sigf:  Format numbers to significant figures nicely
+
 rndr_percent:
 style = get_opt("prozent", "style")
 
@@ -123,4 +128,8 @@ render_f(mx, digits = 2)
 render_f(mx, digits = list(2, 0, 1))
 
 }
+
+render_sigf(c(123456, 23.2546, 1), 4)
+
+
 }
