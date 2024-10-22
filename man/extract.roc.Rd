@@ -4,7 +4,7 @@
 \alias{extract.roc}
 \title{Youden’s J statistic}
 \usage{
-extract.roc(x, ..., digits = 1)
+extract.roc(x, ..., digits = 4)
 }
 \description{
 Optimal (Youden Index) point

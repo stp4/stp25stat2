@@ -1,7 +1,7 @@
 #' Tabellen aus pROC::roc
 #'
 #' @param x pROC::roc Objekt
-#' @param digits numeric.
+#' @param digits numeric. sinificant digits of measurement (derfault value is 4)
 #' @param include.order logical.
 #' @param ...
 #'
@@ -46,7 +46,7 @@
 #' #plotROC2(roc.list)
 Tbll_roc <-
   function(x,
-           digits = 2,
+           digits = 4,
            include.order = TRUE,
            ...) {
     if (inherits(x, "roc")) {
@@ -69,6 +69,41 @@ Tbll_roc <-
   }
 
 
+
+
+#' Youden’s J statistic
+#'
+#' Optimal (Youden Index) point
+#'
+#' The Youden index uses the maximum vertical distance of the ROC curve from the point (X, Y)
+#' on the diagonal (random line). In fact, the Youden index maximizes the difference
+#' between the Se and FP rate, in other words, it maximizes the percentage of Net correct
+#' classification:
+#'
+#' Therefore, the optimal cut-off point is calculated by maximizing Se+Sp at
+#' different cut-off points
+#'
+#' Quelle: https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-024-02198-2
+#'
+extract.roc <-
+  function(x, ..., digits = 4) {
+    youde<- pROC::coords(x, "best")
+
+     srs  <-
+       if (!is.null(attr(x$predictor, "label"))) attr(x$predictor, "label")
+       else x$predictor.name
+
+     data.frame(
+       Source = srs,
+       AUC =  render_f(as.numeric(x$auc), 2),
+       YI_Specificity = render_f(youde[[2]], 2),
+       YI_Sensitivity = render_f(youde[[3]], 2),
+       YI_Cutoff = render_sigf(youde[[1]], digits),
+       direction = paste(levels(x$response)[1],
+                         x$direction,
+                         levels(roc1$response)[2])
+     )
+ }
 
 
 #' @noRd
@@ -119,48 +154,4 @@ roc_dataline<-
             " ", x$levels[2], ").", sep = "")
     }
   }
-
-#' Youden’s J statistic
-#'
-#' Optimal (Youden Index) point
-#'
-#' The Youden index uses the maximum vertical distance of the ROC curve from the point (X, Y)
-#' on the diagonal (random line). In fact, the Youden index maximizes the difference
-#' between the Se and FP rate, in other words, it maximizes the percentage of Net correct
-#' classification:
-#'
-#' Therefore, the optimal cut-off point is calculated by maximizing Se+Sp at
-#' different cut-off points
-#'
-#' Quelle: https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-024-02198-2
-#'
-
-
-
-
-
-extract.roc <-
-  function(x, ..., digits = 1) {
-    youde<- pROC::coords(x, "best")
-
-    rslt <-  stp25stat2::fix_format(
-      data.frame(
-        AUC =  as.numeric(x$auc),
-        YI_Specificity = youde[2],
-        YI_Sensitivity = youde[3],
-        YI_Cutoff = youde[1]
-      ),
-      digits = c(NA, 2, 2, 2, digits)
-    )
-
-    rslt[[1]] <-
-      if (!is.null(attr(x$predictor, "label")))
-        attr(x$predictor, "label")
-    else
-      x$predictor.name
-    rslt
-
-  }
-
-
 

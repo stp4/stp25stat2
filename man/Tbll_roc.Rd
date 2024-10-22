@@ -4,12 +4,12 @@
 \alias{Tbll_roc}
 \title{Tabellen aus pROC::roc}
 \usage{
-Tbll_roc(x, digits = 2, include.order = TRUE, ...)
+Tbll_roc(x, digits = 4, include.order = TRUE, ...)
 }
 \arguments{
 \item{x}{pROC::roc Objekt}
 
-\item{digits}{numeric.}
+\item{digits}{numeric. sinificant digits of measurement (derfault value is 4)}
 
 \item{include.order}{logical.}
 
