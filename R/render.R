@@ -80,6 +80,25 @@ render_sigf <- function(x, digits = 3) {
   out
 }
 
+# in tbll_extract.lda() verwendet
+render_f_signif <- function(m, digits = 2) {
+  apply(
+    m, 2,
+    FUN = function(x) {
+      sapply(
+        x,
+        FUN = function(x)
+          formatC(
+            signif(x, digits = digits),
+            digits = digits ,
+            format = "fg",
+            flag = "#"
+          )
+      )
+    }
+  )
+}
+
 #' @rdname render_f
 #' @export
 render_f.list <- function(x, digits = NULL, ...) {
