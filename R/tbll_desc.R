@@ -547,6 +547,10 @@ names_option <- function(rslt_all) {
 
 
 #' @rdname Tbll_desc
+#'
+#' @description
+#' Tbll_desc_multi: ruft direkt Tbll_desc auf (mit unterschiedlichen Parametern).
+#'
 #' @param by  Gruppenvariable
 #' @param use.level,include.order,exclude.last.order Tbll_desc_multi weitere einstellungen
 #' @export
