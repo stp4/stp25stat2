@@ -121,9 +121,8 @@ Summarise <- function(...,
 
   if (isTRUE(margins)) {
     default_formula <-
-      formula(paste(value, "~",
-                    paste(names(molten)[-((1:0) - ncol(molten))],
-                          collapse = "+")))
+      if( ncol(molten) == 2)  formula(paste(value, "~1"))
+      else formula(paste(value, "~", key))
     rslts_m <-
       aggregate(default_formula,
                 molten,
@@ -150,7 +149,7 @@ Summarise <- function(...,
     rhs <- check_formula(formula, key, value)
     rslts <- tidyr::pivot_wider(rslts,
                                 names_from = !!rhs,
-                                values_from = values_from)
+                                values_from = all_of(values_from))
   }
 
   if(any(is.na(names(rslts))))
