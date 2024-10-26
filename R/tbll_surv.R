@@ -327,7 +327,7 @@ Tbll_coxph_uni <-
 #' @param include.survival Tabelle mit allen Ueberlebenszeiten
 #' @param ...  an summary.surfit times, censored = FALSE, scale = 1, extend=FALSE
 #'
-#' @rdname Tbll_surv
+#' @rdname extract
 tbll_extract.survfit <- function(x,
                                  include.survival=FALSE,
                                  include.se=FALSE,
@@ -352,7 +352,7 @@ tbll_extract.survfit <- function(x,
 #' @param include.se Standardfehler
 #' @param include.ci  Konfidenzintervall
 #'
-#' @rdname Tbll_surv
+#' @rdname extract
 tbll_extract.summary.survfit <- function(x,
                                          digits = NULL,
                                          include.se=FALSE,
@@ -366,7 +366,7 @@ tbll_extract.summary.survfit <- function(x,
 }
 
 
-#' @rdname Tbll_surv
+#' @rdname extract
 tbll_extract.survdiff <- function(x) {
   prepare_output( extract_survdiff(x),
                   caption = "Test Survival Curve Differences",
@@ -378,7 +378,7 @@ tbll_extract.survdiff <- function(x) {
 #' @param include.param Regrssionstabelle
 #' @param include.test z-Test
 #'
-#' @rdname Tbll_surv
+#' @rdname extract
 tbll_extract.coxph <- function(x,
                                include.param = FALSE,
                                include.test = TRUE) {
@@ -395,7 +395,7 @@ tbll_extract.coxph <- function(x,
   rslt
 }
 
-#' @rdname Tbll_surv
+#' @rdname extract
 tbll_extract.summary.coxph <-
   function(x,
            include.se = FALSE,

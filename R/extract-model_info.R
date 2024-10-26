@@ -1,9 +1,8 @@
-#' Regression Infomation
+#' @title  Regression Infomation
+#' @description
 #'
 #' Extrahiert die Variablen namen die Labels und die Daten
-#'
 #' Alternative ist die Library insight
-#'
 #' mit zb der Funktion
 #'
 #' model_info(m4<-Hmisc::spearman2(mpg ~ factor(vs), mtcars))
@@ -17,6 +16,7 @@
 #' aber es gehen noch nicht so viel Modelle
 #'
 #' @param ... Regressinsmodelle
+#' @name Infomation
 #' @export
 #'
 #' @examples
@@ -49,15 +49,18 @@ Infomation <- function(...) {
 # @return Liste mit c("class",  "family", "y", "x", "labels", "N")
 
 
-# # das geht nicht mehr model_info(mpg ~ cyl)
-# model_info(glm(vs ~ mpg, mtcars, family = binomial()))
-# model_info(lm(mpg ~ drat + wt + qsec, mtcars))
-# model_info(wilcox.test(mpg ~ vs, mtcars))
-# model_info(t.test(mpg ~ vs, mtcars))
+
 #
 
-
+#' @rdname Infomation
 #' @export
+#' @examples
+#'
+#' # # das geht nicht mehr model_info(mpg ~ cyl)
+#' model_info(glm(vs ~ mpg, mtcars, family = binomial()))
+#' model_info(lm(mpg ~ drat + wt + qsec, mtcars))
+#' model_info(wilcox.test(mpg ~ vs, mtcars))
+#' model_info(t.test(mpg ~ vs, mtcars))
 model_info <- function(x) {
  UseMethod("model_info")
 }

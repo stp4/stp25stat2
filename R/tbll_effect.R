@@ -244,7 +244,7 @@ tbll_extract.eff <- function(x,
 }
 
 
-#' @rdname Tbll_effect
+#' @rdname extract
 #' @export
 #'
 tbll_extract.efflist <- function(x, ...) {

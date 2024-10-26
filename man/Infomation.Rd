@@ -2,19 +2,19 @@
 % Please edit documentation in R/extract-model_info.R
 \name{Infomation}
 \alias{Infomation}
+\alias{model_info}
 \title{Regression Infomation}
 \usage{
 Infomation(...)
+
+model_info(x)
 }
 \arguments{
 \item{...}{Regressinsmodelle}
 }
 \description{
 Extrahiert die Variablen namen die Labels und die Daten
-}
-\details{
 Alternative ist die Library insight
-
 mit zb der Funktion
 
 model_info(m4<-Hmisc::spearman2(mpg ~ factor(vs), mtcars))
@@ -33,4 +33,10 @@ aber es gehen noch nicht so viel Modelle
  lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
  Infomation(lm1, lm2)
 
+# example code
+# # das geht nicht mehr model_info(mpg ~ cyl)
+model_info(glm(vs ~ mpg, mtcars, family = binomial()))
+model_info(lm(mpg ~ drat + wt + qsec, mtcars))
+model_info(wilcox.test(mpg ~ vs, mtcars))
+model_info(t.test(mpg ~ vs, mtcars))
 }

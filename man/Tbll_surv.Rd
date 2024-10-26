@@ -6,11 +6,6 @@
 \alias{Tbll_surv.coxph}
 \alias{Tbll_surv.formula}
 \alias{Tbll_coxph_uni}
-\alias{tbll_extract.survfit}
-\alias{tbll_extract.summary.survfit}
-\alias{tbll_extract.survdiff}
-\alias{tbll_extract.coxph}
-\alias{tbll_extract.summary.coxph}
 \title{Table for Survival Objects}
 \usage{
 Tbll_surv(x, ...)
@@ -43,51 +38,18 @@ Tbll_coxph_uni(
   include.wald.test = FALSE,
   digits = 2
 )
-
-\method{tbll_extract}{survfit}(
-  x,
-  include.survival = FALSE,
-  include.se = FALSE,
-  include.ci = TRUE,
-  digits = 2,
-  ...
-)
-
-\method{tbll_extract}{summary.survfit}(x, digits = NULL, include.se = FALSE, include.ci = TRUE)
-
-\method{tbll_extract}{survdiff}(x)
-
-\method{tbll_extract}{coxph}(x, include.param = FALSE, include.test = TRUE)
-
-\method{tbll_extract}{summary.coxph}(
-  x,
-  include.se = FALSE,
-  include.ci = TRUE,
-  include.test = TRUE,
-  digits = 2
-)
 }
 \arguments{
 \item{x}{a formula object, with the response on the left of a ~ operator,
 and the terms on the right. The response must be a survival object as returned
 by the Surv function.}
 
-\item{...}{an summary.surfit times, censored = FALSE, scale = 1, extend=FALSE}
+\item{...}{an prepare_data2}
 
 \item{data}{a data.frame in which to interpret the variables named in the
 formula, or in the subset and the weights argument.}
 
 \item{names, formula, digits, include.z.test, include.wald.test}{description folgt}
-
-\item{include.param}{Regrssionstabelle}
-
-\item{include.test}{z-Test}
-
-\item{include.ci}{Konfidenzintervall}
-
-\item{include.se}{Standardfehler}
-
-\item{include.survival}{Tabelle mit allen Ueberlebenszeiten}
 }
 \value{
 data.frame or list with data.frames

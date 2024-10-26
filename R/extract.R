@@ -1,4 +1,4 @@
-#' Extract
+#' Extract (tbll_extract)
 #'
 #' Turn an object into a tidy table
 #'

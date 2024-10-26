@@ -50,13 +50,13 @@ Tbll_roc <-
            include.order = TRUE,
            ...) {
     if (inherits(x, "roc")) {
-      prepare_output(extract.roc(x, digits = digits),
+      prepare_output(tbll_extract.roc(x, digits = digits),
                      roc_dataline(x))
     }
     else{
       rslt <- NULL
       for (i in names(x)) {
-        rslt <- rbind(rslt, extract.roc(x[[i]], digits = digits))
+        rslt <- rbind(rslt, tbll_extract.roc(x[[i]], digits = digits))
       }
 
       if (include.order)
@@ -85,13 +85,16 @@ Tbll_roc <-
 #'
 #' Quelle: https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-024-02198-2
 #'
-extract.roc <-
+#' @rdname extract
+tbll_extract.roc <-
   function(x, ..., digits = 4) {
     youde<- pROC::coords(x, "best")
 
      srs  <-
        if (!is.null(attr(x$predictor, "label"))) attr(x$predictor, "label")
        else x$predictor.name
+     if( is.null(srs)) srs <- "GLM"
+     print(x$predictor.name)
 
      data.frame(
        Source = srs,
@@ -101,7 +104,7 @@ extract.roc <-
        YI_Cutoff = render_sigf(youde[[1]], digits),
        direction = paste(levels(x$response)[1],
                          x$direction,
-                         levels(roc1$response)[2])
+                         levels(x$response)[2])
      )
  }
 

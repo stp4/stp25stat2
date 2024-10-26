@@ -2,7 +2,6 @@
 % Please edit documentation in R/tbll_effect.R
 \name{Tbll_effect}
 \alias{Tbll_effect}
-\alias{tbll_extract.efflist}
 \title{Effect Displays}
 \usage{
 Tbll_effect(
@@ -14,8 +13,6 @@ Tbll_effect(
   include.n = FALSE,
   digits = 2
 )
-
-\method{tbll_extract}{efflist}(x, ...)
 }
 \arguments{
 \item{x}{fit  und effecte x = mod    (a regression model objec)  term    (the quoted name of a term)}

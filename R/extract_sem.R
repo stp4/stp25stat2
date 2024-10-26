@@ -7,7 +7,7 @@
 #' @param include.ci,include.model,include.varianz,include.latent Lavan: was soll ausgegeben werden
 #' @param ...  Fehler abfangen
 #'
-#' @rdname Tbll_cfa
+#' @rdname extract
 #' @export
 #'
 #' @examples

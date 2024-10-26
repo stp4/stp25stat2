@@ -3,7 +3,7 @@
 #' @param include.ci an broom::tidy mit conf.int = include.ci, conf.level = 0.95,
 #' @param ... an  broom::tidy zB  adjust = "tukey"
 #'
-#' @rdname Tbll
+#' @rdname extract
 #' @export
 #'
 #' @examples
@@ -53,7 +53,7 @@ tbll_extract.emm_list <-
   }
 
 
-#' @rdname Tbll
+#' @rdname extract
 #' @export
 tbll_extract.emmGrid <-
   function(x,
@@ -98,7 +98,7 @@ tbll_extract.emmGrid <-
   }
 
 
-#' @rdname Tbll
+#' @rdname extract
 #' @export
 tbll_extract.visreg <- function(x,
                                 include.ci = TRUE,

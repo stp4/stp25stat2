@@ -135,6 +135,8 @@ data.frame
 \description{
 Simple and intuitive formula and pipe-based framework for performing basic statistical Tabels.
 
+Tbll_desc_multi: ruft direkt Tbll_desc auf (mit unterschiedlichen Parametern).
+
 Tbll_desc_long
 }
 \examples{
