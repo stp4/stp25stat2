@@ -18,7 +18,28 @@
 #'
 #' # Linear Discriminant Analysis
 #'  require(MASS)
-Tbll_lda <- function(...) tbll_extract.lda(...)
+Tbll_lda <- function(..., include.label = NULL){
+
+  if(is.null(include.label)){
+     return(tbll_extract.lda(...))
+    }
+  else {
+    if (is_logical(include.label)) stop("\nHier musst du mir die Labels als Character-String uebergeben.\n")
+    else{
+      rst<- tbll_extract.lda(...)
+      pos <- which(names(include.labels)  %in% rst$scaling[[1]])
+
+      if (nrow(rst$scaling) == length(pos))
+        rst$scaling[[1]] <- factor(rst$scaling[[1]],
+                                   names(include.labels[pos]),
+                                   as.character(include.labels[pos]))
+      else{ stop("\nDie Labels mussen als c(a = 'Hallo', b = 'Welt') uebergeben werden.\n")}
+
+      return(rst)
+    }
+
+  }
+  }
 
 
 #' @rdname extract
