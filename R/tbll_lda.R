@@ -72,12 +72,20 @@ tbll_extract.lda <-
       rslt$means <-
         fix_and_format(t(x$means), caption = "Means", note = note_train, digits = digits)
 
-    if (include.scal)
+    if (include.scal){
       rslt$scaling <-
         prepare_output(stp25tools::fix_to_df(
           render_f_signif(x$scaling, digits)),
           caption = "Coefficients of linear discriminants",
           note = note_train)
+
+        est <- rslt$scaling[[2]]
+        prm  <- rslt$scaling[[1]]
+        est <- ifelse(grepl("\\-", est), gsub("\\-", "\\- ", est), paste("+", est))
+        rst <- paste( "Index =", paste(paste(est, "x" , prm, sep = ""), collapse =                              " "))
+        rslt$scaling.formula <- gsub("= \\+" , "=", rst)
+
+      }
 
     if (include.svd) {
       svd <- x$svd
