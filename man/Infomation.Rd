@@ -33,7 +33,7 @@ aber es gehen noch nicht so viel Modelle
  lm2 <- lm(breaks ~ wool * tension, data = warpbreaks)
  Infomation(lm1, lm2)
 
-# example code
+
 # # das geht nicht mehr model_info(mpg ~ cyl)
 model_info(glm(vs ~ mpg, mtcars, family = binomial()))
 model_info(lm(mpg ~ drat + wt + qsec, mtcars))
