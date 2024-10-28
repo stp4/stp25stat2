@@ -119,23 +119,25 @@ Summarise <- function(...,
     names(rslts)[ncol(rslts)] <- value
   }
 
-  if (isTRUE(margins)) {
-    default_formula <-
-      if( ncol(molten) == 2)  formula(paste(value, "~1"))
-      else formula(paste(value, "~", key))
+  if (isTRUE(margins) | plyr::is.formula(margins) ) {
+   # cat( "\n in magrins\n")
+      if(!plyr::is.formula(margins))
+      if( ncol(molten) == 2)  margins <- formula(paste(value, "~1"))
+      else margins <-  formula(paste(value, "~", key))
+
     rslts_m <-
-      aggregate(default_formula,
+      aggregate(margins,
                 molten,
                 FUN = fun,
                 na.action = na.action)
 
     rst <- rslts_m[ncol(rslts_m)]
     if (class(rst[[1]])[1] == "matrix")
-      rslts_m <-
-      cbind(rslts_m[-ncol(rslts_m)], rst[[1]])
+      rslts_m <- cbind(rslts_m[-ncol(rslts_m)], rst[[1]])
 
     rslts <- dplyr::bind_rows(rslts, rslts_m)
-
+# hier gehört noch margins_name
+# an alle mit NA
     frst <-  rslts[[1]]
     if (is.factor(frst))
       rslts[[1]] <-
@@ -143,6 +145,8 @@ Summarise <- function(...,
 
 
     rslts[[1]][is.na(frst)] <- margins_name
+
+
   }
 
   if (!is.null(formula)) {
