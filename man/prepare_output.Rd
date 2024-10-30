@@ -22,7 +22,7 @@ prepare_output(
 
 \item{note}{Anmerkung}
 
-\item{N, include.n}{Anzahl}
+\item{N}{Anzahl}
 
 \item{labels}{Label}
 

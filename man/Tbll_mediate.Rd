@@ -59,7 +59,7 @@ https://paolotoffanin.wordpress.com/2017/05/06/multiple-mediator-analysis-with-l
 #require(stp25output2)
 
 
-# Data --------------------------------------------------------------------
+# Data
 
 
 set.seed(1234)
@@ -89,7 +89,7 @@ dat <- data.frame(
 dat |> Tbll_desc_item(Note, Motivation , Lerndauer)
 
 
-# library mediation -------------------------------------------------------
+# library mediation
 pfad_x <- lm(Note ~ Motivation , dat)
 # Direkter Effekt von X auf Y und Effekt von M auf Y
 pfad_xm_y <- lm(Note ~ Motivation + Lerndauer, dat)
@@ -106,7 +106,8 @@ pfad_x_m_y <- lm(Note ~ Motivation + Lerndauer, dat)
 pfad_x_m <- lm(Lerndauer ~ Motivation , dat)
 
 # pfad_x_y <- lmerTest::lmer(Note ~ Motivation +time+ (1 | id), dat)
-# pfad_x_m_y <- lmerTest::lmer(Note ~ Motivation + Lerndauer +time+ (1 | id), dat)
+# pfad_x_m_y <- lmerTest::lmer(
+#Note ~ Motivation + Lerndauer +time+ (1 | id), dat)
 # pfad_x_m <- lmerTest::lmer(Lerndauer ~ Motivation +time+ (1 | id), dat)
 
 Sobel_Test(pfad_x_y, pfad_x_m_y, pfad_x_m,
@@ -117,15 +118,18 @@ Sobel_Test(pfad_x_y, pfad_x_m_y, pfad_x_m,
 
 # library(mediation)
 # rslt <- mediation::mediate(pfad_x_m, pfad_xm_y,
-#                            treat = "Motivation", mediator = "Lerndauer",
+#                            treat = "Motivation",
+#                            mediator = "Lerndauer",
 #                            boot = FALSE,
 #                            sims = 100)
 # summary(rslt)
 # Tbll(rslt)
 # #
 # #  indirekten Effekt
-# #ACME ist der average causal mediation effect. Das ist der indirekte Effekt (Pfad X und M)
-# pfad_x_m$coefficients["Motivation"] * pfad_xm_y$coefficients["Lerndauer"]
+# #ACME ist der average causal mediation effect.
+# Das ist der indirekte Effekt (Pfad X und M)
+# pfad_x_m$coefficients["Motivation"] *
+#   pfad_xm_y$coefficients["Lerndauer"]
 
 
 
@@ -139,7 +143,9 @@ Sobel_Test(pfad_x_y, pfad_x_m_y, pfad_x_m,
 #     std = FALSE,
 #     plot = FALSE
 #   )
-# # mod4 <- psych::mediate(Note ~ Motivation + Motivation:Lerndauer + (Lerndauer), data =dat, n.iter=50)
+#  mod4 <- psych::mediate(
+#  Note ~ Motivation + Motivation:Lerndauer + (Lerndauer),
+#  data =dat, n.iter=50)
 # class(mod4)
 #
 # print(mod4, short = TRUE )

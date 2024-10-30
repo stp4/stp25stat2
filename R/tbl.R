@@ -1,8 +1,6 @@
 #' Turn an object into a table
 #'
-#' @param x object
-#' @param digits  decimal places
-#' @param ... alles an Tbll
+#' @param ... alles an Tbll, x, digits
 #'
 #' @return data.frame oder liste mit data.frames
 #' @export

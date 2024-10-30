@@ -7,11 +7,7 @@
 Tbll(...)
 }
 \arguments{
-\item{...}{alles an Tbll}
-
-\item{x}{object}
-
-\item{digits}{decimal places}
+\item{...}{alles an Tbll, x, digits}
 }
 \value{
 data.frame oder liste mit data.frames

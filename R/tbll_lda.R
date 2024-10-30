@@ -3,14 +3,17 @@
 #' Linear Discriminant Analysis
 #'
 #' @export
-#' @param x lda {MASS}
-#' @param newdata  Test daten wenn Null dann wird model.frame(x) verwendet und an MASS::predict.lda weitergegeben.
-#' @param digits digits
-#' @param include.means aritmetic means
-#' @param include.scal scaling (LD)
-#' @param include.cTab Accuracy Table
-#' @param include.svd Eigenvalue
-#' @param ...
+#' @param include.label character. Beschriftung auf Labels umstellen
+#' @param ...  tbll_extract.lda:
+#'  x lda {MASS}
+#'  newdata  Test daten wenn Null dann wird model.frame(x)
+#'  verwendet und an MASS::predict.lda weitergegeben.
+#'  include.svd Eigenvalue
+#'  include.cTab Accuracy Table
+#'  include.scal scaling (LD)
+#'  include.means aritmetic means
+#'  digits digits
+#'
 #'
 #' @return list with means, scal, cTab, include.svd and predictiv-Data
 #'
@@ -43,6 +46,15 @@ Tbll_lda <- function(..., include.label = NULL){
 
 
 #' @rdname extract
+#'
+
+#' @param newdata lda. MASS::lda Test daten wenn Null dann wird model.frame(x)
+#'  verwendet und an MASS::predict.lda weitergegeben.
+#' @param include.svd lda. Eigenvalue
+#' @param include.cTab lda. Accuracy Table
+#' @param include.scal lda. scaling (LD)
+#' @param include.means lda. aritmetic means
+#'
 #' @export
 tbll_extract.lda <-
   function(x,

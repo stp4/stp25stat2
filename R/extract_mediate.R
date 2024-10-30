@@ -41,7 +41,7 @@
 #' #require(stp25output2)
 #'
 #'
-#' # Data --------------------------------------------------------------------
+#' # Data
 #'
 #'
 #' set.seed(1234)
@@ -71,7 +71,7 @@
 #' dat |> Tbll_desc_item(Note, Motivation , Lerndauer)
 #'
 #'
-#' # library mediation -------------------------------------------------------
+#' # library mediation
 #' pfad_x <- lm(Note ~ Motivation , dat)
 #' # Direkter Effekt von X auf Y und Effekt von M auf Y
 #' pfad_xm_y <- lm(Note ~ Motivation + Lerndauer, dat)
@@ -89,7 +89,8 @@
 #' pfad_x_m <- lm(Lerndauer ~ Motivation , dat)
 #'
 #' # pfad_x_y <- lmerTest::lmer(Note ~ Motivation +time+ (1 | id), dat)
-#' # pfad_x_m_y <- lmerTest::lmer(Note ~ Motivation + Lerndauer +time+ (1 | id), dat)
+#' # pfad_x_m_y <- lmerTest::lmer(
+#' #Note ~ Motivation + Lerndauer +time+ (1 | id), dat)
 #' # pfad_x_m <- lmerTest::lmer(Lerndauer ~ Motivation +time+ (1 | id), dat)
 #'
 #' Sobel_Test(pfad_x_y, pfad_x_m_y, pfad_x_m,
@@ -100,15 +101,18 @@
 #'
 #' # library(mediation)
 #' # rslt <- mediation::mediate(pfad_x_m, pfad_xm_y,
-#' #                            treat = "Motivation", mediator = "Lerndauer",
+#' #                            treat = "Motivation",
+#' #                            mediator = "Lerndauer",
 #' #                            boot = FALSE,
 #' #                            sims = 100)
 #' # summary(rslt)
 #' # Tbll(rslt)
 #' # #
 #' # #  indirekten Effekt
-#' # #ACME ist der average causal mediation effect. Das ist der indirekte Effekt (Pfad X und M)
-#' # pfad_x_m$coefficients["Motivation"] * pfad_xm_y$coefficients["Lerndauer"]
+#' # #ACME ist der average causal mediation effect.
+#' # Das ist der indirekte Effekt (Pfad X und M)
+#' # pfad_x_m$coefficients["Motivation"] *
+#' #   pfad_xm_y$coefficients["Lerndauer"]
 #'
 #'
 #'
@@ -122,7 +126,9 @@
 #' #     std = FALSE,
 #' #     plot = FALSE
 #' #   )
-#' # # mod4 <- psych::mediate(Note ~ Motivation + Motivation:Lerndauer + (Lerndauer), data =dat, n.iter=50)
+#' #  mod4 <- psych::mediate(
+#' #  Note ~ Motivation + Motivation:Lerndauer + (Lerndauer),
+#' #  data =dat, n.iter=50)
 #' # class(mod4)
 #' #
 #' # print(mod4, short = TRUE )
@@ -734,7 +740,7 @@ print_psych_mediate <-  function(x, digits=2 ) {
 #
 # Motivation <-  scale2(rnorm(n))
 # Lerndauer <-  scale2(1+Motivation + rnorm(n,0,1))
-# Note <- scale2(1 +   2.9 * Lerndauer + 3.3 * Motivation + rnorm(n, 0, 1) )
+# Note <- scale2(1 + 2.9 * Lerndauer + 3.3 * Motivation + rnorm(n, 0, 1) )
 #
 # dat <- data.frame(
 #   id = 1:n,
@@ -769,7 +775,8 @@ print_psych_mediate <-  function(x, digits=2 ) {
 # Tbll(rslt)
 # #
 # #  indirekten Effekt
-# #ACME ist der average causal mediation effect. Das ist der indirekte Effekt (Pfad X und M)
+# #ACME ist der average causal mediation effect.
+# # Das ist der indirekte Effekt (Pfad X und M)
 # pfad_x_m$coefficients["Motivation"] * pfad_xm_y$coefficients["Lerndauer"]
 #
 # library(psych)

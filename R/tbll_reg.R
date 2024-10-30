@@ -1,7 +1,7 @@
 
 #' Regression Table
 #'
-#' Bei glm  kann mit dem Parameter conf.method Wald oder z-test für
+#' Bei glm  kann mit dem Parameter conf.method Wald oder z-test fuer
 #' die Test statistik gewaelt werden.
 #'
 #'
@@ -14,14 +14,14 @@
 #' @param include.beta st. Beta
 #' @param include.odds,include.odds.ci Odds
 #' @param include.statistic Test Statistik
-#' @param conf.method für glm zb "Wald"
+#' @param conf.method fuer glm zb "Wald"
 #' @param include.p,include.stars P-Werte,Sternchen
 #' @param include.param Ausgabe der Parameter
-#' @param include.gof  ModellGüte ausgeben
+#' @param include.gof  ModellGuete ausgeben
 #' @param include.r,include.pseudo R-Quadrat
-#' @param include.aic,include.bic Gütemasse
-#' @param include.loglik,include.minus.LL  für glm
-#' @param include.test Anova Test für das gesamt Modell
+#' @param include.aic,include.bic Guetemasse
+#' @param include.loglik,include.minus.LL  fuer glm
+#' @param include.test Anova Test fuer das gesamt Modell
 #' @param include.rmse RMSE
 #' @param include.custom Eigene Spalte
 #' @export
@@ -73,7 +73,7 @@ Tbll_reg  <- function(...,
   if (inherits(fit[[1]], "rowwise_df")) {
     if (length(fit) != 1)
       warning(
-        "\n\nEtwas ist faul: es ist eine liste der Länge = ",
+        "\n\nEtwas ist faul: es ist eine liste der Laenge = ",
         length(fit),
         " gekommen!\n",
         "Ich erwarte hier ein nest_by Modell."

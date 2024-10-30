@@ -306,6 +306,17 @@ extract_effect(..., names = NULL, transformation, xlevels = list())
 
 \item{xlevels}{an effects::allEffects()}
 
+\item{newdata}{lda. MASS::lda Test daten wenn Null dann wird model.frame(x)
+verwendet und an MASS::predict.lda weitergegeben.}
+
+\item{include.means}{lda. aritmetic means}
+
+\item{include.scal}{lda. scaling (LD)}
+
+\item{include.cTab}{lda. Accuracy Table}
+
+\item{include.svd}{lda. Eigenvalue}
+
 \item{include.survival}{Tabelle mit allen Ueberlebenszeiten}
 
 \item{include.param}{Regrssionstabelle}

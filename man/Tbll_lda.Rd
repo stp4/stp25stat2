@@ -4,24 +4,20 @@
 \alias{Tbll_lda}
 \title{Tbll_lda}
 \usage{
-Tbll_lda(...)
+Tbll_lda(..., include.label = NULL)
 }
 \arguments{
-\item{...}{}
+\item{...}{tbll_extract.lda:
+x lda {MASS}
+newdata  Test daten wenn Null dann wird model.frame(x)
+verwendet und an MASS::predict.lda weitergegeben.
+include.svd Eigenvalue
+include.cTab Accuracy Table
+include.scal scaling (LD)
+include.means aritmetic means
+digits digits}
 
-\item{x}{lda {MASS}}
-
-\item{newdata}{Test daten wenn Null dann wird model.frame(x) verwendet und an MASS::predict.lda weitergegeben.}
-
-\item{digits}{digits}
-
-\item{include.means}{aritmetic means}
-
-\item{include.scal}{scaling (LD)}
-
-\item{include.cTab}{Accuracy Table}
-
-\item{include.svd}{Eigenvalue}
+\item{include.label}{character. Beschriftung auf Labels umstellen}
 }
 \value{
 list with means, scal, cTab, include.svd and predictiv-Data

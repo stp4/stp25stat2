@@ -15,7 +15,11 @@ Tbll_effect(
 )
 }
 \arguments{
-\item{x}{fit  und effecte x = mod    (a regression model objec)  term    (the quoted name of a term)}
+\item{x}{fit  und effecte x = mod    (a regression model objec)
+term    (the quoted name of a term)}
+
+\item{term}{character.
+the quoted name of a term, effects::effect(term, ...)}
 
 \item{...}{param an effect transformation = list(link = log, inverse = exp)}
 
@@ -25,8 +29,10 @@ Tbll_effect(
 data.frame ore  list with data.frame
 }
 \description{
-Workaraund fuer effect {effects}. Dei Funktion erlaubt formulas und kann  ~a*b
- sowie ~b*a evaluieren.
+Workaraund fuer effects::effect . Dei Funktion erlaubt formulas und kann
+  ~a*b
+ sowie
+  ~b*a evaluieren.
 }
 \examples{
 
@@ -53,42 +59,46 @@ DF$log.y =  log(DF$y)
 (fit.log.y <- lm(log.y ~ iq, DF))
 (fit.model.log<- lm(log(y)~iq, DF))
 
-p1 <-
-  plot(effect("iq", fit.linear ,
-              partial.residuals = TRUE),
-       main = "y (linear)")
-
-p2 <-
-  plot(effect("iq", fit.log.y,
-              partial.residuals = TRUE),
-       main = "log")
-
-p3 <- plot(effect("iq",  fit.log.y,
-                  partial.residuals = TRUE,
-                  transformation =  list(link =  log,  inverse = exp)),
-           main = "log + trans")
-
-p4 <- plot(effect("iq", fit.model.log ,
-                  partial.residuals = TRUE),
-           main = "log(y)")
-
-p5 <-   plot(effect("iq", fit.model.log ,
-                    partial.residuals = TRUE,
-                    transformation =  list(link =  log,  inverse = exp)),
-             main = "log(y) + trans")
-
-require(cowplot)
-plot_grid(p1,p4, p5,  p2, p3, ncol = 3)
+  # p1 <-
+  #   plot(effect("iq", fit.linear ,
+  #             partial.residuals = TRUE),
+  #      main = "y (linear)")
+  #
+  # p2 <-
+  # plot(effect("iq", fit.log.y,
+  #            partial.residuals = TRUE),
+  #      main = "log")
+  #
+  # p3 <- plot(effect("iq",  fit.log.y,
+  #                partial.residuals = TRUE,
+  #                transformation =
+  #                list(link =  log,  inverse = exp)),
+  #         main = "log + trans")
+  #
+  # p4 <- plot(effect("iq", fit.model.log ,
+  #               partial.residuals = TRUE),
+  #         main = "log(y)")
+  #
+  # p5 <-   plot(effect("iq", fit.model.log ,
+  #                  partial.residuals = TRUE,
+  #                  transformation =
+  #                  list(link =  log,  inverse = exp)),
+  #          main = "log(y) + trans")
+  #
+  # require(cowplot)
+  # plot_grid(p1,p4, p5,  p2, p3, ncol = 3)
 
 cbind(
   Tbll(effect("iq", fit.linear), include.ci=FALSE),
   log.y=Tbll(effect("iq", fit.log.y), include.ci=FALSE)[[2]],
   log.y.trans= Tbll(effect("iq", fit.log.y,
-                           transformation = list(link = log, inverse = exp)),
+                           transformation =
+                           list(link = log, inverse = exp)),
                            include.ci=FALSE)[[2]],
   model.log=Tbll(effect("iq", fit.model.log), include.ci=FALSE)[[2]],
   model.log.trans= Tbll(effect("iq", fit.model.log,
-                               transformation =  list(link = log, inverse = exp)),
+                               transformation =
+                               list(link = log, inverse = exp)),
                                include.ci=FALSE)[[2]]
 )
 

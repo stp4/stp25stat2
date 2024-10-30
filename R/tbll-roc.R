@@ -3,7 +3,7 @@
 #' @param x pROC::roc Objekt
 #' @param digits numeric. sinificant digits of measurement (derfault value is 4)
 #' @param include.order logical.
-#' @param ...
+#' @param ... not used
 #'
 #' @return data.frame
 #' @export
@@ -58,16 +58,11 @@ Tbll_roc <-
       for (i in names(x)) {
         rslt <- rbind(rslt, tbll_extract.roc(x[[i]], digits = digits))
       }
-
       if (include.order)
         rslt <- rslt[order(rslt[[2]], decreasing = TRUE), ]
-
       prepare_output(rslt)
     }
-
-
   }
-
 
 
 
@@ -94,7 +89,6 @@ tbll_extract.roc <-
        if (!is.null(attr(x$predictor, "label"))) attr(x$predictor, "label")
        else x$predictor.name
      if( is.null(srs)) srs <- "GLM"
-     print(x$predictor.name)
 
      data.frame(
        Source = srs,

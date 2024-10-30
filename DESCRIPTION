@@ -22,13 +22,13 @@ Imports:
   dplyr,
   knitr,
   stringr,  
-  broom 
+  broom ,methods, pscl
 Suggests: 
- stats, methods,    
+ stats,     
  stp25data, carData, 
  broom.mixed, glue, reshape2,
  psych, 
- lmtest, lme4, lmerTest, nlme, pscl, MASS, rms, 
+ lmtest, lme4, lmerTest, nlme,   MASS, rms, 
  multcomp,
  effects, effectsize, emmeans, insight, performance, parameters,
  survival, pROC, epiR,  
@@ -36,5 +36,4 @@ Suggests:
  caret, coin, vcd, rockchalk,
  lavaan, semPlot, piecewiseSEM,
  meta, heplots
-VignetteBuilder: knitr  
 Language: de_DE

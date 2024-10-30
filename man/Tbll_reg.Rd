@@ -77,28 +77,28 @@ Tbll_reg_long(
 
 \item{include.statistic}{Test Statistik}
 
-\item{conf.method}{für glm zb "Wald"}
+\item{conf.method}{fuer glm zb "Wald"}
 
 \item{include.p, include.stars}{P-Werte,Sternchen}
 
 \item{include.param}{Ausgabe der Parameter}
 
-\item{include.gof}{ModellGüte ausgeben}
+\item{include.gof}{ModellGuete ausgeben}
 
 \item{include.r, include.pseudo}{R-Quadrat}
 
-\item{include.aic, include.bic}{Gütemasse}
+\item{include.aic, include.bic}{Guetemasse}
 
-\item{include.loglik, include.minus.LL}{für glm}
+\item{include.loglik, include.minus.LL}{fuer glm}
 
-\item{include.test}{Anova Test für das gesamt Modell}
+\item{include.test}{Anova Test fuer das gesamt Modell}
 
 \item{include.rmse}{RMSE}
 
 \item{include.custom}{Eigene Spalte}
 }
 \description{
-Bei glm  kann mit dem Parameter conf.method Wald oder z-test für
+Bei glm  kann mit dem Parameter conf.method Wald oder z-test fuer
 die Test statistik gewaelt werden.
 }
 \examples{

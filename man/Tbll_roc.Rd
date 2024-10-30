@@ -13,7 +13,7 @@ Tbll_roc(x, digits = 4, include.order = TRUE, ...)
 
 \item{include.order}{logical.}
 
-\item{...}{}
+\item{...}{not used}
 }
 \value{
 data.frame

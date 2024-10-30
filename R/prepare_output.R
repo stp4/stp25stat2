@@ -5,7 +5,7 @@
 #' @param x data.frame Objekt Liste oder df
 #' @param caption Uberschrift
 #' @param note Anmerkung
-#' @param N,include.n Anzahl
+#' @param N Anzahl
 #' @param labels Label
 #' @param rgroup,n.rgroup an htmlTable {htmlTable}
 #' @param ... Weitere Argumente
