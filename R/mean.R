@@ -330,7 +330,7 @@ ci_factor <- function(x,
                                   sides = sides,
                                   method = method)
 
-  r <- rndr_prct_ci(rslt[, 2] * 100, rslt[, 3] * 100)
+  r <- rndr_mean_CI(rslt[, 2] * 100, rslt[, 3] * 100)
 
   ifelse(rslt[, 1] <= 0, ".", r)
 }
