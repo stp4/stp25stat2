@@ -67,7 +67,7 @@ Tbll_reg  <- function(...,
                       include.rmse = TRUE,
 
                       include.custom = NULL) {
-
+  models <- NULL
   fit <- list(...)
 
   if (inherits(fit[[1]], "rowwise_df")) {

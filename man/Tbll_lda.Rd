@@ -8,7 +8,7 @@ Tbll_lda(..., include.label = NULL)
 }
 \arguments{
 \item{...}{tbll_extract.lda:
-x lda {MASS}
+x  MASS::lda
 newdata  Test daten wenn Null dann wird model.frame(x)
 verwendet und an MASS::predict.lda weitergegeben.
 include.svd Eigenvalue
@@ -28,5 +28,72 @@ Linear Discriminant Analysis
 \examples{
 
 # Linear Discriminant Analysis
- require(MASS)
+require(MASS)
+#require(stp25stat2)
+#require(stp25output2)
+#require(stp25plot)
+#require(lattice)
+
+
+Iris <- data.frame(id = seq_len(50*3),
+                   rbind(iris3[,,1], iris3[,,2], iris3[,,3]),
+                   Sp =  factor(rep(c("s","c","v"), rep(50,3))),
+                   #add a bit of noise to the data
+                   Species = factor(rep(
+                   c("treat","treat",
+                   "control", "control",
+                   "treat", "control"),
+                   rep(25,6)))
+)
+
+# sample 70\% of the observations
+set.seed(11, sample.kind="Rejection")
+train_data <-  Iris |> dplyr::slice_sample(prop=.70)
+test_data <-   Iris |> dplyr::anti_join(train_data, by = 'id')
+
+# 1)  Logistic regression
+# H0: b = 0
+
+# reg_log <-
+#   glm(Species ~ Sepal.L. + Sepal.W. + Petal.L. + Petal.W.,
+#       train_data,
+#       family = "binomial")
+# reg_lm <-
+#   lm(I(Species == "s") ~ Sepal.L. + Sepal.W. + Petal.L. + Petal.W.,
+#      train_data)
+# reg_log$coefficients
+# exp(reg_log$coefficients)
+# coef(reg_lm)
+
+# 2) Linear and quadratic discriminant analysis
+
+ldamod <- lda(Species ~ Sepal.L. + Sepal.W. + Petal.L. + Petal.W.,
+train_data)
+ldamod$scaling
+
+lda_pred <- predict(ldamod, newdata = test_data)
+# posterior probabilities
+head(lda_pred$posterior)
+
+x_tab <- table(lda_pred$class, test_data$Species)
+caret::confusionMatrix(x_tab)
+
+rslt <- Tbll_lda(ldamod,  test_data)
+# rslt  |> Output()
+
+
+#bwplot(LD1 ~ Species, rslt$predict[[1]],
+# main ="Prediction of the test model")
+
+# 3) Construction and plotting of the ROC curve
+# require(pROC)
+#
+# roc_lda <-  roc(response = test_data$Species,
+#               predictor = lda_pred$posterior[,2])
+# pROC::coords(roc_lda, "best")
+# Tbll_roc(roc_lda)
+# plot(roc_lda)
+# plotROC2(roc_lda, include.table = TRUE)
+
+
 }

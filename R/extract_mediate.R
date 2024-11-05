@@ -151,7 +151,7 @@ NULL
 #' @rdname extract
 #' @description
 #' Causal Mediation Analysis:
-#'  stolen from mediate {mediation} and psych {mediate}
+#'  stolen from mediate::mediation and psych
 #'
 tbll_extract.mediate  <- function(x, ...) {
   if (any(class(x) == "psych"))

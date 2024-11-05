@@ -45,7 +45,7 @@ Tbll_pca <- function(x,
                     digits = 2,
                     ...
                     ){
-
+  extprn <- NULL
   rslt <- extract_principal(x,
                             cut = .30,
                             sort = TRUE,

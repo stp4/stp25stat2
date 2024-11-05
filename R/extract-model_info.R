@@ -53,6 +53,7 @@ Infomation <- function(...) {
 #
 
 #' @rdname Infomation
+#' @param x any object
 #' @export
 #' @examples
 #'

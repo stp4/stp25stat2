@@ -7,7 +7,7 @@
 #' @param note Anmerkung
 #' @param N Anzahl
 #' @param labels Label
-#' @param rgroup,n.rgroup an htmlTable {htmlTable}
+#' @param rgroup,n.rgroup an htmlTable
 #' @param ... Weitere Argumente
 #' @return tibble mit attributen
 #' @export

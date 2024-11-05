@@ -50,6 +50,8 @@ by the Surv function.}
 formula, or in the subset and the weights argument.}
 
 \item{names, formula, digits, include.z.test, include.wald.test}{description folgt}
+
+\item{include.param, include.test, include.ci, include.se}{logical. Include}
 }
 \value{
 data.frame or list with data.frames

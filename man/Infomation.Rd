@@ -11,6 +11,8 @@ model_info(x)
 }
 \arguments{
 \item{...}{Regressinsmodelle}
+
+\item{x}{any object}
 }
 \description{
 Extrahiert die Variablen namen die Labels und die Daten

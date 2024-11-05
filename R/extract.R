@@ -5,9 +5,10 @@
 #' @name extract
 #' @param x  Objekte
 #' @param digits Nachkomastellen
+#' @param caption character. nicht ueberall implementiert
 #' @param ...  weitere Argumente
 #'
-#' @param Positive_Class,type,test,note,include.I2,include.Q,include.tau,include.H,include.sumsq,include.meansq,include.omega,include.power,conf.int,fix_format,digits.param,digits.odds,digits.test,digits.beta,format,conf.style.1,anova description
+#' @param Positive_Class,type,include.I2,include.Q,include.tau,include.H,include.sumsq,include.meansq,include.omega,include.power,conf.int,fix_format,digits.param,digits.odds,digits.test,digits.beta,format,conf.style.1,anova description
 #' @return data.frame
 #' @export
 #'
@@ -85,9 +86,18 @@ tbll_extract.manova <- function(...) {
 
 #' @rdname extract
 #' @export
+#' @examples
+#'
+#' #  TukeyHSD
+#' fm1 <- aov(breaks ~ wool + tension, data = warpbreaks)
+#' TukeyHSD(fm1, "tension", ordered = TRUE) |> tbll_extract()
+#' #plot(TukeyHSD(fm1, "tension"))
 tbll_extract.TukeyHSD <- function(x,
                                   digits = 2,
                                   ...) {
+
+ # tbll_extract.TukeyHSD: no visible binding for global variable
+  estimate <- conf.low <- conf.high <- null.value <- adj.p.value <- NULL
   rslt <- broom::tidy(x)
   rslt <- transform(
     rslt,
@@ -140,7 +150,6 @@ tbll_extract.summary.aov <- function(x,
 
 
 #' @rdname extract
-#' @param include.se,include.df in extract.step
 #' @export
 #'
 #' @examples
@@ -590,7 +599,7 @@ tbll_extract.list <- function(x,
 }
 
 #' @rdname extract
-#' @param include.ll.ratio,include.pearson in extract.loglm
+#' @param include.ll.ratio,include.pearson logical. in extract.loglm
 #' @export
 #' @examples
 #'

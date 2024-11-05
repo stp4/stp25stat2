@@ -14,13 +14,6 @@
 }
 
 
-
-
-# Information ueber die verwendeten Methoden
-#
-# @param methode,library,fun  Text
-#
-# @return data.frame()
 Info_Statistic <-
   function(methode = "describe",
            library = "base",

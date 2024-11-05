@@ -26,7 +26,7 @@ prepare_output(
 
 \item{labels}{Label}
 
-\item{rgroup, n.rgroup}{an htmlTable {htmlTable}}
+\item{rgroup, n.rgroup}{an htmlTable}
 
 \item{...}{Weitere Argumente}
 }

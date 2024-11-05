@@ -276,11 +276,13 @@ extract_effect(..., names = NULL, transformation, xlevels = list())
 
 \item{digits}{in extract.matchit}
 
-\item{include.se, include.df}{in extract.step}
+\item{include.se}{Standardfehler}
 
-\item{Positive_Class, type, test, note, include.I2, include.Q, include.tau, include.H, include.sumsq, include.meansq, include.omega, include.power, conf.int, fix_format, digits.param, digits.odds, digits.test, digits.beta, format, conf.style.1, anova}{description}
+\item{caption}{character. nicht ueberall implementiert}
 
-\item{include.ll.ratio, include.pearson}{in extract.loglm}
+\item{Positive_Class, type, include.I2, include.Q, include.tau, include.H, include.sumsq, include.meansq, include.omega, include.power, conf.int, fix_format, digits.param, digits.odds, digits.test, digits.beta, format, conf.style.1, anova}{description}
+
+\item{include.ll.ratio, include.pearson}{logical. in extract.loglm}
 
 \item{include.ftest, include.vif, include.heteroskedasticity, include.durbin, include.levene, include.bartlett}{GOF for lm}
 
@@ -327,8 +329,6 @@ verwendet und an MASS::predict.lda weitergegeben.}
 
 \item{response}{effects: y-var}
 
-\item{include.se}{Standardfehler}
-
 \item{include.ci}{Konfidenzintervall}
 }
 \value{
@@ -345,7 +345,7 @@ Turn an object into a tidy table
 MANOVA: extract.manova(x, , test="Wilks") test : "Wilks", "Pillai"
 
 Causal Mediation Analysis:
- stolen from mediate {mediation} and psych {mediate}
+ stolen from mediate::mediation and psych
 
 tbll_extract.summary.mediate: extract Output from mediate:::summary.mediate
 
@@ -384,6 +384,11 @@ different cut-off points
 Quelle: https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-024-02198-2
 }
 \examples{
+
+#  TukeyHSD
+fm1 <- aov(breaks ~ wool + tension, data = warpbreaks)
+TukeyHSD(fm1, "tension", ordered = TRUE) |> tbll_extract()
+#plot(TukeyHSD(fm1, "tension"))
 
 \donttest{
 summary(lm1 <- lm(Fertility ~ ., data = swiss))
@@ -554,21 +559,27 @@ extract_etaSqr(fit1)
  require(effects)
 
  data(Prestige, package = "carData")
- mod <- lm(log(prestige) ~ income:type + education, data=Prestige)
+ mod <- lm(log(prestige) ~ income:type + education,
+ data=Prestige)
  eff = effect("education", mod, partial.residuals=TRUE)
  dat<- extract_partial_residuals(eff)
 
 # library(ggplot2)
 # library(gridExtra)
 
-# https://stackoverflow.com/questions/43950459/use-ggplot-to-plot-partial-effects-obtained-with-effects-library
+# https://stackoverflow.com/questions/43950459/
+# use-ggplot-to-plot-partial-effects-obtained-with-effects-library
 
  # g <- ggplot(dat$fit, aes(x = education, y = fit)) +
  # theme_bw() +
  # geom_line(size = 1) +
- # geom_point(data = dat$residuals, aes(x = education , y =  partial.residuals), shape = 1, col = "blue", size = 2) +
+ # geom_point(data = dat$residuals,
+ # aes(x = education , y =  partial.residuals),
+ # shape = 1, col = "blue", size = 2) +
  # geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5) +
- #  geom_smooth(data =  dat$residuals, aes(x = education, y =  partial.residuals),   method = "loess", span = 2/3, linetype = "dashed", se = FALSE)
+ #  geom_smooth(data =  dat$residuals,
+ #  aes(x = education, y =  partial.residuals),
+ #  method = "loess", span = 2/3, linetype = "dashed", se = FALSE)
 }
 
 \donttest{

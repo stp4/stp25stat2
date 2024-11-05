@@ -11,6 +11,7 @@
 #'   HR > 1: Increase in Hazard (bad prognostic factor)
 #'
 #' @param ... survfit, survdiff, coxph
+#' @param include.param,include.test,include.ci,include.se logical. Include
 #' @param names,formula,digits,include.z.test,include.wald.test description folgt
 #'
 #' @return data.frame or list with data.frames
