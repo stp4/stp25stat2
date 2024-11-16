@@ -585,7 +585,11 @@ extract_assocstats_chisq   <- function(x,
 }
 
 #' @rdname extract
+#'
 #' @export
+
+#'
+#'
 #'
 tbll_extract.list <- function(x,
                               ...) {
@@ -597,6 +601,72 @@ tbll_extract.list <- function(x,
     sapply(x, class)
   }
 }
+
+
+#' @rdname extract
+#' @export
+#' @examples
+#'  library(flexplot)
+#' #' Output APA style statistical significance from an object
+#' full.mod <- lm(satisfaction~communication * separated , data=relationship_satisfaction)
+#' estimates(full.mod) |> tbll_extract()
+#' estimates(full.mod) |> Tbll()
+#'
+tbll_extract.estimates <-
+  function (x, digits = 2, ...)
+  {
+    rslt <- list()
+    if ("r.squared" %in% names(x)) {
+      R_squared <-
+        tibble::tibble(
+          Term = c("Model", "Semi-Partial", names(x$semi.p)),
+          `R squared` =  c(
+            stp25stat2:::rndr_mean_CI(x$r.squared[1], x$r.squared[2:3], digits = 2),
+            "",
+            render_f(x$semi.p, digits = 2)
+          )
+        )
+      rslt[["R squared"]] <- prepare_output(R_squared, "R squared")
+    }
+
+    if ("correlation" %in% names(x)) {
+      if (!is.na(x$correlation[1])) {
+        rslt[['Correlation']] <- paste("Correlation: ", render_f(x$correlation[1], digits = 2))
+      }
+    }
+
+    if (length(x$factors) > 0) {
+      rslt[['Estimates for Factors']] <-
+        prepare_output(fix_format2(x$factor.summary,
+                                   digits = digits,
+                                   include.rownames = FALSE), 'Estimates for Factors')
+
+      x$difference.matrix$cohens.d <- render_f(x$difference.matrix$cohens.d, 2)
+      rslt[["Mean Differences"]]  <-
+        prepare_output(fix_format2(x$difference.matrix,
+                                   digits = digits,
+                                   include.rownames = FALSE),
+                       "Mean Differences")
+    }
+
+    if (length(x$numbers) > 0) {
+
+      x$numbers.summary[, 5:ncol(x$numbers.summary)] <-
+        render_f(x$numbers.summary[,5:ncol(x$numbers.summary)], digits = 2)
+
+
+      names(x$numbers.summary) <- gsub("\\.", "_",   names(x$numbers.summary))
+      rslt[['Estimates for Numeric Variables']] <-
+        prepare_output( fix_format2(x$numbers.summary,
+                                    digits = digits,
+                                    include.rownames = FALSE),
+                        'Estimates for Numeric Variables')
+    }
+
+    rslt
+  }
+
+
 
 #' @rdname extract
 #' @param include.ll.ratio,include.pearson logical. in extract.loglm

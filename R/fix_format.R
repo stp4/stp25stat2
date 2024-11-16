@@ -45,8 +45,18 @@
 #' summary(mod2)$coefficients |> fix_format()
 #'
 #'}
-#'
-fix_format <- function(x,
+fix_format <- function(...) {
+  UseMethod("fix_format")
+}
+
+
+
+
+
+
+#' @rdname fix_format
+#' @export
+fix_format.default <- function(x,
                        digits = NULL,
                        names_repair = TRUE,
                        include.rownames = TRUE,
@@ -93,4 +103,35 @@ fix_format <- function(x,
                   })
 }
 
+#' @rdname fix_format
+#' @export
+fix_format.list <-
+  function(x, ...) {
+    rslt <- NULL
+    for (i in names(x)) {
+      if (is.data.frame(x[[i]]))
+        rslt[[i]] <- fix_format(x[[i]], ...)
+    }
+    if (length(rslt) == 1)
+      rslt <- rslt[[1]]
+    else if (length(rslt) == 0)
+      rslt <- "Keine Ahnung was ich das machen soll? Ich kann nur data.frames aufdroeseln!"
 
+    rslt
+  }
+
+#' fixed digits
+fix_format2 <-  function(x,
+                         digits = NULL,
+                         include.rownames = TRUE) {
+  x <-
+    stp25tools::fix_to_tibble(x,
+                              include.rownames = include.rownames)
+
+  stp25tools:::dapply1(x, function(xx) {
+    if (is.numeric(xx))
+      render_f(xx, digits)
+    else
+      xx
+  })
+}
