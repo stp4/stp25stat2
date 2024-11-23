@@ -28,7 +28,9 @@ Summarise(
 
 \item{formula}{Zeilen/Spalten Lang/Weit}
 
-\item{include.total, margins, margins_name}{Gesamt nur bei Gruppen sinnvoll}
+\item{include.total, margins, }{logical or formula: value ~ variable + sex}
+
+\item{margins_name}{character}
 }
 \value{
 data.frame, tibble

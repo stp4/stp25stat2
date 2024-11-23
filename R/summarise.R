@@ -8,8 +8,9 @@
 #' @param key,value,include.label  an Long
 #' @param na.action  an aggregate
 #' @param formula Zeilen/Spalten Lang/Weit
-#' @param include.total,margins,margins_name  Gesamt nur bei Gruppen sinnvoll
+#' @param include.total,margins, logical or formula: value ~ variable + sex
 #'
+#' @param margins_name  character
 #' @return data.frame, tibble
 #' @export
 #' @examples
@@ -99,7 +100,8 @@ Summarise <- function(...,
     formula(paste(value, "~",
                   paste(names(molten)[-ncol(molten)],
                         collapse = "+")))
-
+# wegen na.action ansonsten
+# aggregate(molten[value], molten[-ncol(molten)], FUN =fun)
   rslts <-
     aggregate(default_formula,
               molten,
@@ -132,20 +134,21 @@ Summarise <- function(...,
                 na.action = na.action)
 
     rst <- rslts_m[ncol(rslts_m)]
+
     if (class(rst[[1]])[1] == "matrix")
       rslts_m <- cbind(rslts_m[-ncol(rslts_m)], rst[[1]])
-
+    # pos Total
+    n_r <-  seq_len(nrow(rslts_m)) + nrow(rslts)
     rslts <- dplyr::bind_rows(rslts, rslts_m)
-# hier gehört noch margins_name
-# an alle mit NA
-    frst <-  rslts[[1]]
-    if (is.factor(frst))
-      rslts[[1]] <-
-      factor(frst, c(levels(frst), margins_name))
 
+    na_n <-  setdiff(names(rslts), all.vars(margins))
 
-    rslts[[1]][is.na(frst)] <- margins_name
-
+    for (i in na_n) {
+      if (is.factor(rslts[[i]]))
+        rslts[[i]] <-
+          factor(rslts[[i]], c(margins_name, levels(rslts[[i]])))
+      rslts[n_r, i] <- margins_name
+    }
 
   }
 
