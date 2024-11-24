@@ -137,17 +137,22 @@ Summarise <- function(...,
 
     if (class(rst[[1]])[1] == "matrix")
       rslts_m <- cbind(rslts_m[-ncol(rslts_m)], rst[[1]])
-    # pos Total
-    n_r <-  seq_len(nrow(rslts_m)) + nrow(rslts)
+    # moegliche position fuer  Total
+    pos_total <-  seq_len(nrow(rslts_m)) + nrow(rslts)
     rslts <- dplyr::bind_rows(rslts, rslts_m)
 
-    na_n <-  setdiff(names(rslts), all.vars(margins))
+    # moegliche Variablen fuer  Total
+    pos_variable <-  seq_len( which(names(rslts) == key))
 
-    for (i in na_n) {
+
+    for (i in pos_variable) {
+      if(  all(is.na(rslts[pos_total, i] ))){
       if (is.factor(rslts[[i]]))
         rslts[[i]] <-
           factor(rslts[[i]], c(margins_name, levels(rslts[[i]])))
-      rslts[n_r, i] <- margins_name
+       rslts[pos_total, i] <- margins_name
+
+       }
     }
 
   }
