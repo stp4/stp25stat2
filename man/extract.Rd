@@ -29,6 +29,7 @@
 \alias{tbll_extract.roc}
 \alias{tbll_extract.assocstats}
 \alias{tbll_extract.list}
+\alias{tbll_extract.estimates}
 \alias{tbll_extract.loglm}
 \alias{extract_gof}
 \alias{extract.manova}
@@ -112,6 +113,8 @@ tbll_extract(...)
 \method{tbll_extract}{assocstats}(x, ...)
 
 \method{tbll_extract}{list}(x, ...)
+
+\method{tbll_extract}{estimates}(x, digits = 2, ...)
 
 \method{tbll_extract}{loglm}(x, include.ll.ratio = TRUE, include.pearson = TRUE, ...)
 
@@ -437,6 +440,12 @@ data("Arthritis")
 tab <- xtabs(~Improved + Treatment, data = Arthritis)
 tbll_extract(assocstats(tab))
 }
+ library(flexplot)
+#' Output APA style statistical significance from an object
+full.mod <- lm(satisfaction~communication * separated , data=relationship_satisfaction)
+estimates(full.mod) |> tbll_extract()
+estimates(full.mod) |> Tbll()
+
 
 \donttest{
 require(MASS)

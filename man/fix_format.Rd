@@ -2,9 +2,13 @@
 % Please edit documentation in R/fix_format.R
 \name{fix_format}
 \alias{fix_format}
+\alias{fix_format.default}
+\alias{fix_format.list}
 \title{Fix Format}
 \usage{
-fix_format(
+fix_format(...)
+
+\method{fix_format}{default}(
   x,
   digits = NULL,
   names_repair = TRUE,
@@ -13,6 +17,8 @@ fix_format(
   se = c("Std\\\\. Error", "est.std"),
   df = c("N", "Df")
 )
+
+\method{fix_format}{list}(x, ...)
 }
 \arguments{
 \item{x}{data.frame}
@@ -64,5 +70,4 @@ Anova(mod2) |> fix_format()
 summary(mod2)$coefficients |> fix_format()
 
 }
-
 }
