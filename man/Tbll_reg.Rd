@@ -101,6 +101,11 @@ Tbll_reg_long(
 Bei glm  kann mit dem Parameter conf.method Wald oder z-test fuer
 die Test statistik gewaelt werden.
 }
+\details{
+RMSE: The lower the RMSE, the better a given model is able to “fit” a dataset.
+
+AIC and  BIC  are for Selecting Regression Models
+}
 \examples{
 
  lm1 <- lm(breaks ~ wool + tension, data = warpbreaks)

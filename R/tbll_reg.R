@@ -4,6 +4,9 @@
 #' Bei glm  kann mit dem Parameter conf.method Wald oder z-test fuer
 #' die Test statistik gewaelt werden.
 #'
+#' RMSE: The lower the RMSE, the better a given model is able to “fit” a dataset.
+#'
+#' AIC and  BIC  are for Selecting Regression Models
 #'
 #' @param ... ein oder mehrer Modelle
 #' @param include.label  Namen oder Labels FALSE
