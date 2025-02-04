@@ -1,72 +1,66 @@
-#' Fix Format
+
+#' fix_format
 #'
+#' @param ... all
 #'
-#'
-#' @param x data.frame
-#'
-#' @param digits Nachkomastellen
-#' @param names_repair P-value and SE
-#' @param include.rownames include.rownames = TRUE
-#' @param p.value,se,df pattern
-#'
+#' @returns data.frame
 #' @export
-#' @return data.frame
 #'
 #' @examples
 #'
-#' \donttest{
-#'
-#' df2 <- data.frame(
+#' df2 <-
+#' data.frame(
 #' term = c("A", "B", "C", "D"),
 #' Estimate = c(23.5, .14, 5.6, 2.9876),
 #' df1 = c(3.3, 35., 7.8, 2.1),
 #' df = c(3, 35, 7, 2),
 #' N = c(33, 35, 78, 21),
-#'
 #' F.value = c(2.73, 12.444, 14.576, 30.412),
-#' pvalue = c(0.73, 0.044, 0.056, 0.042),   stringsAsFactors =FALSE
-#'
-#'
+#' pvalue = c(0.73, 0.044, 0.056, 0.042),
+#' stringsAsFactors =FALSE
 #' )
 #'
-#' x1<-fix_format(df2)
+#' fix_format(df2)
 #'
 #'
-#'  require(car)
-#' mod1 <- lm(conformity ~ fcategory * partner.status, data = Moore)
-#' mod2 <-
-#'   glm(conformity ~ fcategory * partner.status,
-#'       data = Moore,
-#'       family = poisson())
-#'
-#' Anova(mod1) |> fix_format()
-#' summary(mod1)$coefficients |> fix_format()
-#' Anova(mod2) |> fix_format()
-#' summary(mod2)$coefficients |> fix_format()
-#'
-#'}
+#' #  require(car)
+#' # mod1 <- lm(conformity ~ fcategory * partner.status, data = Moore)
+#' # mod2 <-
+#' #   glm(conformity ~ fcategory * partner.status,
+#' #       data = Moore,
+#' #       family = poisson())
+#' #
+#' # Anova(mod1) |> fix_format()
+#' # summary(mod1)$coefficients |> fix_format()
+#' # Anova(mod2) |> fix_format()
+#' # summary(mod2)$coefficients |> fix_format()
 fix_format <- function(...) {
   UseMethod("fix_format")
 }
 
 
-
-
-
-
-#' @rdname fix_format
+#' @param x data.frame or list
+#'
+#' @param digits Nachkomastellen
+#' @param names_repair  P-value and SE
+#' @param include.rownames logical.
+#' @param p.value pattern
+#' @param se pattern
+#' @param df pattern
+# @rdname fix_format
+#'
 #' @export
 fix_format.default <- function(x,
-                       digits = NULL,
-                       names_repair = TRUE,
-                       include.rownames = TRUE,
-                       p.value = c(
-                         "Pr\\(\\>",
-                         "p value",
-                         "p.value",
-                         "pvalue"),
-                       se = c("Std\\. Error", "est.std"),
-                       df = c("N", "Df")) {
+                               digits = NULL,
+                               names_repair = TRUE,
+                               include.rownames = TRUE,
+                               p.value = c(
+                                 "Pr\\(\\>",
+                                 "p value",
+                                 "p.value",
+                                 "pvalue"),
+                               se = c("Std\\. Error", "est.std"),
+                               df = c("N", "Df")) {
   x <-
     stp25tools::fix_to_tibble(x, include.rownames = include.rownames)
   data_names <- names(x)
@@ -103,8 +97,8 @@ fix_format.default <- function(x,
                   })
 }
 
-#' @rdname fix_format
 #' @export
+# @rdname fix_format
 fix_format.list <-
   function(x, ...) {
     rslt <- NULL
@@ -120,7 +114,10 @@ fix_format.list <-
     rslt
   }
 
-#' fixed digits
+
+
+# fixed digits
+#' @noRd
 fix_format2 <-  function(x,
                          digits = NULL,
                          include.rownames = TRUE) {
