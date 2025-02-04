@@ -1,4 +1,3 @@
-
 #' Estimate Marginal Contrasts
 #'
 #' Stolen from modelbased::estimate_contrasts()
@@ -70,12 +69,12 @@ Tbll_contrasts  <- function(x,
   rslt
 }
 
-
+#' @noRd
 format_estimate_contrasts <-
   function(x, digits = 2) {
     x |>
       insight::standardize_names() |>
-      fix_format2(digits = digits) |>
+      fix_format_insight(digits = digits) |>
       prepare_output(caption =  paste0(attr(x, "table_title")[1],
                                        ". Response: ",
                                        attr(x, "response")),
@@ -84,7 +83,9 @@ format_estimate_contrasts <-
 
   }
 
-fix_format2 <-
+
+#' @noRd
+fix_format_insight <-
   function(x, digits = 2) {
     x$Statistic <- render_f(x$Statistic, digits)
     x$df <- as.character(x$df)
