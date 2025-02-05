@@ -998,6 +998,10 @@ effect_size <- function(x,
   #       'sig. Test' = rslt)
   cbind('SDM/OR [95% CI]' = es)
 }
+
+
+
+
 #' @rdname Tbll_desc
 #'
 #' @param ... an prepare_data2
@@ -1009,6 +1013,13 @@ effect_size <- function(x,
 #' # from Hmisc
 #' summary(breaks ~ tension + wool, warpbreaks)
 #' Tbll_mean(breaks ~ tension + wool, warpbreaks)
+#'
+#' Tbll_mean(
+#'    breaks ~ tension + wool,
+#'    warpbreaks,
+#'    include.custom = ci_median
+#'
+#' )
 #'
 Tbll_mean <- function(...,
                       include.total = TRUE,
@@ -1059,3 +1070,122 @@ Tbll_mean <- function(...,
 
 
 }
+
+#' @rdname Mittelwert
+#'
+#' @description ci_median Confidence interval for the median
+#' stolen from https://github.com/cran/asbio/blob/master/R/ci.median.R
+#' author Ken Aho
+#'
+#' @param conf 95% CI
+#' @param digits digits if render=TRUE
+#' @param render Formatieren
+#' @export
+#' @examples
+#'
+#'  ci_median(1:10)
+#'  ci_mean(1:11)
+#'
+#'
+#'   Tbll_mean(
+#' breaks ~ tension + wool,
+#' warpbreaks,
+#' include.custom = ci_median
+#'
+#' )
+#'
+#'
+ci_median <-
+  function(x, conf = .95,
+           digits = 2,
+           render =  if(!is.null(digits)) TRUE else FALSE) {
+    x <-  na.omit(x)
+    n <-  length(x)
+    m <- median(x)
+    L <- qbinom((1 - conf) / 2, n, 0.5)
+    U <- n - L + 1
+    if ( (n > 5)  &  (L < U) ) {
+      iqr <- IQR(x)
+      order.x <- sort(x)
+      lwr = order.x[L]
+      upr = order.x[n - L + 1]
+    }
+    else{
+      iqr <-  lwr <- upr <- NA
+    }
+
+
+    if (render)
+      c(
+        n = render_f(n, 0),
+        median = render_f(m, digits),
+        iqr = render_f(iqr, digits),
+        CI_lwr = render_f(lwr, digits),
+        CI_upr = render_f(upr, digits)
+      )
+    else
+      c(
+        n = n,
+        median = m,
+        iqr = s,
+        CI_lwr = lwr,
+        CI_upr = upr
+      )
+
+
+
+  }
+
+#' @rdname Mittelwert
+#' @export
+ci_mean <- function(x,
+                    conf = .95,
+                    digits = 2,
+                    render =  if(!is.null(digits)) TRUE else FALSE
+) {
+  x <- na.omit(x)
+  n <- length(x)
+  m <- mean(x)
+  if (n > 5) {
+    q <- qnorm(1 - ((1 - conf) / 2))
+    s <- sd(x)
+    se <- s / sqrt(n)
+    lwr <- m - q * se
+    upr <- m + q * se
+  }
+  else{
+    s <- se <- lwr <- upr <- NA
+  }
+
+  if (render)
+    c(
+      n = render_f(n, 0),
+      mean = render_f(m, digits),
+      sd = render_f(s, digits),
+      CI_lwr = render_f(lwr, digits),
+      CI_upr = render_f(upr, digits)
+    )
+  else
+    c(
+      n = n,
+      mean = m,
+      sd = s,
+      CI_lwr = lwr,
+      CI_upr = upr
+    )
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
