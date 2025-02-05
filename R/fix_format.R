@@ -47,7 +47,6 @@ fix_format <- function(...) {
 #' @param p.value pattern
 #' @param se pattern
 #' @param df pattern
-# @rdname fix_format
 #'
 #' @export
 fix_format.default <- function(x,
@@ -98,7 +97,7 @@ fix_format.default <- function(x,
 }
 
 #' @export
-# @rdname fix_format
+
 fix_format.list <-
   function(x, ...) {
     rslt <- NULL

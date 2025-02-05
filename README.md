@@ -60,9 +60,6 @@ warpbreaks |> Tbll_desc(~breaks + wool)
 # 3 "wool "         ""             
 # 4 "    A"         "50% (27)"     
 # 5 "    B"         "50% (27)"
-```
-
-``` r
 
 warpbreaks |> Tbll_desc(breaks, wool)
 # # A tibble: 5 × 2
@@ -526,6 +523,9 @@ DF |>
 - `Tbll_likert()`: Univariate
 
 ``` r
+
+
+require(stp25likert)
 Lik <- Tbll_likert(DF2,
                    Magazines, 
                    Comic.books, 
@@ -616,17 +616,11 @@ Tbll_corr( ~ a + b + c, dat)
 # 1 (1) Alpha "1"   ".17, " ".25, " 
 # 2 (2) Beta  ""    "1"     "-.20, "
 # 3 (3) Gamma ""    ""      "1"
-```
-
-``` r
 Tbll_corr(a ~ c, dat)
 # # A tibble: 1 × 4
 #   Characteristics   c_N c_r   c_p.value
 # * <chr>           <dbl> <chr> <chr>    
 # 1 Alpha              40 .25   .119
-```
-
-``` r
 Tbll_corr(a + b + c ~ d, dat)
 # # A tibble: 3 × 4
 #   Characteristics   d_N d_r   d_p.value
@@ -634,9 +628,6 @@ Tbll_corr(a + b + c ~ d, dat)
 # 1 Alpha              40 .39   .012     
 # 2 Beta               40 .83   <.001    
 # 3 Gamma              40 -.15  .343
-```
-
-``` r
 Tbll_corr(a + b + c ~ d, 
           dat, 
           groups = ~ g, 
@@ -734,7 +725,7 @@ Tbll_item_analysis(  A + B + C + D + E ~ index, df,
 # 5          0.40
 ```
 
-### Sig. Test
+## Sig. Test
 
 ``` r
 t1 <- wilcox.test(mpg ~ vs, mtcars)
@@ -745,17 +736,11 @@ t1
 # data:  mpg by vs
 # W = 22.5, p-value = 9.034e-05
 # alternative hypothesis: true location shift is not equal to 0
-```
-
-``` r
 Tbll(t1)
 # # A tibble: 1 × 3
 #   Source    W     p.value
 # * <chr>     <chr> <chr>  
 # 1 mpg by vs 22.50 <.001
-```
-
-``` r
 APA(t1)
 # [1] "W=22.50, p<.001"
 ```

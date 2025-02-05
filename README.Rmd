@@ -235,6 +235,9 @@ DF2 <- data.frame(
 ```
 
 ```{r Tbll_likert}
+
+
+require(stp25likert)
 Lik <- Tbll_likert(DF2,
                    Magazines, 
                    Comic.books, 

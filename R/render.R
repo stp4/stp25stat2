@@ -582,14 +582,9 @@ paste0(sep_1,
 
 
 rndr_mean_CI <- function(m, ci, digits = get_opt("r", "digits" ), ...) {
-  m<- render_f(m, digits)
- ci <-  rndr_CI(ci, digits)
-
-# print(m)
-# print(ci)
+  m <- render_f(m, digits)
+  ci <-  rndr_CI(ci, digits)
   paste( m, ci )
-
-
 }
 
 

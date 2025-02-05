@@ -286,6 +286,13 @@ Tbll_desc_multi(dat,
 summary(breaks ~ tension + wool, warpbreaks)
 Tbll_mean(breaks ~ tension + wool, warpbreaks)
 
+Tbll_mean(
+   breaks ~ tension + wool,
+   warpbreaks,
+   include.custom = ci_median
+
+)
+
 
 
 #mtcars |> Tbll_desc(mpg, cyl,  disp,  hp, drat,
