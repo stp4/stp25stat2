@@ -2,34 +2,65 @@
 % Please edit documentation in R/fix_format.R
 \name{fix_format}
 \alias{fix_format}
+\alias{fix_format2}
 \title{fix_format}
 \usage{
-fix_format(...)
+fix_format(x, ...)
+
+fix_format2(x, digits = NULL, include.rownames = TRUE)
 }
 \arguments{
-\item{...}{all}
+\item{x}{an R object. data.frame or list}
+
+\item{digits}{integer. if Null stp25stat2:::format_guess()
+a positive integer indicating how many significant digits are to be used}
+
+\item{include.rownames}{logical. TRUE}
+
+\item{names_repair}{logical. P-value and SE}
+
+\item{p.value}{character.  pattern for p_values}
+
+\item{se}{character. pattern for Estimate and SE}
+
+\item{df}{character. pattern for degree of fredom}
 }
 \value{
-data.frame
+A tbble data.frame the same length as the input.
 }
 \description{
-fix_format
+Formatieren der Zahlen für die Ausgabe mit Output()
+
+fix_format():
+Alle numeric werden entweder geraten oder mit einer fixen
+Nachkomastelle formatiert.
+
+fix_format2(): Erratet die p-Werte und formatiert
 }
 \examples{
 
 df2 <-
-data.frame(
-term = c("A", "B", "C", "D"),
-Estimate = c(23.5, .14, 5.6, 2.9876),
-df1 = c(3.3, 35., 7.8, 2.1),
-df = c(3, 35, 7, 2),
-N = c(33, 35, 78, 21),
-F.value = c(2.73, 12.444, 14.576, 30.412),
-pvalue = c(0.73, 0.044, 0.056, 0.042),
-stringsAsFactors =FALSE
-)
+  data.frame(
+    term = c("A", "B", "C", "D"),
+    Estimate = c(23.5567, .148990, 5.643256, 2.9876),
+    df1 = c(3.3, 35., 7.8, 2.1),
+    df = c(3, 35, 7, 2),
+    N = c(33, 35, 78, 21),
+    F.value = c(2.73345, 12.4446, 14.5767, 30.4128),
+    pvalue = c(0.73123, 0.044456, 0.056789, 0.042654),
+    stringsAsFactors =FALSE
+  )
 
+# Erratet die p-Wert
 fix_format(df2)
+
+# versucht zu eraten wie viele digits
+fix_format2(df2)
+
+# fest vorgegeben
+fix_format2(df2, digits = 2)
+
+
 
 
 #  require(car)
@@ -43,4 +74,5 @@ fix_format(df2)
 # summary(mod1)$coefficients |> fix_format()
 # Anova(mod2) |> fix_format()
 # summary(mod2)$coefficients |> fix_format()
+
 }
