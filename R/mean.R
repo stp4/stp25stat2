@@ -1,16 +1,32 @@
-#'  Mean
-#'
-#' Lagemasse Berechnen
+#'  Mittelwert/Prozent
 #'
 #' @name Mittelwert
-#' @param ...  platzhalter
-#' @param na.rm,exclude fehlende werte
-#' @param max_factor_length,is_true_false Argumente an calc_percent
-#' @export
+#'
+#'
 #' @examples
 #'
+#' # numeric output
 #' mean2(rnorm(100))
 #' sd2(rnorm(100))
+#'
+#' # character output
+#' Percent2(gl(2, 8, labels = c("Control", "Treat")))
+#'
+NULL
+
+
+
+#' @rdname Mittelwert
+#'
+#' @param x	 an R object.
+#' @param na.rm logical. fehlende Werte
+#'
+#' @export
+#'
+#' @description
+#' mean2, sd2(), length2() median2(): Copy of the base function with na.rm = TRUE.
+#' @return numeric
+#' @export
 #'
 mean2 <-
   function(x, na.rm = TRUE) {
@@ -20,56 +36,211 @@ mean2 <-
 
 #' @rdname Mittelwert
 #' @export
-sd2 <-  function(x, na.rm = TRUE) {
+sd2 <-
+  function(x, na.rm = TRUE) {
   sd(make_numeric(x), na.rm = na.rm)
 }
 
 #' @rdname Mittelwert
 #' @export
-length2 <- function(x, na.rm = FALSE) {
+length2 <-
+  function(x, na.rm = FALSE) {
   if (na.rm) sum(!is.na(x))
   else length(x)
 }
 
-make_numeric <- function(x) {
-  if (is.numeric(x))
-    return(x)
-  else if (is.factor(x)) {
-    if (nlevels(x) == 2)
-      ifelse(x == levels(x)[1], 1, 0)
-    else
-      as.numeric(x)
-  }
-  else {
-    warning("Die Werte sind eventuel falsch class=", class(x), "!")
-    stp25tools::as_numeric(x)
-  }
-}
-
-
 #' @rdname Mittelwert
 #' @export
 median2 <-
-  function(x, na.rm=TRUE, ... ) { median(make_numeric(x), na.rm = na.rm) }
+  function(x, na.rm=TRUE) { median(make_numeric(x), na.rm = na.rm) }
 
 
 
 
-# calc_ --------------------------------------------------------------------
-#' @rdname Mittelwert
-#' @export
-#' @examples
-#' percent2(gl(2, 8, labels = c("Control", "Treat")))
-percent2 <- function(x, ...) calc_percent(x, ...)
+
+
+# Formatierte Ausgabe  ---------------------------------------------------------
+
+
 
 #' @rdname Mittelwert
 #'
-#' @description Format Prozent
+#' @description
+#' Percent2(): Prozent-Werte Berechnen
+#'
 #'  style = 1    50% (27)
+#'
 #'  style = 2    27 (50%)
+#'
 #'  style = 3    50%
+#'
 #'  style = 4    27
+#'
 #'  style = 5    27/54
+#'
+#' @param digits numeric.
+#' @param n numeric. to Percent2()
+#' @param exclude missing  to Percent2()
+#' @param max_factor_length numeric.  to Percent2()
+#' @param style numeric.  to Percent2()
+#' @param is_true_false logical  to Percent2()
+#' @param ... not used
+#' @return character
+#'
+#' @export
+#'
+Percent2 <- function(x, ...) calc_percent(x, ...)
+
+
+#' @rdname Mittelwert
+#'
+#' @description
+#' Mean2(), Median2(): Formatierte Ausgabe
+#'
+#' @param unit Einheiten
+#'
+#' @export
+#'
+Mean2 <- function(x, digits=2, ...) calc_mean( x, digits=digits, ...)
+
+#' @rdname Mittelwert
+#' @export
+Median2 <- function(x, digits=2, ...) calc_median( x, digits=digits, ...)
+
+
+
+
+#' @rdname Mittelwert
+#'
+#' @description Median_ci Confidence interval for the median
+#' stolen from Ken Aho github.com/cran/asbio/blob/master/R/ci.median.R
+#'
+#' @param conf numeric.  default = .95  95-CI
+#' @param digits numeric.digits if render=TRUE
+#' @param render logical. Formatieren
+#' @export
+#'
+#' @examples
+#'
+#'  Median_ci(1:10)
+#'  Mean_ci(1:11)
+#'
+#'
+#' Tbll_mean(
+#'   breaks ~ tension + wool,
+#'   warpbreaks,
+#'   include.custom = Median_ci
+#'
+#' )
+#'
+#'
+Median_ci <-
+  function(x, conf = .95,
+           digits = 2,
+           render =  if(!is.null(digits)) TRUE else FALSE) {
+    x <-  na.omit(x)
+    n <-  length(x)
+    m <- median(x)
+    L <- qbinom((1 - conf) / 2, n, 0.5)
+    U <- n - L + 1
+    if ( (n > 5)  &  (L < U) ) {
+      iqr <- IQR(x)
+      order.x <- sort(x)
+      lwr = order.x[L]
+      upr = order.x[n - L + 1]
+    }
+    else{
+      iqr <-  lwr <- upr <- NA
+    }
+
+
+    if (render)
+      c(
+        n = render_f(n, 0),
+        median = render_f(m, digits),
+        iqr = render_f(iqr, digits),
+        CI_lwr = render_f(lwr, digits),
+        CI_upr = render_f(upr, digits)
+      )
+    else
+      c(
+        n = n,
+        median = m,
+        iqr = s,
+        CI_lwr = lwr,
+        CI_upr = upr
+      )
+
+
+
+  }
+
+#' @rdname Mittelwert
+#' @export
+Mean_ci <- function(x,
+                    conf = .95,
+                    digits = 2,
+                    render =  if(!is.null(digits)) TRUE else FALSE
+) {
+  x <- na.omit(x)
+  n <- length(x)
+  m <- mean(x)
+  if (n > 5) {
+    q <- qnorm(1 - ((1 - conf) / 2))
+    s <- sd(x)
+    se <- s / sqrt(n)
+    lwr <- m - q * se
+    upr <- m + q * se
+  }
+  else{
+    s <- se <- lwr <- upr <- NA
+  }
+
+  if (render)
+    c(
+      n = render_f(n, 0),
+      mean = render_f(m, digits),
+      sd = render_f(s, digits),
+      CI_lwr = render_f(lwr, digits),
+      CI_upr = render_f(upr, digits)
+    )
+  else
+    c(
+      n = n,
+      mean = m,
+      sd = s,
+      CI_lwr = lwr,
+      CI_upr = upr
+    )
+
+
+
+}
+
+
+
+# Helper ------------------------------------------------------------------
+
+
+
+#' @noRd
+make_numeric <-
+  function(x) {
+    if (is.numeric(x))
+      return(x)
+    else if (is.factor(x)) {
+      if (nlevels(x) == 2)
+        ifelse(x == levels(x)[1], 1, 0)
+      else
+        as.numeric(x)
+    }
+    else {
+      warning("Die Werte sind eventuel falsch class=", class(x), "!")
+      stp25tools::as_numeric(x)
+    }
+  }
+
+#' @noRd
 calc_percent <- function(x,
                          digits = get_opt("prozent", "digits") ,
                          n = length(x),
@@ -145,27 +316,19 @@ calc_percent <- function(x,
 }
 
 
-#' @rdname Mittelwert
-#'
-#' @param x vector
-#' @param digits nachkomastellen (2)
-#' @param n laenge des vectors
-#' @param style lang oder Kurz
-#' @param unit Einheiten
-#'
+
+
+#' @noRd
 calc_mean <-  function(x,
                        digits = get_opt("mean", "digits") ,
                        n = length(x),
                        style = get_opt("mean", "style"),
-                       unit=NULL) {
+                       unit = NULL) {
+  if (missing(x))
+    return(switch(style, "1" = "mean (sd)", "2" = "mean (sd, range)", "mean (sd)"))
 
-  if(missing(x)) return( switch(style,
-                                "1" = "mean (sd)",
-                                "2" = "mean (sd, range)",
-                                "mean (sd)"
-  ))
-
-  if(all(is.na(x))) return(NaN)
+  if (all(is.na(x)))
+    return(NaN)
 
   # handle units
   if (!is.numeric(x)) {
@@ -180,14 +343,14 @@ calc_mean <-  function(x,
   if (is.null(style)) {
     rndr_mean(mean(x, na.rm = TRUE),
               ifelse(n > 2, sd(x, na.rm = TRUE), NA),
-              digits=digits,
-              unit=unit)
+              digits = digits,
+              unit = unit)
   }
   else if (style == "1") {
     rndr_mean(mean(x, na.rm = TRUE),
               ifelse(n > 2, sd (x, na.rm = TRUE), NA),
-              digits=digits,
-              unit=unit)
+              digits = digits,
+              unit = unit)
   }
   else if (style == "2" | style == "long") {
     rndr_mean_range(
@@ -196,14 +359,14 @@ calc_mean <-  function(x,
       min(x, na.rm = TRUE),
       max(x, na.rm = TRUE),
       digits = digits,
-      unit=unit
+      unit = unit
     )
   }
   else {
     rndr_mean(mean(x),
               ifelse(n > 2, sd(x), NA),
-              digits=digits,
-              unit=unit)
+              digits = digits,
+              unit = unit)
   }
 }
 
@@ -281,6 +444,7 @@ calc_median <-
       rndr_median_quant()
 
   }
+
 
 
 

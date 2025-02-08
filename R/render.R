@@ -176,10 +176,9 @@ render_f.numeric <- function(x, digits = NULL, ...) {
   if (is.null(digits))
     make_format(x, ...)
   else if (length(digits) == 1)
-    make_format(x, digits=digits, ...)
+    make_format(x, digits = digits, ...)
   else
-    mapply(make_format, x,
-           digits=length_multiplier(digits, length(x)), ...)
+    mapply(make_format, x, digits = length_multiplier(digits, length(x)), ...)
 }
 
 
@@ -275,11 +274,11 @@ length_multiplier <- function(x,
 #   stp25stat2:::format_guess(rnorm(100, sd=1e-6))
 #' @noRd
 format_guess <- function(x) {
-
   d <- x[!is.na(x)]
   if (length(d) == 0)
     return(0) # Nothing, then just return 0 for rounding
-  if (all(d == floor(d)))
+
+   if (all(d == floor(d)))
     # Is it all whole numbers, then no decimals
     0
   else

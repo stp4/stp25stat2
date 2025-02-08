@@ -289,7 +289,7 @@ Tbll_mean(breaks ~ tension + wool, warpbreaks)
 Tbll_mean(
    breaks ~ tension + wool,
    warpbreaks,
-   include.custom = ci_median
+   include.custom = Median_ci
 
 )
 
