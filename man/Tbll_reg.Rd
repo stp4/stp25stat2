@@ -3,6 +3,7 @@
 \name{Tbll_reg}
 \alias{Tbll_reg}
 \alias{Tbll_reg_long}
+\alias{Tbll_reg_wide}
 \title{Regression Table}
 \usage{
 Tbll_reg(
@@ -34,6 +35,37 @@ Tbll_reg(
 )
 
 Tbll_reg_long(
+  ...,
+  include.label = FALSE,
+  include.intercept = FALSE,
+  digits = NULL,
+  include.b = TRUE,
+  include.se = FALSE,
+  include.beta = FALSE,
+  include.ci = TRUE,
+  include.odds = FALSE,
+  include.odds.ci = FALSE,
+  include.statistic = FALSE,
+  conf.method = "Wald",
+  include.p = FALSE,
+  include.stars = if (include.p) FALSE else TRUE,
+  include.r = TRUE,
+  include.pseudo = FALSE,
+  include.aic = FALSE,
+  include.bic = include.aic,
+  include.test = FALSE,
+  include.devianze = FALSE,
+  include.param = TRUE,
+  include.rmse = FALSE,
+  include.sigma = FALSE,
+  include.obs = TRUE,
+  include.gof = include.r | include.pseudo | include.aic | include.bic | include.test,
+  include.loglik = FALSE,
+  include.minus.LL = include.loglik,
+  include.custom = NULL
+)
+
+Tbll_reg_wide(
   ...,
   include.label = FALSE,
   digits = NULL,

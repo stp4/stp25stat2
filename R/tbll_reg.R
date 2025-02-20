@@ -136,11 +136,151 @@ Tbll_reg  <- function(...,
 }
 
 
+#' @rdname Tbll_reg
+#' @export
+Tbll_reg_long  <- function(...,
+                            include.label = FALSE,
+                            include.intercept = FALSE,
+                            # geht nicht
+                            #names = NULL,
+                            digits = NULL,
+                            include.b = TRUE,
+                            include.se = FALSE,
+                            include.beta = FALSE,
+                            include.ci = TRUE,
+                            include.odds = FALSE,
+                            include.odds.ci = FALSE,
+                            include.statistic = FALSE,
+                            conf.method = "Wald",
+                            # c("Wald", "Z") bei glm
+                            include.p = FALSE,
+                            include.stars = if (include.p)
+                              FALSE
+                            else
+                              TRUE,
+
+                            include.r = TRUE,
+                            include.pseudo = FALSE,
+                            include.aic = FALSE,
+                            include.bic = include.aic,
+                            include.test = FALSE,
+                            include.devianze = FALSE,
+                            include.param = TRUE,
+                            include.rmse = FALSE,
+                            include.sigma = FALSE,
+
+                            include.obs = TRUE,
+                            include.gof = include.r |
+                              include.pseudo |
+                              include.aic |
+                              include.bic | include.test,
+
+                            #  include.ftest=TRUE,
+                            include.loglik = FALSE,
+                            include.minus.LL = include.loglik,
+                            #include.minus.LL=include.loglik,
+                            # include.r=FALSE, #include.pseudo=FALSE,
+                            # include.heteroskedasticity = TRUE,
+                            # include.durbin = TRUE,
+                            # include.levene = FALSE,
+                            # include.bartlett = FALSE,
+                            # include.vif=FALSE,
+                            # include.sigma=FALSE,
+                            # include.rmse=FALSE,
+                            # include.aic = TRUE,
+                            # include.bic = TRUE,
+                            #  include.residual=TRUE,
+                            #  include.normality=FALSE,
+                            #  include.multicollin=include.vif,
+                            #  include.deviance=TRUE,
+                            include.custom = NULL) {
+  fit <- list(...)
+
+  coeff <-
+    stp25stat2:::regression_table(
+      fit,
+      include.param = include.param,
+      include.gof = include.gof,
+      include.custom = include.custom,
+      include.b = include.b,
+      include.se = include.se,
+      include.beta = include.beta,
+      include.ci = include.ci,
+      include.odds = include.odds,
+      include.odds.ci = include.odds.ci,
+      include.statistic = include.statistic,
+      include.p = include.p,
+      include.stars = include.stars,
+      include.df = FALSE,
+      include.effects = c("ran_pars", "fixed"),
+      ci.level = .95,
+      conf.method = conf.method,
+      digits = digits,
+      digits.param = 3,
+      digits.odds = 2,
+      digits.test = 2,
+      digits.beta = 2,
+      format = "fg",
+
+      dictionary = c(
+        std.error = "SE",
+        estimate = "b",
+        p.value = "p"
+      ),
+      return_list = TRUE
+    )
+
+
+
+  gofs <- NULL
+  rslt <- NULL
+  for (i in seq_along(coeff)) {
+    x <- coeff[[i]]
+    if (!include.intercept)
+      x <- x[-1, ]
+
+    if (include.gof) {
+      gofs <- extract_gof(
+        fit[[i]],
+        include.ftest = include.test,
+        include.loglik = include.loglik,
+        include.minus.LL = include.minus.LL,
+        include.r = any(c(include.r, include.pseudo)),
+        include.heteroskedasticity = FALSE,
+        include.durbin = FALSE,
+        include.levene = FALSE,
+        include.bartlett = FALSE,
+        include.sigma = include.sigma,
+        include.rmse = include.rmse,
+        include.aic = include.aic,
+        include.bic = include.bic,
+        include.residual = FALSE,
+        include.normality = FALSE,
+        include.multicollin = FALSE,
+        include.deviance = include.devianze
+      )
+
+      gf <- t(gofs[2])
+      colnames(gf)  <-  gofs[[1]]
+
+      x <-
+        dplyr::bind_cols(x, rbind(gf, matrix(rep(
+          "", (nrow(x) - 1) * ncol(gf)
+        ), ncol = ncol(gf))))
+
+    }
+
+    nms <- c(names(coeff)[i], rep("", nrow(x) - 1))
+    coeff[[i]] <- dplyr::bind_cols("Model" = nms, x)
+
+  }
+  dplyr::bind_rows(coeff)
+}
 
 
 #' @rdname Tbll_reg
 #' @export
-Tbll_reg_long  <- function(...,
+Tbll_reg_wide  <- function(...,
                            include.label = FALSE,
                            # geht nicht
                            #names = NULL,
@@ -241,7 +381,7 @@ Tbll_reg_long  <- function(...,
 #'
 #' @param x Regressionsobjekt
 #'
-#' @return data.frame
+#' @return data.frame() oder list( return_list = TRUE )
 #'
 #' @noRd
 #'
@@ -287,6 +427,7 @@ regression_table <-
                            estimate = "b",
                            p.value = "p"),
             col_names = NULL,
+            return_list = FALSE,
             ...)
   {
     n <- length(x)
@@ -359,6 +500,7 @@ regression_table <-
       coefs[[custom.model.names[i]]] <- model
     }
 
+    if(return_list) return( coefs )
 
     if (n > 1) {
       coefs <-  stp25tools::list_to_df(coefs)

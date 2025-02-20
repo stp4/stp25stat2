@@ -66,7 +66,8 @@ tbll_extract.data.frame <- function(x, ...) {
 #' @rdname extract
 #' @export
 tbll_extract.lm <- function(...) {
-  Tbll_reg_long(...)
+  # die Funktion ist nicht getestet
+  Tbll_reg_wide(...)
 }
 
 #' @rdname extract
