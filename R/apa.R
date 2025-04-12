@@ -226,7 +226,7 @@ APA.formula <- function(x,
           freq = which.max(table(x)),
           1
         )
-        res<-  res[max_value]
+        m <- m[max_value]
       }
       res <- c(res, m)
     }
