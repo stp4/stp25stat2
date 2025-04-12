@@ -188,6 +188,7 @@ APA.formula <- function(x,
                         data,
                         exclude = NA,
                         max_factor_length = 25,
+                        max_value =FALSE,
                         ...) {
   X <- stp25tools::prepare_data2(x, data)
   res <- NULL
@@ -214,9 +215,20 @@ APA.formula <- function(x,
         c(lev = "NA", n = "NA", m = "NA")
       )
       m <- as.character(res1$m)
-      names(m) <- X$measure.vars[i]
-      res <- c(res, m)
+     # names(m) <- X$measure.vars[i]
 
+      names(m) <- gsub(", ", "", res1$lev)
+
+      if(max_value) {
+        max_value <- switch(
+          X$measure[i],
+          factor = which.max( table(x) ),
+          freq = which.max(table(x)),
+          1
+        )
+        res<-  res[max_value]
+      }
+      res <- c(res, m)
     }
   }
   else{
@@ -407,21 +419,9 @@ APA.summary.table <- function(x,
 
 
 
-#' @rdname APA
-#' @export
-APA.meta <- function(x, ...) {
-  # sprintf("Heterogeneity: Cochran Q = %.1f, I^2 = %.0f %%",   x$Q, x$I2 *100)
-  c (100 * c(x$I2, x$lower.I2, x$upper.I2)) # I-squared
-  paste(
-    "Heterogeneity: Cochran ",
-    rndr_test(x$Q, x$df.Q,  x$pval.Q,  symbol = "Q"),
-    ", I^2 = ",
-    formatC(x$I2 * 100, format = "f", digits = 1),
-    " %",
-    sep = ""
-  )
 
-}
+
+
 
 
 # Experimental
