@@ -4,11 +4,11 @@
 \alias{Tbll_reg}
 \alias{Tbll_reg_long}
 \alias{Tbll_reg_wide}
+\alias{Tbll_model}
 \title{Regression Table}
 \usage{
 Tbll_reg(
   ...,
-  include.label = FALSE,
   names = NULL,
   digits = NULL,
   include.b = TRUE,
@@ -36,8 +36,8 @@ Tbll_reg(
 
 Tbll_reg_long(
   ...,
-  include.label = FALSE,
   include.intercept = FALSE,
+  names = NULL,
   digits = NULL,
   include.b = TRUE,
   include.se = FALSE,
@@ -58,7 +58,7 @@ Tbll_reg_long(
   include.param = TRUE,
   include.rmse = FALSE,
   include.sigma = FALSE,
-  include.obs = TRUE,
+  include.obs = FALSE,
   include.gof = include.r | include.pseudo | include.aic | include.bic | include.test,
   include.loglik = FALSE,
   include.minus.LL = include.loglik,
@@ -89,11 +89,18 @@ Tbll_reg_wide(
   include.minus.LL = include.loglik,
   include.custom = NULL
 )
+
+Tbll_model(
+  x,
+  digits = 2,
+  ci_digits = digits,
+  p_digits = 3,
+  select = "minimal",
+  ...
+)
 }
 \arguments{
 \item{...}{ein oder mehrer Modelle}
-
-\item{include.label}{Namen oder Labels FALSE}
 
 \item{names}{Spaltenname}
 
@@ -132,6 +139,8 @@ Tbll_reg_wide(
 \description{
 Bei glm  kann mit dem Parameter conf.method Wald oder z-test fuer
 die Test statistik gewaelt werden.
+
+Tbll_model(): ist eine Copie von parameters::model_parameters und insight::format_table
 }
 \details{
 RMSE: The lower the RMSE, the better a given model is able to “fit” a dataset.
@@ -147,8 +156,23 @@ AIC and  BIC  are for Selecting Regression Models
   lm1, lm2,
   include.p = FALSE,
   include.ci = TRUE,
-  include.se=FALSE
+  include.se = FALSE
 )
+
+
+ Tbll_reg(lm1)
+
+
+
+ #' Alternative
+
+ #' parameters::model_parameters(lm1) |>
+ #' insight::format_table(select = "minimal")
+
+ #' library(modelsummary)
+ #' modelsummary(list(mod1=lm1, mod2=lm2), output = "gt") |>
+ #' Output("gt")
+
 
 
 }

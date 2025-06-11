@@ -1,11 +1,11 @@
 .onAttach <- function(...) {
 
-  oldc <- getOption("contrasts")
+  oldc <<- getOption("contrasts")
   contrasts =  c("contr.Treatment", "contr.poly")
   options(contrasts = contrasts)
 
   packageStartupMessage(
-    "I changed the contrasts from",
+    "I changed the contrasts from ",
     paste(oldc, collapse =  ),
     "\nto ", paste(contrasts, collapse =  ),
     "!\n\n")
