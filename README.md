@@ -892,7 +892,7 @@ Tab 2: Marginal Contrasts Analysis. Response: breaks
 </td>
 </tr>
 <tr>
-<th colspan="3" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+<th colspan="4" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
 </th>
 <th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
  
@@ -903,7 +903,7 @@ CI
 <th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
  
 </th>
-<th colspan="4" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+<th colspan="3" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
 </th>
 </tr>
 <tr>
@@ -915,6 +915,9 @@ Level2
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 Coefficient
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+SE
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
  
@@ -929,13 +932,10 @@ high
  
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
-SE
+Statistic
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 df
-</th>
-<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
-Statistic
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 p
@@ -945,34 +945,34 @@ p
 <tbody>
 <tr>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-A
-</td>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 B
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-5.78
-</td>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
- 
+A
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
--0.57
-</td>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-12.13
-</td>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
- 
+-5.78
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 3.16
 </td>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-50
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+ 
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-1.83
+-12.13
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+0.57
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+-1.83
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+50
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 .074
@@ -982,8 +982,8 @@ B
 <tfoot>
 <tr>
 <td colspan="11">
-Marginal contrasts estimated at wool p-value adjustment method: Holm
-(1979)
+Variable predicted: breaks Predictors contrasted: wool Predictors
+averaged: tension p-value adjustment method: Holm (1979)
 </td>
 </tr>
 </tfoot>
@@ -996,7 +996,7 @@ Tab 3: Marginal Contrasts Analysis. Response: breaks
 </td>
 </tr>
 <tr>
-<th colspan="3" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+<th colspan="4" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
 </th>
 <th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
  
@@ -1007,7 +1007,7 @@ CI
 <th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
  
 </th>
-<th colspan="4" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+<th colspan="3" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
 </th>
 </tr>
 <tr>
@@ -1019,6 +1019,9 @@ Level2
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 Coefficient
+</th>
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+SE
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
  
@@ -1033,13 +1036,10 @@ high
  
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
-SE
+Statistic
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 df
-</th>
-<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
-Statistic
 </th>
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 p
@@ -1049,104 +1049,104 @@ p
 <tbody>
 <tr>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-L
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-H
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-14.72
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
- 
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-5.13
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-24.31
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
- 
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-3.87
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-50
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-3.80
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-.001
-</td>
-</tr>
-<tr>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-L
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 M
 </td>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-10.00
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
- 
+L
 </td>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-0.41
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-19.59
-</td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
- 
+-10.00
 </td>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 3.87
 </td>
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-50
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+ 
 </td>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-2.58
+-17.78
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+-2.22
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+-2.58
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+50
 </td>
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 .026
 </td>
 </tr>
 <tr>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-M
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+H
 </td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+L
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+-14.72
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+3.87
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+-22.50
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+-6.94
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+-3.80
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+50
+</td>
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+.001
+</td>
+</tr>
+<tr>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 H
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-4.72
-</td>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
- 
+M
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
--4.87
-</td>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-14.31
-</td>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
- 
+-4.72
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 3.87
 </td>
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-50
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+ 
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
-1.22
+-12.50
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+3.06
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+ 
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+-1.22
+</td>
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+50
 </td>
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 .228
@@ -1156,8 +1156,8 @@ H
 <tfoot>
 <tr>
 <td colspan="11">
-Marginal contrasts estimated at tension p-value adjustment method: Holm
-(1979)
+Variable predicted: breaks Predictors contrasted: tension Predictors
+averaged: wool p-value adjustment method: Holm (1979)
 </td>
 </tr>
 </tfoot>
@@ -1181,14 +1181,14 @@ modelsummary::datasummary(
   data = df)
 ```
 
-|       | Mean | SD   | Histogram |
-|-------|------|------|-----------|
-| A     | 2.53 | 1.77 | ▇▂▁▁▄     |
-| B     | 2.67 | 1.68 | ▇▆▁▁▆     |
-| C     | 3.07 | 1.58 | ▇▂▇▃▇     |
-| D     | 3.47 | 1.77 | ▄▁▁▂▇     |
-| E     | 2.67 | 1.72 | ▇▂▂▁▅     |
-| index | 0.00 | 1.00 | ▇▃▅▂▂▇    |
+|       | Mean  | SD   | Histogram |
+|-------|-------|------|-----------|
+| A     | 2.53  | 1.77 | ▇▂▁▁▄     |
+| B     | 2.67  | 1.68 | ▇▆▁▁▆     |
+| C     | 3.07  | 1.58 | ▇▂▇▃▇     |
+| D     | 3.47  | 1.77 | ▄▁▁▂▇     |
+| E     | 2.67  | 1.72 | ▇▂▂▁▅     |
+| index | -0.00 | 1.00 | ▇▃▅▂▂▇    |
 
 ``` r
 
