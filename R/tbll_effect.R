@@ -374,10 +374,11 @@ tbll_extract_eff <-
            type = c("response", "link"),
            return.data.frame = FALSE,
            ...)  {
-    caption <- "Regression Models: Effect"
+    caption <- paste("Regression Models Response: ", insight::find_response(x))
     note <- ""
     type <- match.arg(type)
     rslt <- NULL
+    value_label <- "value"
     if (inherits(x, "eff")) {
       rslt[[1]] <- effects_as.data.frame.eff(x, type = type)
     }
@@ -391,17 +392,17 @@ tbll_extract_eff <-
           rndr_mean_CI(rslt[[i]]$fit,
                        cbind(rslt[[i]]$lower, rslt[[i]]$upper),
                        digits = digits)
-        note <- "Average [95%-CI]"
+        value_label <- "Average [95%-CI]"
       }
       else if (include.fit & include.se) {
         rslt[[i]]$value  <-
           rndr_mean(rslt[[i]]$fit,  rslt[[i]]$se, digits)
-        note <- "Average (SE)"
+        value_label <- "Average (SE)"
       }
       else if (include.fit) {
         rslt[[i]]$value <-
           render_f(rslt[[i]]$fit, digits = digits)
-        note <- "Average"
+        value_label <- "Average"
       }
       else {
         return(rslt[[i]])
@@ -436,6 +437,10 @@ tbll_extract_eff <-
         nn <- length(rslt[[i]])
         rslt[[i]] <- rslt[[i]][c(1:(nn - 2), nn, nn - 1)]
       }
+
+      if( names(rslt[[i]])[2] == "value")
+        names(rslt[[i]])[2] <- value_label
+
     }
 
     if (length(rslt) == 1)  rslt[[1]]
