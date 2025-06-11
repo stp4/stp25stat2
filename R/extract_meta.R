@@ -40,6 +40,9 @@ tbll_extract.meta <-
         )
       )
 
+
+
+
     model <- grepl("Common effect", rslt)
     if (any(model)) {
       model <-  -1:1 + which(model)
@@ -52,7 +55,9 @@ tbll_extract.meta <-
         `95%-CI` = c(paste(dat[[1]][5], dat[[1]][6]),
                      paste(dat[[2]][5], dat[[2]][6])),
         z = c(dat[[1]][7],  dat[[2]][7]),
-        `p-value` = c(dat[[1]][8],  dat[[2]][8])
+        `p-value` =  ifelse(c(dat[[1]][8],  dat[[2]][8]) == "<",
+                            "<.001",
+                            c(dat[[1]][8],  dat[[2]][8]))
       )
       names(model)[2] <- header[2]
       model <-
@@ -96,7 +101,8 @@ tbll_extract.meta <-
         q <-  2  + which(q)
         q <-  rslt[q]
         q <-  unlist(strsplit(q, " +"))
-        q <- paste0("Q(", q[3], ") = ", q[2], ", p = ", q[4])
+        q <- paste0("Q(", q[3], ") = ", q[2], ", p = ",
+                    ifelse(q[4] == "<", .001, q[4]))
         model <- stp25tools::add_row_df(model, q, pos = nrow(model) + 1)
       }
     }
@@ -116,3 +122,86 @@ tbll_extract.meta <-
     model
 
   }
+
+
+
+#' @rdname APA
+#' @export
+#' @examples
+#'
+#' require(meta)
+#' data(Olkin1995)
+#' m1 <- metabin(ev.exp, n.exp, ev.cont, n.cont,
+#'               data = Olkin1995, subset = c(41, 47, 51, 59),
+#'               studlab = paste(author, year),
+#'               sm = "RR", method = "I")
+#'
+#' APA(m1)
+#'
+#' # Standard funnel plot
+#' # sensitivity analysis, and reporting of Egger’s test
+#' metabias(m1, method.bias = "linreg") |> APA()
+
+APA.meta <- function(x, ...) {
+  # sprintf("Heterogeneity: Cochran Q = %.1f, I^2 = %.0f %%",   x$Q, x$I2 *100)
+  c (100 * c(x$I2, x$lower.I2, x$upper.I2)) # I-squared
+  paste(
+    "Heterogeneity: Cochran ",
+    stp25stat2:::rndr_test(x$Q, x$df.Q,  x$pval.Q,  symbol = "Q"),
+    ", I^2 = ",
+    formatC(x$I2 * 100, format = "f", digits = 1),
+    " %",
+    sep = ""
+  )
+
+}
+
+#' @rdname APA
+#' @export
+APA.metabias <- function(x) {
+
+  if (length(x$k) != 0 & length(x$k.min != 0)) {
+    if (x$k <= x$k.min) {
+      #  if (x$k <= 2)
+      paste("Number of studies (k=",
+            x$k,
+            ") too small to test for small study effects.")
+      #  else paste("Number of studies (k=", x$k, ") too small to test for small study effects (k.min=", x$k.min, "). Change argument 'k.min' if appropriate.")
+    }
+  }
+  else if (length(x$subgroup) != 0)
+    paste("No test for small study effects conducted ",
+          "for meta-analysis with subgroups.")
+
+  else{
+    est <- stp25stat2::render_f(x$estimat, 2)
+    paste0(
+      "Sensitivity analysis: Egger-Test Bias estimate ",
+      est[1],
+      " (SE = ",
+      est[2],
+      ")",
+      ", " ,
+      stp25stat2:::rndr_P(x$pval)
+    )
+  }
+
+}
+
+
+# require(meta)
+# data(Olkin1995)
+# m1 <- metabin(ev.exp, n.exp, ev.cont, n.cont,
+#               data = Olkin1995, subset = c(41, 47, 51, 59),
+#               studlab = paste(author, year),
+#               sm = "RR", method = "I")
+#
+# APA.meta(m1)
+#
+# # Standard funnel plot
+# # sensitivity analysis, and reporting of Egger’s test
+# metabias(m1, method.bias = "linreg") |> APA.metabias()
+
+
+
+#Tbll(m1) |> Output("Main question", note= APA(metabias(m1, method.bias = "linreg") ))
