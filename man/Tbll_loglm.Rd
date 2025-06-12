@@ -41,18 +41,25 @@ Plank <- data.frame(
 )
 Plank$mace_bin <- ifelse(Plank$mace == "yes", 1, 0)
 
-#Log-Linear Models
+
+# Log-Linear Models
 tbl <- xtabs(freq ~ therapy + mace + infarction, data = Plank)
-# [A][B][C]
+
+#  M1 	[Therapy][MACE][Infarct]
+#  vollständige Unabhängigkeit aller drei Variablen
 mod1 <- loglm(~ therapy + mace + infarction, data = tbl)
-# [AB][C]
+#  M2 	[Therapy:MACE][Infarct]
+#  Therapy und MACE assoziiert, Infarkttyp unabhängig
 mod2 <- loglm(~ therapy + mace + infarction + therapy:mace, data = tbl)
-# [AC][BC]
+#  M3 	[Therapy:MACE][Infarct:MACE]
+#  Therapy und Infarkttyp wirken separat über MACE, aber sind untereinander unabhängig
 mod3 <- loglm(~ therapy + mace + infarction + therapy:mace + infarction:mace, data = tbl)
-# [AB][AC][BC]
+#  M4 	[Therapy:MACE][Infarct:MACE] [Therapy:Infarct]
+#  alle Zwei-Wege alle paarweisen Abhängigkeiten, keine Dreifachinteraktion
 mod4 <- loglm(~ therapy + mace + infarction + therapy:mace +
                 therapy:infarction + infarction:mace, data = tbl)
-# [ABC] Saturated
+ #  M5  [Therapy:MACE:Infarct]
+ #  Saturated 	perfekter Fit, keine Restriktionen
 mod5 <- loglm(~ therapy * mace * infarction, data = tbl)
 
 
