@@ -2,7 +2,8 @@
 % Please edit documentation in R/extract.R, R/extract_gof.R,
 %   R/extract_manova.R, R/extract_mediate.R, R/extract_meta.R,
 %   R/extract_param.R, R/extract_residuals.R, R/extract_sem.R, R/tbll-roc.R,
-%   R/tbll_effect-emmeans.R, R/tbll_effect.R, R/tbll_lda.R, R/tbll_surv.R
+%   R/tbll_effect-emmeans.R, R/tbll_effect.R, R/tbll_lda.R, R/tbll_loglm.R,
+%   R/tbll_surv.R
 \name{extract}
 \alias{extract}
 \alias{tbll_extract}
@@ -49,6 +50,7 @@
 \alias{tbll_extract.eff}
 \alias{tbll_extract.efflist}
 \alias{tbll_extract.lda}
+\alias{tbll_extract.anova.loglm}
 \alias{tbll_extract.survfit}
 \alias{tbll_extract.summary.survfit}
 \alias{tbll_extract.survdiff}
@@ -246,6 +248,8 @@ extract_effect(..., names = NULL, transformation, xlevels = list())
   digits = 2,
   ...
 )
+
+\method{tbll_extract}{anova.loglm}(x, ...)
 
 \method{tbll_extract}{survfit}(
   x,
