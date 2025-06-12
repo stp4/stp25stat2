@@ -162,6 +162,37 @@ xtabs-Objekt
 
 \donttest{
 
+Plank <- data.frame(
+  therapy = c("H+A", "H+A+P", "H+A", "H+A+P", "H+A", "H+A+P", "H+A", "H+A+P"),
+  mace = c("yes", "yes", "no", "no", "yes", "yes", "no", "no"),
+  infarction = c("NSTEMI", "NSTEMI", "NSTEMI", "NSTEMI", "STEMI", "STEMI", "STEMI", "STEMI"),
+  freq = c(7, 1, 140, 54, 63, 14, 221, 126)
+)
+Plank$mace_bin <- ifelse(Plank$mace == "yes", 1, 0)
+
+
+xtabs(freq ~ therapy + infarction + mace, Plank)
+
+# OR
+glm_logistic <- glm(mace_bin ~ therapy * infarction,
+                    data=Plank, weights = freq,
+                    family = binomial())
+# RR
+# glm_poisson <- glm(freq ~ therapy * mace + infarction * mace,family = poisson(),data = Plank)
+
+
+set_opt(percent=list(digits=1))
+Tbll_xtabs(freq ~ therapy + infarction + mace,
+           Plank,
+           margin= 1:2,
+           add.margins = 3)
+
+# andere Methode die Prozent zu berechnen -> glm-logistic
+Tbll_effect(glm_logistic, digits = 3, include.ci = FALSE)
+
+
+
+
 data(infert, package = "datasets")
 infert$case  <- factor(infert$case ,1:0, c("case", "control") )
 infert$spontaneous <- factor(infert$spontaneous)
