@@ -140,28 +140,44 @@ Tbll_desc_long
 \examples{
 
 
-\donttest{
+ \donttest{
+# install.packages("corrr")
+require(corrr)
+require(stp25stat2)
 require(stp25tools)
+set.seed(1)
 n <- 2 * 20
-e <- rnorm(n)
-dat <-  Label(
+x <- rnorm(n)
+y <- rnorm(n)
+
+dat <-
   data.frame(
-    a = rnorm(n) + e / 2,
-    b = rnorm(n) + e,
-    c = rnorm(n),
-    d = rnorm(n) + e * 10,
-    g = gl(2, 20, labels = c("Control", "Treat"))
-  ),
-  a = "Alpha",
-  b = "Beta",
-  c = "Gamma"
-)
+    group = gl(2, 20, labels = c("Control", "Treat")),
+    a = rnorm(n,0,1),
+    b =  x,
+    c =  y,
+    d = rnorm(n,0,.5) + x + y,
+    e = rnorm(n,0,.5) + x - y,
+    f = rnorm(n,0,.5) - x + y,
+    g = rnorm(n,0,.75)  + x,
+    h = rnorm(n,0,.5) - y
+  ) |> Label(
+    a = "Alpha",
+    b = "Beta",
+    c = "Gamma"
+  )
 
 
 Tbll_corr( ~ a + b + c, dat)
 Tbll_corr(a ~ c, dat)
 Tbll_corr(a + b + c ~ d, dat)
-Tbll_corr(a + b + c ~ d, dat, groups = ~ g)
+Tbll_corr(a + b + c ~ d, dat, groups = ~ group)
+
+x<-corrr::correlate(dat[-1])
+x
+#corrr::fashion(x)
+#corrr::rplot(x)
+corrr::network_plot(x, min_cor = .2)
 
 }
 
