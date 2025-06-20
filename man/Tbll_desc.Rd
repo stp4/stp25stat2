@@ -95,7 +95,7 @@ Tbll_desc_item(
 
 \item{include.mean, include.median, include.sd}{Masszahlen}
 
-\item{include.n}{Anzahl an gueltigen Werten}
+\item{include.n}{logical. Anzahl an gueltigen Werten (je Zeile)}
 
 \item{include.stars, include.p}{Tbll_corr(): P-Werte,Explizite p-Werte, Sternchen als p-Werte}
 
@@ -103,7 +103,11 @@ Tbll_desc_item(
 
 \item{type}{Tbll_corr(): enweder "pearson" oder "spearman"}
 
-\item{include.nr, include.total, include.multiresponse}{weitere param}
+\item{include.nr}{logical or numeric.
+Anzahl an gueltigen Werten aber in der ersten Zeile.
+Spezialtrick: wenn alle Items die gleichen Fehlenden Werte besiten dann -> include.n=FALSE, include.nr=TRUE, na.action = na.omit}
+
+\item{include.total, include.multiresponse}{weitere param}
 
 \item{include.test, include.normality.tests}{Test}
 

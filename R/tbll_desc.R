@@ -3,8 +3,11 @@
 #' Simple and intuitive formula and pipe-based framework for performing basic statistical Tabels.
 #'
 #' @param ...  an prepare_data2
-#' @param include.n  Anzahl an gueltigen Werten
-#' @param include.nr,include.total,include.multiresponse  weitere param
+#' @param include.n  logical. Anzahl an gueltigen Werten (je Zeile)
+#' @param include.nr logical or numeric.
+#' Anzahl an gueltigen Werten aber in der ersten Zeile.
+#' Spezialtrick: wenn alle Items die gleichen Fehlenden Werte besiten dann -> include.n=FALSE, include.nr=TRUE, na.action = na.omit
+#' @param include.total,include.multiresponse  weitere param
 #' @param include.test,include.normality.tests Test
 #' @param include.label Labels ja-nein
 #' @param use.duplicated erlaube duplikate der Messwerte
@@ -174,7 +177,6 @@ Tbll_desc <-
     if (!include.label)
       X$row_name <- X$measure.vars
 
-
     if (include.n & sum(any_missing_measure[X$measure!="header"] - X$N) == 0) {
       # keine fehlenden dann nur erste Zeile mit N
       include.n <- FALSE
@@ -273,6 +275,7 @@ Tbll_desc <-
     # 4. Anzahl entweder als Spalte oder als Singel-Zeile
     #
     if (include.nr) {
+
       n.out <- c("(N)", rep("", ncol(rslt_all) - 1))
       names(n.out) <- names(rslt_all)
 
@@ -293,6 +296,7 @@ Tbll_desc <-
       }
       rslt_all <- rbind(n.out, rslt_all)
     }
+
     if (!include.n) {
       length.out <- if (is.null(X$group.vars)) 1
                     else nlevels(X$data[[X$group.vars]]) + include.total
@@ -438,7 +442,9 @@ Tbll_desc <-
           rslt_test <-
           append(rslt_test, rep("", nlevels(X$data[[X$measure.vars[i]]])))
       }
-      if(include.nr)   rslt_test <-  append(rslt_test, "", after = 0)
+      if(include.nr)
+        rslt_test <- append(rslt_test, "", after = 0)
+
       note <-paste(note, " ",
                    paste(unique(names(rslt_test)[nzchar(names(rslt_test))]),
                          collapse = ", "), ".", sep = "")
@@ -460,7 +466,7 @@ Tbll_desc <-
         rslt_disttest <- append(rslt_disttest, r)
       }
       if (include.nr)
-        rslt_disttest <-  append(rslt_disttest, "", after = 0)
+        rslt_disttest <- append(rslt_disttest, "", after = 0)
 
       note<- X$measure.test[1]
       rslt_all$normality.tests <- rslt_disttest
