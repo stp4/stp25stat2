@@ -2,21 +2,32 @@
 #'
 #' Simple and intuitive formula and pipe-based framework for performing basic statistical Tabels.
 #'
-#' @param ...  an prepare_data2
+#' @param ...  an prepare_data2 formula, data
 #' @param include.n  logical. Anzahl an gueltigen Werten (je Zeile)
 #' @param include.nr logical or numeric.
 #' Anzahl an gueltigen Werten aber in der ersten Zeile.
 #' Spezialtrick: wenn alle Items die gleichen Fehlenden Werte besiten dann -> include.n=FALSE, include.nr=TRUE, na.action = na.omit
-#' @param include.total,include.multiresponse  weitere param
-#' @param include.test,include.normality.tests Test
-#' @param include.label Labels ja-nein
-#' @param use.duplicated erlaube duplikate der Messwerte
-#' @param include.custom eigene Funktion mit (x, by, fun) return kann ein Vector oder eine Matrix sein
-#'  function(x , by, ...){
-#'  x <- scale(as.numeric(x))
-#'  diff(sapply(split(x, by), mean, na.rm=TRUE))})
+#' @param include.total,include.multiresponse logical. weitere param
+#' @param include.test,include.normality.tests logical or character. wilcoxon, anova, t.test
+#' @param include.label logical. Labels ja-nein
+#' @param use.duplicated logical. erlaube duplikate der Messwerte
+#' @param include.measure character, für alle z.B. dem Median verwenden
+#' @param include.custom function. Funktion mit (x, by, fun) return kann ein Vector oder eine Matrix sein.
 #'
-#'  in Tbll_desc_long(include.custom = function(x){ mean(x)})
+#' Tbll_desc(...,
+#'   function(x , by, ...) \{
+#'
+#'     x <- scale(as.numeric(x))
+#'
+#'     diff( sapply( split(x, by), mean, na.rm=TRUE ) )
+#'
+#'     \}
+#'     )
+#'
+#'  in Tbll_Mean(..., include.custom  =  function(x) Auswertung (x) )
+#'
+#'  in Tbll_desc_long(..., include.custom = function(x) \{ mean(x) \})
+#'
 #' @param include.value vector oder data.frame in exact der Reihenfolge wie die meassure-variablen.
 #' @return data.frame
 #' @export
@@ -129,6 +140,7 @@ Tbll_desc <-
             include.multiresponse = FALSE,
             include.custom = NULL,
             include.value = NULL,
+            include.measure = NULL,
             digits = NULL,
             use.level = 1, # multiresponse,
             use.duplicated = FALSE
@@ -150,6 +162,15 @@ Tbll_desc <-
       X$row_name <- X$row_name[in_vars]
       X$measure.test <- X$measure.test[in_vars]
     }
+
+
+    if (!is.null(include.measure)) {
+      if (length(include.measure) == 1)
+        X$measure <- rep(include.measure, length(include.measure))
+      else
+        X$measure  <- include.measure
+    }
+
 
 
     if (is.character(include.test)) {
@@ -555,32 +576,55 @@ names_option <- function(rslt_all) {
 #' @rdname Tbll_desc
 #'
 #' @description
-#' Tbll_desc_multi: ruft direkt Tbll_desc auf (mit unterschiedlichen Parametern).
+#' Tbll_desc_multi: ruft direkt Tbll_desc auf
+#' mit unterschiedlichen Parametern (include.multiresponse = TRUE)
 #'
 #' @param by  Gruppenvariable
 #' @param use.level,include.order,exclude.last.order Tbll_desc_multi weitere einstellungen
 #' @export
 #'
 #' @examples
+#' #  Tbll_desc_multi()
 #'
 #' dat <- data.frame(
-#'   Hotel =  c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-#'   Pension = c(1, 1, 0, 0, 0, 1, 1, 1, 1, 1),
-#'   Hostel = c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1),
-#'   Ferienwohnung = c(1, 1, 1, 1, 0, 0, 0, 1, 0, 0),
-#'   Airbnb = c(0, 0, 0, 0, 0, 1, 0, 1, 1, 1),
-#'   Campingplatz = c(0, 0, 0, 1, 0, 1, 1, 0, 0, 0),
-#'   Couchsurfing =c(0,0,0,0,0, 0, 1, 0, 0, 0)
+#'   Campingplatz = c(0, 0, 0, 1, 0, 1, 1, 0, 0, 0, NA),
+#'   Pension = c(1, 1, 0, 0, 0, 1, 1, 1, 1, 1, NA),
+#'   Hotel =  c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, NA),
+#'   Ferienwohnung = c(1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NA),
+#'   Airbnb = c(0, 0, 0, 0, 0, 1, 0, 1, 1, 1, NA),
+#'   Hostel = c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1, NA),
+#'   Couchsurfing = c(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, NA)
 #' )
 #'
-#' Tbll_desc_multi(dat,
-#'                  Hotel,
-#'                  Pension,
-#'                  Hostel,
-#'                  Ferienwohnung,
-#'                  Airbnb,
-#'                  Campingplatz,
-#'                  Couchsurfing)
+#'
+#' nrow(dat)
+#' dat |>
+#'   Tbll_desc_multi(
+#'     Campingplatz,
+#'     Pension,
+#'     Hotel,
+#'     Ferienwohnung,
+#'     Airbnb,
+#'     Hostel,
+#'     Couchsurfing,
+#'     #Workaround für Fehene Werte
+#'     include.n = FALSE,
+#'     include.nr = TRUE,
+#'     na.action = na.omit
+#'   )
+#'
+#' # # stp25plot::multi_barplot(dat)
+#' # require(stp25likert)
+#' #
+#' # dat |>
+#' #   Summarise_multi(
+#' #     Campingplatz,
+#' #     Pension,
+#' #     Hotel,
+#' #     Ferienwohnung,
+#' #     Airbnb,
+#' #     Hostel,
+#' #     Couchsurfing) #|> likert_stacked()
 #'
 Tbll_desc_multi <-
   function(...,
@@ -595,7 +639,6 @@ Tbll_desc_multi <-
            include.total = FALSE,
            include.test = FALSE,
            include.normality.tests = FALSE,
-
            include.custom = NULL,
            include.value = NULL) {
 
@@ -638,7 +681,7 @@ Tbll_desc_multi <-
 
       rslt_order <- as.numeric(ord_rslt$custom)
 
-      if (grepl("^\\(N)", rslt$Item[1])) {
+      if (grepl("^\\(N)", rslt[[1]][1])) {
         rslt_order  <-  order(c(1000,  rslt_order[-1]), decreasing = TRUE)
       }
       else
@@ -1010,14 +1053,36 @@ effect_size <- function(x,
 
 #' @rdname Tbll_desc
 #'
+#' @description
+#' Tbll_mean() ist in Begleitung einer Regression gedacht bei der mit
+#' include.custom = fun die Masszahlen berechnet werden.
+#'
+#'
 #' @param ... an prepare_data2
-#' @param include.custom fun = function(x) Auswertung (x)
 #'
 #' @export
 #' @examples
 #'
+#' DF <- data.frame(group = gl(2, 10, 20, labels = c("Ctl", "Trt")),
+#' sex =  factor(c(1, 1, 1, 1, 1, 2, 1, 1, 1, 1,
+#'                 2, 1, 2, 2, 2, 1, 2, 1, 2, 1), 1:2, c("m", "f")),
+#' weight = c(
+#'   4.17, 5.58, 5.18, 6.11, 4.50,
+#'   4.61, 5.17, 4.53, 5.33, 5.14,
+#'   4.81, 4.17, 4.41, 3.59, 5.87,
+#'   3.83, 6.03, 4.89, 4.32, 4.69
+#' ))
+#' lm.D9 <- lm(weight ~ group + sex, DF)
+#'
+#' Tbll_mean(weight ~ group + sex, DF)
+#' #Tbll_desc(weight ~ group, DF)
+#' Tbll_effect(lm.D9)
+#' #Tbll (lm.D9)
+#' #Tbll_model( lm.D9 )
+#'
+#'
 #' # from Hmisc
-#' summary(breaks ~ tension + wool, warpbreaks)
+#' # summary(breaks ~ tension + wool, warpbreaks)
 #' Tbll_mean(breaks ~ tension + wool, warpbreaks)
 #'
 #' Tbll_mean(

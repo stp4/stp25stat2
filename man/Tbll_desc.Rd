@@ -32,6 +32,7 @@ Tbll_desc(
   include.multiresponse = FALSE,
   include.custom = NULL,
   include.value = NULL,
+  include.measure = NULL,
   digits = NULL,
   use.level = 1,
   use.duplicated = FALSE
@@ -91,7 +92,7 @@ Tbll_desc_item(
 \arguments{
 \item{...}{an prepare_data2}
 
-\item{include.label}{Labels ja-nein}
+\item{include.label}{logical. Labels ja-nein}
 
 \item{include.mean, include.median, include.sd}{Masszahlen}
 
@@ -107,19 +108,35 @@ Tbll_desc_item(
 Anzahl an gueltigen Werten aber in der ersten Zeile.
 Spezialtrick: wenn alle Items die gleichen Fehlenden Werte besiten dann -> include.n=FALSE, include.nr=TRUE, na.action = na.omit}
 
-\item{include.total, include.multiresponse}{weitere param}
+\item{include.total, include.multiresponse}{logical. weitere param}
 
-\item{include.test, include.normality.tests}{Test}
+\item{include.test, include.normality.tests}{logical or character. wilcoxon, anova, t.test}
 
-\item{include.custom}{fun = function(x) Auswertung (x)}
+\item{include.custom}{function. Funktion mit (x, by, fun) return kann ein Vector oder eine Matrix sein.
+
+Tbll_desc(...,
+  function(x , by, ...) \{
+
+    x <- scale(as.numeric(x))
+
+    diff( sapply( split(x, by), mean, na.rm=TRUE ) )
+
+    \}
+    )
+
+ in Tbll_Mean(..., include.custom  =  function(x) Auswertung (x) )
+
+ in Tbll_desc_long(..., include.custom = function(x) \{ mean(x) \})}
 
 \item{include.value}{vector oder data.frame in exact der Reihenfolge wie die meassure-variablen.}
+
+\item{include.measure}{character, für alle z.B. dem Median verwenden}
 
 \item{digits}{Nachkommastellen}
 
 \item{use.level, include.order, exclude.last.order}{Tbll_desc_multi weitere einstellungen}
 
-\item{use.duplicated}{erlaube duplikate der Messwerte}
+\item{use.duplicated}{logical. erlaube duplikate der Messwerte}
 
 \item{by}{Gruppenvariable}
 
@@ -137,7 +154,11 @@ data.frame
 \description{
 Simple and intuitive formula and pipe-based framework for performing basic statistical Tabels.
 
-Tbll_desc_multi: ruft direkt Tbll_desc auf (mit unterschiedlichen Parametern).
+Tbll_desc_multi: ruft direkt Tbll_desc auf
+mit unterschiedlichen Parametern (include.multiresponse = TRUE)
+
+Tbll_mean() ist in Begleitung einer Regression gedacht bei der mit
+include.custom = fun die Masszahlen berechnet werden.
 
 Tbll_desc_long
 }
@@ -281,29 +302,69 @@ Tbll_reg(lm1, lm2)
 
  }
 
+#  Tbll_desc_multi()
 
 dat <- data.frame(
-  Hotel =  c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-  Pension = c(1, 1, 0, 0, 0, 1, 1, 1, 1, 1),
-  Hostel = c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1),
-  Ferienwohnung = c(1, 1, 1, 1, 0, 0, 0, 1, 0, 0),
-  Airbnb = c(0, 0, 0, 0, 0, 1, 0, 1, 1, 1),
-  Campingplatz = c(0, 0, 0, 1, 0, 1, 1, 0, 0, 0),
-  Couchsurfing =c(0,0,0,0,0, 0, 1, 0, 0, 0)
+  Campingplatz = c(0, 0, 0, 1, 0, 1, 1, 0, 0, 0, NA),
+  Pension = c(1, 1, 0, 0, 0, 1, 1, 1, 1, 1, NA),
+  Hotel =  c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, NA),
+  Ferienwohnung = c(1, 1, 1, 1, 0, 0, 0, 1, 0, 0, NA),
+  Airbnb = c(0, 0, 0, 0, 0, 1, 0, 1, 1, 1, NA),
+  Hostel = c(1, 1, 0, 1, 1, 0, 0, 1, 0, 1, NA),
+  Couchsurfing = c(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, NA)
 )
 
-Tbll_desc_multi(dat,
-                 Hotel,
-                 Pension,
-                 Hostel,
-                 Ferienwohnung,
-                 Airbnb,
-                 Campingplatz,
-                 Couchsurfing)
+
+nrow(dat)
+dat |>
+  Tbll_desc_multi(
+    Campingplatz,
+    Pension,
+    Hotel,
+    Ferienwohnung,
+    Airbnb,
+    Hostel,
+    Couchsurfing,
+    #Workaround für Fehene Werte
+    include.n = FALSE,
+    include.nr = TRUE,
+    na.action = na.omit
+  )
+
+# # stp25plot::multi_barplot(dat)
+# require(stp25likert)
+#
+# dat |>
+#   Summarise_multi(
+#     Campingplatz,
+#     Pension,
+#     Hotel,
+#     Ferienwohnung,
+#     Airbnb,
+#     Hostel,
+#     Couchsurfing) #|> likert_stacked()
+
+
+DF <- data.frame(group = gl(2, 10, 20, labels = c("Ctl", "Trt")),
+sex =  factor(c(1, 1, 1, 1, 1, 2, 1, 1, 1, 1,
+                2, 1, 2, 2, 2, 1, 2, 1, 2, 1), 1:2, c("m", "f")),
+weight = c(
+  4.17, 5.58, 5.18, 6.11, 4.50,
+  4.61, 5.17, 4.53, 5.33, 5.14,
+  4.81, 4.17, 4.41, 3.59, 5.87,
+  3.83, 6.03, 4.89, 4.32, 4.69
+))
+lm.D9 <- lm(weight ~ group + sex, DF)
+
+Tbll_mean(weight ~ group + sex, DF)
+#Tbll_desc(weight ~ group, DF)
+Tbll_effect(lm.D9)
+#Tbll (lm.D9)
+#Tbll_model( lm.D9 )
 
 
 # from Hmisc
-summary(breaks ~ tension + wool, warpbreaks)
+# summary(breaks ~ tension + wool, warpbreaks)
 Tbll_mean(breaks ~ tension + wool, warpbreaks)
 
 Tbll_mean(

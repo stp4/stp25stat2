@@ -2,9 +2,9 @@ Package: stp25stat2
 Type: Package
 Title: Functions for statistical computations
 Version: 0.2.2
-Date: 12-06-2025
+Date: 12-07-2025
 Authors@R: person("Wolfgang", "Peter", email = "w.peter@statistik-peter.at",  role = c("aut", "cre"))
-Description: The purpose of stp25stat2 is to facilitate work and provide functions for creating statistical evaluation tables.
+Description: The purpose of stp25stat2 package is to make work easier by providing functions for creating statistical evaluation tables.
 License: GPL-3 
 Encoding: UTF-8
 LazyData: true
