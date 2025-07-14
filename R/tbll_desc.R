@@ -57,6 +57,26 @@
 #'              by= ~group,
 #'              include.total=TRUE)
 #'
+#'  # in der Formula koennen auch eigene Funkrtionen mit dem Namen fun oder funny
+#'  # uebergeben werden
+#'  #
+#'  funny <-
+#'  function(x,
+#'           digits = get_opt("mean", "digits"),
+#'           n = length(x)
+#'  ) {
+#'    data.frame(
+#'      lev = c("Coustom Fun", "sd"),
+#'      n = c(as.character(n), ""),
+#'      m = c(round( mean(x, na.rm=TRUE),0) ,  "nix"),
+#'      stringsAsFactors = FALSE
+#'   )
+#'  }
+#'
+#' DF |>
+#'   Tbll_desc( age[funny],
+#'              by= ~group,
+#'              include.total=TRUE)
 #'
 #' Tbll_desc(
 #'   warpbreaks,
@@ -805,6 +825,8 @@ prct_or_mean <- function(x,
     multi =   multi_tbll(x, digits, n, use.level = use.level),
     ratio =   ratio_tbll(x, n),
     header =  emty_tbll(),
+    fun = fun(x, digits, n),
+    funny = funny(x, digits, n),
     emty_tbll()
   )
 
