@@ -58,23 +58,28 @@
 #'              include.total=TRUE)
 #'
 #'  # in der Formula koennen auch eigene Funkrtionen mit dem Namen fun oder funny
-#'  # uebergeben werden
+#'  # uebergeben werden. Die Einstellung use.duplicated geht aber nicht.
 #'  #
-#'  funny <-
-#'  function(x,
-#'           digits = get_opt("mean", "digits"),
-#'           n = length(x)
-#'  ) {
-#'    data.frame(
-#'      lev = c("Coustom Fun", "sd"),
-#'      n = c(as.character(n), ""),
-#'      m = c(round( mean(x, na.rm=TRUE),0) ,  "nix"),
-#'      stringsAsFactors = FALSE
-#'   )
-#'  }
+#'  # Prototyp für einene Function
+#' #'  funny <-
+#' fun <-
+#'   function(x,
+#'            digits = get_opt("mean", "digits"),
+#'            n = length(x)) {
+#'     data.frame(
+#'       lev = c("Coustom Fun",
+#'               "   mean",
+#'               "   sd"),
+#'       n = c(as.character(n), "", ""),
+#'       m = c("",
+#'             round(mean(x, na.rm = TRUE), digits),
+#'             round(sd(x, na.rm = TRUE), digits)),
+#'       stringsAsFactors = FALSE
+#'     )
+#'   }
 #'
 #' DF |>
-#'   Tbll_desc( age[funny],
+#'   Tbll_desc( age[fun],
 #'              by= ~group,
 #'              include.total=TRUE)
 #'
@@ -183,6 +188,10 @@ Tbll_desc <-
       X$measure.test <- X$measure.test[in_vars]
     }
 
+# cat("\n")
+#
+# print(X$measure.test)
+# print(X$measure)
 
     if (!is.null(include.measure)) {
       if (length(include.measure) == 1)
@@ -270,7 +279,8 @@ Tbll_desc <-
     #
     if (!is.null(X$group.vars)) {
       if(sum(any_missing_measure)>0 & is.null(get_opt("prozent", "exclude")))
-        warning("Achtung exclude geht nur mit addNA()",  call. = FALSE, immediate. = TRUE)
+        warning("Achtung exclude geht nur mit addNA()",
+                call. = FALSE, immediate. = TRUE)
 
       if (length(X$group.vars) > 1) {
         X$data$group <- interaction2(X$data[X$group.vars])
@@ -353,7 +363,9 @@ Tbll_desc <-
     # workaround um eindeitige row-names zu bekommen
     # die werden zum mergen gebraucht
     rownames(rslt_all) <- gsub("\\.first_factor", "", rownames(rslt_all))
-    #
+
+
+
     #  Eigene Funktion fun(x, by, measure, measure.test)
     #  return vector oder matrix
     #  die länge ist gleich wie bei measure oder die anzahl an factoren
@@ -479,10 +491,16 @@ Tbll_desc <-
         }
         if (!is.null(temp))
           X$data[[X$measure.vars[i]]] <- temp
-        if (X$measure[i] == "factor")
-          rslt_test <-
-          append(rslt_test, rep("", nlevels(X$data[[X$measure.vars[i]]])))
-      }
+
+        if( X$measure[i] == "fun")
+          rslt_test <-append(rslt_test, rep("", nrow(fun(1,1,1))-1))
+        else if( X$measure[i] =="funny" )
+          rslt_test <-append(rslt_test, rep("", nrow(funny(1,1,1))-1))
+        else if (X$measure[i] == "factor")
+          rslt_test <-append(rslt_test, rep("", nlevels(X$data[[X$measure.vars[i]]])))
+
+
+       }
       if(include.nr)
         rslt_test <- append(rslt_test, "", after = 0)
 
@@ -490,6 +508,10 @@ Tbll_desc <-
                    paste(unique(names(rslt_test)[nzchar(names(rslt_test))]),
                          collapse = ", "), ".", sep = "")
       rslt_all$statistics <- rslt_test
+
+     # cat("\ninclude.test\n")
+     # print(rslt_test)
+
     }
     if (include.normality.tests) {
       rslt_disttest <- NULL

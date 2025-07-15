@@ -160,12 +160,14 @@ set_opt(
 ) 
 ```
  
-```{r tbll_desc-options, results='asis'}
+```{r tbll_desc-options1, results='asis'}
+
 DF |>
   Tbll_desc(
     sex[ratio],
     group[freq],
     age[median],
+   # age[fun,contest,3], # das geht (noch) nicht mit include.custom
     alc, smoker,
     "Clinical/Pretreatment",
     diabet,
@@ -188,8 +190,52 @@ DF |>
   ) |> stp25output2::Output()
 ```
  
+ 
+ 
+```{r tbll_desc-options2, results='asis'}
+fun <-
+  function(x,
+           digits = get_opt("mean", "digits"),
+           n = length(x)) {
+    data.frame(
+      lev = c("Coustom Fun", 
+              "   n",
+              "   mean", 
+              "   sd"),
+      n = c(as.character(n), "", "", ""),
+      m = c("", 
+            length(x),
+            round(mean(x, na.rm = TRUE), digits), 
+            round(sd(x, na.rm = TRUE), digits)),
+      stringsAsFactors = FALSE
+    )
+  }
+
+DF |>
+  Tbll_desc(
+    sex[ratio],
+    age[fun,contest,3], # das geht (noch) nicht mit include.custom
+    alc, smoker,
+    "Clinical/Pretreatment",
+    diabet,
+    by = ~ group,
+    include.total = TRUE,
+    include.test = TRUE
+   
+  ) |> stp25output2::Output("Eigene Funktion fuer das Alter")
+```
  Additional columns are added with **include.value**.
 A vector or data.frame is transferred in the same order as the measurement variables.
+
+
+
+ 
+
+
+
+
+
+
 
 ```{r tbll-desc-add-df}
 Info <- data.frame( var_name=c("age", "sex"), y=1:2)

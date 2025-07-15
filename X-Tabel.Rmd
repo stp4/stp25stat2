@@ -1,0 +1,416 @@
+---
+title: "Tbll_xtabs"
+author: "Wolfgang Peter"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+  md_document:
+    variant: markdown_github
+vignette: >
+  %\VignetteIndexEntry{Tbll_xtabs}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(tidyverse)
+require(stp25output2)
+require(stp25stat2)
+require(stp25tools)
+require(stp25plot)
+library(vcd)
+```
+
+## Mosaic-Plot
+
+Ein Mosaikplot ist eine grafische Repräsentation einer
+Kontingenztabelle, in der die Fläche der Rechtecke des Plots
+proportional zu den Häufigkeiten der Kontingenztabelle ist.
+
+A mosaic plot is a graphical display of the cell frequencies of a
+contingency table in which the area of boxes of the plot are
+proportional to the cell frequencies of the contingency table.
+
+```{r, include=FALSE}
+dat<- 
+stp25aggregate::GetData("
+   sex  racing  diet Freq
+ female   10km  omni  147
+   male   10km  omni   76
+ female     HM  omni  238
+   male     HM  omni  197
+ female   M/UM  omni  215
+   male   M/UM  omni  399
+ female   10km  vegi  113
+   male   10km  vegi   29
+ female     HM  vegi  143
+   male     HM  vegi   72
+ female   M/UM  vegi  125
+   male   M/UM  vegi  116
+ female   10km  vegan  208
+   male   10km  vegan   49
+ female     HM  vegan  271
+   male     HM  vegan  111
+ female   M/UM  vegan  168
+   male   M/UM  vegan  187                       
+                        ")
+# xtabs(Freq~ sex, dat)
+
+
+
+```
+
+```{r, results='asis'}
+x1<- xtabs(Freq~ diet+ sex, dat)
+Tbll_xtabs( xtabs(Freq~ diet +sex, dat), margin = "sex" ) %>% 
+  Output()
+
+```
+
+Table `r Tab_Index` shows data on the relation between sex and diet
+among `r sum(dat$Freq)` runners.
+
+The Pearson chi-Squared for this data is `r APA(summary(x1))`,
+indicating substantial departure from independence.
+
+Figure 1 shows the expected frequencies for sex and diet. The heights of
+the boxes are proportional to the percentage of females and males,
+`r round(prop.table(xtabs(Freq~ sex, dat))[1]*100)` % of the runners
+were female. The widths of the boxes are proportional to the percentage
+of diet.
+
+There are more male omnivorous runners and female vegan runners that
+would occur under independence, and fewer female omnivorous runners and
+male vegan runners.
+
+```{r, fig.cap='Mosaic-Plot displaying the expected frequencies. Color and Shading showing the standardized deviation from independenze by the color shading of each rectangle. Cells with positive deviation are blue, negative deviation are drawn red. The absolut value of the deviation is portrayed by schading density.',fig.height=4, fig.width=4}
+
+ipol <-function(x) pmin(x/6,1)
+mosaic(Freq
+  ~ diet | sex,
+  dat,
+  shade = TRUE,
+  legend = TRUE ,
+  #labeling=labeling_left,
+  varnames = F, 
+  gp=shading_hcl, gp_args=list(interpolate=ipol),
+  # ?labeling_border
+  labeling_args = list(abbreviate_labs = c(8, 5, 4)),
+   main ="Tow-Way Mosaic"
+)
+
+```
+
+```{r}
+vcd::assocstats(x1) %>% Tbll()
+
+glm(Freq
+    ~ diet * sex,
+    dat, family = poisson() ) %>% car::Anova()
+
+```
+
+```{r, fig.height=7, fig.width=7}
+ipol <-function(x) pmin(x/6,1)
+mosaic(Freq
+  ~ racing + diet | sex,
+  dat,
+  shade = TRUE,
+  legend = TRUE ,
+  #labeling=labeling_left,
+  varnames = F, 
+  gp=shading_hcl, gp_args=list(interpolate=ipol),
+  # ?labeling_border
+  labeling_args = list(abbreviate_labs = c(8, 5, 4)))
+
+```
+
+## Loglinear Models
+
+Kontingenztabellen können auch mit log-linearen Modellen untersucht
+werden.
+
+Im log-lin-Modellen wird die Abhängigkeit (assoziation) zwischen den
+Faktoren untersucht. Es wird aber nicht zwischen **Ziel** und
+**Einflussvariable** unterschieden. Die Fallzahl soll das 5-fache der
+betrachteten Zellen betragen. Bei dreidimensionalen Tafeln sind 5
+verschiedene Modelle zu testen.
+
+| Model                    | Model formula      | Symbol       |
+|--------------------------|--------------------|--------------|
+| Mutual independence      | \~A + B + C        | [A][B][C]    |
+| Joint independence       | \~A\*B + C         | [AB][C]      |
+| Conditional independence | \~(A+B)\*C         | [AC][BC]     |
+| All two-way associations | \~A*B + A*C + B\*C | [AB][AC][BC] |
+| Saturated model          | \~A\**B\**C        | [ABC]        |
+
+### Beispiel Marital Status and Permarital and Extramarital Sex
+
+    G Gender
+    M Familienstand 
+    P voreheliches Sex
+    E außereheliches Sex
+
+```{r, echo=FALSE, results='asis'}
+require(stpvers)
+require(vcd)
+
+library(MASS)
+
+dat2<- 
+  stp25aggregate::GetData("
+gender  premarital extramarital marital Freq
+ male n n  divorced 68
+ male n y divorced 17
+ male y n divorced 60
+ male y y divorced 28
+ female n n   divorced 214
+ female n y divorced 36
+ female y n divorced 54
+ female y y divorced 17
+ male n n  marrid 130
+ male n y marrid 4
+ male y n marrid 42
+ male y y marrid 11
+ female n n   marrid 322
+ female n y marrid 4
+ female y n marrid 25
+ female y y marrid 4
+                        ", output=FALSE)
+
+x1<-xtabs(Freq ~ gender + premarital + extramarital + marital, dat2)
+x.g.p<-xtabs(Freq ~ gender + premarital  , dat2)
+x.g.p.e.m <- xtabs(Freq ~ gender + premarital + extramarital + marital, dat2)
+xtabs(Freq ~ gender + premarital + extramarital + marital, dat2) %>% 
+  ftable() %>%
+  stp25tools::fix_to_df() %>% Output("Familienstand")
+
+```
+
+```{r}
+mart_tab1 <- xtabs(Freq ~ gender + premarital  , dat2)
+(mart.1 <- MASS::loglm(~ gender + premarital, data = mart_tab1))
+(OR <- oddsratio(mart_tab1, log = FALSE)) # odds ratio
+```
+
+```{r, include=FALSE}
+mart_tab2 <- xtabs(Freq ~ gender + premarital + extramarital , dat2)
+
+oddsratio(xtabs(Freq ~   premarital + extramarital +gender, dat2), log=FALSE)
+
+mart_tab3 <-
+  xtabs(Freq ~ gender + premarital + extramarital + marital , dat2)
+
+
+```
+
+```{r}
+mart.1 <- 
+  loglm( ~ gender + premarital, 
+          data = mart_tab1)
+mart.2 <-
+  loglm(~ gender * premarital + extramarital,
+        data = mart_tab2)
+
+mart.3 <-
+  loglm(~ gender * premarital * extramarital + marital, 
+        data = mart_tab3)
+
+mart.4 <-
+  loglm(~ gender + premarital + extramarital + marital, 
+        data = mart_tab3)
+
+```
+
+```{r, , include=FALSE, results='asis'}
+t1<- mart.1 %>% Tbll() 
+t2<-mart.2 %>% Tbll()
+t3<-mart.3 %>% Tbll()
+t4<-mart.4 %>% Tbll()
+ 
+
+rslt<-rbind( t1[1,], t2[1,], t3[1,], t4[1,])
+rslt$Test <- c("[G][P]","[GP][E]","[GPE][M]","[G][P][E][M]")
+rslt %>% Output("Likelihood Ratio G²")
+ 
+```
+
+Die Untersuchung der Scheidungsrate erfolgt in meheren Schritten. Als
+erstes untersuchen wir ist voreheliches Sex vom Gechlecht abhängig.
+[G][P]: P as response to G
+
+Als zweites wird untersucht ob das Geschlecht und voreheliches
+Sexzusammen einen Effect auf außereheliches Sex haben [GP][E] E as
+response to G and P jointly.
+
+Und in den Weiteren Schritten wird der Familienstand in die Analyse
+eingebracht.
+
+Das [G][P] Model zeigt einen hohen Zusammenhang von G und P mit G² =
+`r t1[1,2]`
+
+     For the model  G² = `r t1[1,2]` indicating that Gender and Premarital sex are highly assocated. The mosaic plot shows that mean are much more likely to report Premarital sex than are woman.
+
+```{r, echo=FALSE}
+ plot(mart.1, main="[G][P]")  
+  plot(mart.2, main="[GP][E]")
+ 
+ 
+plot( mart.3, main="[GPE][M]")
+plot( mart.4, main="[G][P][E][M]")
+```
+
+## Zweifach - Tabelle N x M
+
+```{r}
+data(infert, package = "datasets")
+infert$case  <- factor(infert$case ,1:0, c("case", "control") )
+head(infert)
+```
+
+```{r usage-2, results='asis'}
+
+Tbll_xtabs( ~ education + case, infert, include.percent = FALSE) %>%
+  Output()
+
+Tbll_xtabs( ~ education + case,
+            infert,
+            include.total = TRUE,
+            include.count = FALSE) %>%
+  Output()
+
+Tbll_xtabs(
+  ~ education + case,
+  infert,
+  include.total.columns = TRUE,
+  include.count = FALSE
+) %>%
+  Output()
+
+Tbll_xtabs( ~ education + case,
+            infert,
+            include.total.rows = TRUE,
+            include.count = FALSE) %>%
+  Output()
+ 
+ 
+
+```
+
+## Dreifach - Tabelle N x M x O
+
+Feinkontrolle über die Berechnung und Darstellung der Prozent.
+
+:   education + induced + case
+
+-   N und M Zeilen
+-   O Spalten (Letztes Item ist die Spalte)
+
+Fall 1 Spalten - Prozent case und control je 100%
+
+```{r}
+x <- xtabs( ~ education + induced + case, infert)
+
+#  margin = 3 ist equivalent mit  margin = "case"
+#  addmargins(x, c(2,3)) == addmargins(x, c(3,2)) 
+round(
+  addmargins(
+    prop.table(x, margin = "case"), 
+    c(1, 2)
+    ), 2) * 100
+
+```
+
+-   margin geht an *prop.table* (1 indicates rows, 2 indicates columns)
+-   add.margins geht an *addmargins* mit margin=seq_along(dim(x))
+
+```{r usage-margin, results='asis'}
+Tbll_xtabs(
+  x,
+  margin = "case",
+  add.margins = c("education", "induced"),
+  include.count = FALSE) %>% 
+  Output()
+
+Tbll_xtabs(
+  x,
+  margin = "case",
+ # add.margins = c("education", "induced"),
+  include.count = FALSE) %>% 
+  Output()
+
+```
+
+```{r data, results='asis'}
+dat <- Label(
+  GetData(
+"sex treatment  neg  pos
+f   KG         10	   9
+f   UG         14	   5
+m   KG         23	   7
+m   UG         18	  14",
+Tabel_Expand = TRUE,
+id.vars = 1:2,
+value = "befund"
+  ), sex = "Gexhlecht", treatment = "Behandlung")
+
+dat %>% Tabelle2(sex, treatment, befund)
+
+```
+
+    APA2(xtabs( ~ sex +treatment + befund, dat)) 
+
+
+
+    APA2(xtabs( ~ sex +treatment + befund, dat),
+         include.total = TRUE))
+
+Mehr als kalter Kaffee
+
+```{r simple2-tabs, results='asis'}
+
+Tbll_xtabs(xtabs( ~ sex +treatment + befund, dat),
+     include.total.rows = TRUE,
+     include.total.columns = TRUE) %>%   
+  Output("Einfache Tabelle")
+
+
+Tbll_xtabs(xtabs( ~ sex +treatment + befund, dat),
+     include.total.columns = FALSE) %>%   
+  Output("Einfache Tabelle")
+
+Tbll_xtabs(xtabs( ~ sex +treatment + befund, dat),
+     include.total.columns = TRUE) %>%   
+  Output("Einfache Tabelle")
+
+```
+
+## Library vcd
+
+```{r}
+ 
+x1 <- xtabs(~ sex + treatment, dat)
+vcd::assocstats(x1)
+
+Tbll_xtabs(x1, include.test = TRUE)[[2]]
+#Tbll_xtabs(x1, include.prop.chisq = TRUE)[[2]] #Proportion noch nicht fertig.
+Tbll_xtabs(x1, include.chisq = TRUE)[[2]]
+Tbll_xtabs(x1, include.correlation = TRUE)[[2]] 
+
+
+
+ 
+```
+
+```{r}
+
+x2 <- xtabs( ~ sex +treatment + befund, dat) 
+vcd::assocstats(x2)
+```

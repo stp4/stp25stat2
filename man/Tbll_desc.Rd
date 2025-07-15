@@ -231,23 +231,28 @@ DF |>
              include.total=TRUE)
 
  # in der Formula koennen auch eigene Funkrtionen mit dem Namen fun oder funny
- # uebergeben werden
+ # uebergeben werden. Die Einstellung use.duplicated geht aber nicht.
  #
- funny <-
- function(x,
-          digits = get_opt("mean", "digits"),
-          n = length(x)
- ) {
-   data.frame(
-     lev = c("Coustom Fun", "sd"),
-     n = c(as.character(n), ""),
-     m = c(round( mean(x, na.rm=TRUE),0) ,  "nix"),
-     stringsAsFactors = FALSE
-  )
- }
+ # Prototyp für einene Function
+#'  funny <-
+fun <-
+  function(x,
+           digits = get_opt("mean", "digits"),
+           n = length(x)) {
+    data.frame(
+      lev = c("Coustom Fun",
+              "   mean",
+              "   sd"),
+      n = c(as.character(n), "", ""),
+      m = c("",
+            round(mean(x, na.rm = TRUE), digits),
+            round(sd(x, na.rm = TRUE), digits)),
+      stringsAsFactors = FALSE
+    )
+  }
 
 DF |>
-  Tbll_desc( age[funny],
+  Tbll_desc( age[fun],
              by= ~group,
              include.total=TRUE)
 

@@ -20,6 +20,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://www.r-pkg.org/badges/version/stp25stat2)](https://CRAN.R-project.org/package=stp25stat2)
 
 <!-- [![Badge: example](https://img.shields.io/badge/any_text-you_like-blue)](https://statistik-peter.at/) -->
+
 <!-- badges: end -->
 
 ## Descriptive statistics
@@ -139,11 +140,13 @@ set_opt(
 ```
 
 ``` r
+
 DF |>
   Tbll_desc(
     sex[ratio],
     group[freq],
     age[median],
+   # age[fun,contest,3], # das geht (noch) nicht mit include.custom
     alc, smoker,
     "Clinical/Pretreatment",
     diabet,
@@ -167,311 +170,998 @@ DF |>
 ```
 
 <table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
+
 <thead>
+
 <tr>
+
 <td colspan="5" style="text-align: left;">
+
 Tab 1: group (N=47)
 </td>
+
 </tr>
+
 <tr>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
 Item
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
 Total
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
 Control
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
 Treat
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
 SDM/OR \[95% CI\]
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 (N) 
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 47
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 22
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 25
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Sex (male:female)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 25:22
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 10:12
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 15:10
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 0.56 \[0.17, 1.77\] OR
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Group 
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 n.a.
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
  Control
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 22 (46.8%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 22 (100.0%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 0 ( . )
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
  Treat
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 25 (53.2%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 0 ( . )
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 25 (100.0%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Age (median)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 43 (35, 59)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 51 (29, 62)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 41 (36, 55)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 -0.24 \[-0.82, 0.33\] ES
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Alcohol Consumption 
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 n.a.
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
  non
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 17 (36.2%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 8 (36.4%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 9 (36.0%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
  Occasionally
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 12 (25.5%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 9 (40.9%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 3 (12.0%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
  Abuse
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 18 (38.3%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 5 (22.7%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 13 (52.0%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Tobacco Smoker true 
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 9 (19%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 4 (18%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 5 (20%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 1.12 \[0.26, 4.85\] OR
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Clinical/Pretreatment 
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Diabetes true 
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 22 (47%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 10 (45%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 12 (48%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 1.11 \[0.35, 3.49\] OR
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Cardiovascular Disease true 
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 3 (6%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 1 (5%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 2 (8%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 1.83 \[0.15, \>20\] OR
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Chronic Metabolic Disease true 
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 18 (38%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 7 (32%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 11 (44%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 1.68 \[0.51, 5.56\] OR
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 Chronic Infections yes 
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 11 (23.4%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 4 (18.2%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 7 (28.0%)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 0.57 \[0.14, 2.30\] OR
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 Serum Bilirubin (mg/dl) (median)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 0.735 (0.590, 1.026)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 0.708 (0.593, 1.044)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 0.786 (0.488, 1.024)
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 0.10 \[-0.47, 0.68\] ES
 </td>
+
 </tr>
+
 </tbody>
+
 <tfoot>
+
 <tr>
+
 <td colspan="5">
+
 </td>
+
 </tr>
+
 </tfoot>
+
+</table>
+
+``` r
+fun <-
+  function(x,
+           digits = get_opt("mean", "digits"),
+           n = length(x)) {
+    data.frame(
+      lev = c("Coustom Fun", 
+              "   n",
+              "   mean", 
+              "   sd"),
+      n = c(as.character(n), "", "", ""),
+      m = c("", 
+            length(x),
+            round(mean(x, na.rm = TRUE), digits), 
+            round(sd(x, na.rm = TRUE), digits)),
+      stringsAsFactors = FALSE
+    )
+  }
+
+DF |>
+  Tbll_desc(
+    sex[ratio],
+    age[fun,contest,3], # das geht (noch) nicht mit include.custom
+    alc, smoker,
+    "Clinical/Pretreatment",
+    diabet,
+    by = ~ group,
+    include.total = TRUE,
+    include.test = TRUE
+   
+  ) |> stp25output2::Output("Eigene Funktion fuer das Alter")
+```
+
+<table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
+
+<thead>
+
+<tr>
+
+<td colspan="5" style="text-align: left;">
+
+Tab 2: Eigene Funktion fuer das Alter (N=47)
+</td>
+
+</tr>
+
+<tr>
+
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
+Item
+</th>
+
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
+Total
+</th>
+
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
+Control
+</th>
+
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
+Treat
+</th>
+
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
+Statistics
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+(N) 
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+47
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+22
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+25
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Sex (male:female)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+25:22
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+10:12
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+15:10
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+X2(1)=0.99, p=.319
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Age Coustom Fun
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+F(1, 45)=0.52, p=.475
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ n
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+47
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+22
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+25
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ mean
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+46.007
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+48.007
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+44.248
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ sd
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+15.764
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17.725
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13.946
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Alcohol Consumption 
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+X2(2)=6.45, p=.040
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ non
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17 (36.2%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+8 (36.4%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+9 (36.0%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Occasionally
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+12 (25.5%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+9 (40.9%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+3 (12.0%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Abuse
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+18 (38.3%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+5 (22.7%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13 (52.0%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Tobacco Smoker true 
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+9 (19%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+4 (18%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+5 (20%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+X2(1)=0.02, p=.874
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Clinical/Pretreatment 
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
+Diabetes true 
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
+22 (47%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
+10 (45%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
+12 (48%)
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
+X2(1)=0.03, p=.861
+</td>
+
+</tr>
+
+</tbody>
+
+<tfoot>
+
+<tr>
+
+<td colspan="5">
+
+. Test Statistic: Pearson Chi-squared, Wilcoxon-Test.
+</td>
+
+</tr>
+
+</tfoot>
+
 </table>
 
 Additional columns are added with **include.value**. A vector or
@@ -534,13 +1224,13 @@ Lik <- Tbll_likert(DF2,
                    ReferenceZero=2)
 
 Lik
-# # A tibble: 4 × 5
-#   Item        `low(1:1)` `neutral(2)` `high(3:5)` `M(SD)`   
-#   <fct>       <chr>      <chr>        <chr>       <chr>     
-# 1 Magazines   8 (8.0%)   22 (22.0%)   70 (70.0%)  3.11 (1.1…
-# 2 Comic.books 4 (4.0%)   15 (15.0%)   81 (81.0%)  3.34 (1.0…
-# 3 Fiction     19 (19.0%) 36 (36.0%)   45 (45.0%)  2.46 (1.0…
-# 4 Newspapers  2 (2.0%)   19 (19.0%)   79 (79.0%)  3.21 (0.9…
+# # A tibble: 4 × 7
+#   Item        `--`       `-`       o     `+`   `++`  `M(SD)`
+#   <fct>       <chr>      <chr>     <chr> <chr> <chr> <chr>  
+# 1 Magazines   8 (8.0%)   22 (22.0… 34 (… 23 (… 13 (… 3.11 (…
+# 2 Comic.books 4 (4.0%)   15 (15.0… 35 (… 35 (… 11 (… 3.34 (…
+# 3 Fiction     19 (19.0%) 36 (36.0… 28 (… 14 (… 3 (3… 2.46 (…
+# 4 Newspapers  2 (2.0%)   19 (19.0… 44 (… 26 (… 9 (9… 3.21 (…
 ```
 
     stp25plot::likertplot(
@@ -885,282 +1575,481 @@ Tbll_contrasts(lm1) |> stp25output2::Output()
 Contrast: wool tension
 
 <table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
+
 <thead>
+
 <tr>
+
 <td colspan="11" style="text-align: left;">
-Tab 2: Marginal Contrasts Analysis. Response: breaks
+
+Tab 3: Marginal Contrasts Analysis. Response: breaks
 </td>
+
 </tr>
+
 <tr>
+
 <th colspan="4" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+
 </th>
+
 <th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
+
  
 </th>
+
 <th colspan="2" style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
 CI
 </th>
+
 <th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
+
  
 </th>
+
 <th colspan="3" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+
 </th>
+
 </tr>
+
 <tr>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 Level1
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 Level2
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 Coefficient
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 SE
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
+
  
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 low
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 high
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
+
  
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 Statistic
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 df
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 p
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 B
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 A
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 -5.78
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 3.16
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+
  
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 -12.13
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 0.57
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+
  
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 -1.83
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 50
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 .074
 </td>
+
 </tr>
+
 </tbody>
+
 <tfoot>
+
 <tr>
+
 <td colspan="11">
+
 Variable predicted: breaks Predictors contrasted: wool Predictors
 averaged: tension p-value adjustment method: Holm (1979)
 </td>
+
 </tr>
+
 </tfoot>
+
 </table>
+
 <table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
+
 <thead>
+
 <tr>
+
 <td colspan="11" style="text-align: left;">
-Tab 3: Marginal Contrasts Analysis. Response: breaks
+
+Tab 4: Marginal Contrasts Analysis. Response: breaks
 </td>
+
 </tr>
+
 <tr>
+
 <th colspan="4" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+
 </th>
+
 <th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
+
  
 </th>
+
 <th colspan="2" style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
+
 CI
 </th>
+
 <th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
+
  
 </th>
+
 <th colspan="3" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
+
 </th>
+
 </tr>
+
 <tr>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 Level1
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 Level2
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 Coefficient
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 SE
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
+
  
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 low
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 high
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
+
  
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 Statistic
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 df
 </th>
+
 <th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
+
 p
 </th>
+
 </tr>
+
 </thead>
+
 <tbody>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 M
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 L
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 -10.00
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 3.87
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+
  
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 -17.78
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 -2.22
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+
  
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 -2.58
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 50
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 .026
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 H
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 L
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 -14.72
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 3.87
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+
  
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 -22.50
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 -6.94
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;" colspan="1">
+
  
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 -3.80
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 50
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
 .001
 </td>
+
 </tr>
+
 <tr>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 H
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 M
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 -4.72
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 3.87
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+
  
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 -12.50
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 3.06
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
+
  
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 -1.22
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 50
 </td>
+
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
+
 .228
 </td>
+
 </tr>
+
 </tbody>
+
 <tfoot>
+
 <tr>
+
 <td colspan="11">
+
 Variable predicted: breaks Predictors contrasted: tension Predictors
 averaged: wool p-value adjustment method: Holm (1979)
 </td>
+
 </tr>
+
 </tfoot>
+
 </table>
 
 ## Alternative packages
@@ -1203,7 +2092,7 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 <col style="width: 9%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th></th>
 <th>N</th>
@@ -1211,13 +2100,13 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>Magazines</td>
 <td>–</td>
 <td>8</td>
 <td>8.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td><ul>
 <li></li>
@@ -1225,13 +2114,13 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 <td>22</td>
 <td>22.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td></td>
 <td>o</td>
 <td>34</td>
 <td>34.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td><ul>
 <li></li>
@@ -1239,19 +2128,19 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 <td>23</td>
 <td>23.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td></td>
 <td>++</td>
 <td>13</td>
 <td>13.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Comic.books</td>
 <td>–</td>
 <td>4</td>
 <td>4.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td></td>
 <td><ul>
 <li></li>
@@ -1259,13 +2148,13 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 <td>15</td>
 <td>15.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>o</td>
 <td>35</td>
 <td>35.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td></td>
 <td><ul>
 <li></li>
@@ -1273,19 +2162,19 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 <td>35</td>
 <td>35.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>++</td>
 <td>11</td>
 <td>11.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Fiction</td>
 <td>–</td>
 <td>19</td>
 <td>19.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td><ul>
 <li></li>
@@ -1293,13 +2182,13 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 <td>36</td>
 <td>36.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td></td>
 <td>o</td>
 <td>28</td>
 <td>28.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td><ul>
 <li></li>
@@ -1307,19 +2196,19 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 <td>14</td>
 <td>14.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td></td>
 <td>++</td>
 <td>3</td>
 <td>3.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Newspapers</td>
 <td>–</td>
 <td>2</td>
 <td>2.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td></td>
 <td><ul>
 <li></li>
@@ -1327,13 +2216,13 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 <td>19</td>
 <td>19.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>o</td>
 <td>44</td>
 <td>44.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td></td>
 <td><ul>
 <li></li>
@@ -1341,19 +2230,19 @@ modelsummary::datasummary_skim(DF2, type = "categorical")
 <td>26</td>
 <td>26.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>++</td>
 <td>9</td>
 <td>9.0</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Geschlecht</td>
 <td>m</td>
 <td>61</td>
 <td>61.0</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>f</td>
 <td>39</td>
@@ -1377,7 +2266,7 @@ modelsummary::modelsummary(
 <col style="width: 27%" />
 </colgroup>
 <thead>
-<tr class="header">
+<tr>
 <th></th>
 <th><ol type="1">
 <li></li>
@@ -1388,92 +2277,92 @@ modelsummary::modelsummary(
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>(Intercept)</td>
 <td>21.0 [11.6, 30.4]</td>
 <td>3.0 [2.7, 3.4]</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>(3.4)</td>
 <td>(0.2)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>outcome[T.2]</td>
 <td>-7.7 [-18.0, 2.7]</td>
 <td>-0.5 [-0.9, -0.1]</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>(3.7)</td>
 <td>(0.2)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>outcome[T.3]</td>
 <td>-5.3 [-15.7, 5.0]</td>
 <td>-0.3 [-0.7, 0.1]</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>(3.7)</td>
 <td>(0.2)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>treatment[T.2]</td>
 <td>0.0 [-10.3, 10.3]</td>
 <td>0.0 [-0.4, 0.4]</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>(3.7)</td>
 <td>(0.2)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>treatment[T.3]</td>
 <td>0.0 [-10.3, 10.3]</td>
 <td>0.0 [-0.4, 0.4]</td>
 </tr>
-<tr class="even">
+<tr>
 <td></td>
 <td>(3.7)</td>
 <td>(0.2)</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>Num.Obs.</td>
 <td>9</td>
 <td>9</td>
 </tr>
-<tr class="even">
+<tr>
 <td>R2</td>
 <td>0.527</td>
 <td></td>
 </tr>
-<tr class="odd">
+<tr>
 <td>R2 Adj.</td>
 <td>0.053</td>
 <td></td>
 </tr>
-<tr class="even">
+<tr>
 <td>AIC</td>
 <td>57.6</td>
 <td>56.8</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>BIC</td>
 <td>58.8</td>
 <td>57.7</td>
 </tr>
-<tr class="even">
+<tr>
 <td>Log.Lik.</td>
 <td>-22.786</td>
 <td>-23.381</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>F</td>
 <td>1.112</td>
 <td>1.372</td>
 </tr>
-<tr class="even">
+<tr>
 <td>RMSE</td>
 <td>3.04</td>
 <td>3.04</td>
